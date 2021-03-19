@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { TarotCardFaceStyles } from '../TarotCardFace';
+import AssetCardBack from '../../Assets/card-back.png';
 
 const TarotCardBack:React.FC = () => {
     return (
@@ -18,6 +19,8 @@ const StyleConstants = {
 const TarotCardBackDiv = styled.div`
 ${TarotCardFaceStyles}
 background-color: ${StyleConstants.colours.stock};
+background-image: url(${AssetCardBack});
+background-size: contain;
 
 z-index: -1;
 transform: rotateY(180deg);

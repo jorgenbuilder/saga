@@ -3,13 +3,18 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import IndexScreen from './Screens/Index';
+import Routes from './System/Constants/Routes';
 
 const App: React.FC = () => {
+  const routes = Object.keys(Routes).map(route => {
+    const RouteConf = Routes[route];
+    return <Route path={RouteConf.path} exact={RouteConf.exact} key={route}><RouteConf.component /></Route>
+  });
   return (
     <Router>
       <Switch>
-        <Route path="/"><IndexScreen /></Route>
+        {routes}
+        <Route path="*">Nothing here!</Route>
       </Switch>
     </Router>
   );

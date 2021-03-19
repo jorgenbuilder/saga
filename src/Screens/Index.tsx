@@ -1,21 +1,10 @@
-import styled from 'styled-components';
-import AnimationPlane from '../Atoms/AnimationPlane';
-import TarotCard from '../Molecules/TarotCard';
-
-const IndexScreen:React.FC = () => {
+import { Redirect } from 'react-router-dom';
+import Routes from '../System/Constants/Routes';
+const Index:React.FC = () => {
+    console.log('Rendering index.')
     return (
-        <Table>
-            <TarotCard />
-        </Table>
+        <Redirect push={true} to={Routes.workbench.path} />
     );
 };
 
-export default IndexScreen;
-
-
-const Table = styled(AnimationPlane)`
-display: flex;
-align-items: center;
-justify-content: center;
-height: 100%;
-`;
+export default Index;
