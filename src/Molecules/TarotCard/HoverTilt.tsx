@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
 import React, { useRef, useState } from 'react';
+import styled from 'styled-components';
 import TarotCard from '.';
+import Float from '../../Atoms/Animations/Float';
 
 const HoverTiltTarotCard:React.FC = () => {
     const [mouse, setMouse] = useState<[number, number, boolean]>([0, 0, false]);
@@ -15,35 +16,32 @@ const HoverTiltTarotCard:React.FC = () => {
     let tilty = 0;
     if (ref.current && isActive) {
         const rect = ref.current.getBoundingClientRect();
-        const center = [rect.width / 2, rect.height / 2];
-        if (mx >= center[0]) {
-            tiltx = (mx - center[0]) / center[0];
+        const [cx, cy] = [rect.width / 2, rect.height / 2];
+        const [x, y] = [mx - rect.left, my - rect.top];
+        if (x >= cx) {
+            tiltx = (x - cx) / cx;
         } else {
-            tiltx = -(center[0] - mx) / center[0];
+            tiltx = -(cx - x) / cx;
         }
-        if (my >= center[0]) {
-            tilty = (my - center[1]) / center[1];
+        if (y >= cy) {
+            tilty = (y - cy) / cy;
         } else {
-            tilty = -(center[1] - my) / center[1];
+            tilty = -(cy - y) / cy;
         }
     }
     
     const enterHandler: React.MouseEventHandler<HTMLDivElement> = () => setMouse([mx, my, true]);
     const exitHandler: React.MouseEventHandler<HTMLDivElement> = () => setMouse([mx, my, false]);
     const moveHandler: React.MouseEventHandler<HTMLDivElement> = (e) => {
-        const { offsetTop, offsetLeft } = e.currentTarget;
-        setMouse([e.pageX - offsetLeft, e.pageY - offsetTop, true]);
+        setMouse([e.pageX, e.pageY, true]);
     }
     const handleClick: React.MouseEventHandler<HTMLDivElement> = () => setFlipped(!flipped);
 
     return (
-        <motion.div
-            ref={ref}
-            
-        >
+        <HoverTiltDiv ref={ref}>
             <TarotCard
                 style={{
-                    transform: `rotateX(${Math.floor(10 * tilty)}deg) rotateY(${rotation - Math.floor(10 * tiltx)}deg)`,
+                    transform: `rotateX(${Math.floor(15 * tilty)}deg) rotateY(${rotation - Math.floor(15 * tiltx)}deg)`,
                     backfaceVisibility: 'visible',
                     transition: 'transform .24s ease-out',
                 }}
@@ -51,16 +49,13 @@ const HoverTiltTarotCard:React.FC = () => {
                 onMouseMove={moveHandler}
                 onMouseEnter={enterHandler}
                 onMouseLeave={exitHandler}
-                // whileHover={{
-                //     transform: `rotateX(${Math.floor(10 * tilty)}deg) rotateY(${rotation - Math.floor(10 * tiltx)}deg)`,
-                //     transition: {
-                //         duration: .24,
-                //         ease: 'linear',
-                //     }
-                // }}
             />
-        </motion.div>
+        </HoverTiltDiv>
     );
 }
 
 export default HoverTiltTarotCard;
+const HoverTiltDiv = styled.div`
+// animation: ${Float} 3.8s ease-out infinite;
+// animation-direction: alternate;
+`;

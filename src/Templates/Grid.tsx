@@ -26,13 +26,22 @@ margin: .25in;
 display: flex;
 flex-shrink: 0;
 
+background-color: ${StyleConstants.colours.dark.uiLight};
 border: 8px solid ${StyleConstants.colours.dark.uiMedium};
 border-radius: ${StyleConstants.dimensions.corners.default.value}${StyleConstants.dimensions.corners.default.unit};
 
 transition: all 160ms ease-out;
 
+> a {
+    color: ${StyleConstants.colours.dark.uiDark};
+    text-decoration: none;
+    font-size: 24px;
+    text-align: center;
+}
+
 &:hover {
     border-color: ${StyleConstants.colours.dark.uiLight};
+    transform: scale(1.125);
 }
 `;
 

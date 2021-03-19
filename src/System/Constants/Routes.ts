@@ -1,8 +1,9 @@
 import React from 'react';
 import Index from '../../Screens/Index';
-import WorkBench from '../../Screens/Workbench';
-import WorkBenchStaticRotation from '../../Screens/Workbench/StaticRotation';
-import WorkBenchCardReveal from '../../Screens/Workbench/CardReveal';
+import Workbench from '../../Screens/Workbench';
+import WorkbenchStaticRotation from '../../Screens/Workbench/StaticRotation';
+import WorkbenchCardReveal from '../../Screens/Workbench/CardReveal';
+import WorkbenchShuffleDeck from '../../Screens/Workbench/ShuffleDeck';
 
 const Routes: {
     [key: string]: {
@@ -18,16 +19,20 @@ const Routes: {
     },
     workbench: {
         path: '/workbench',
-        component: WorkBench,
+        component: Workbench,
         exact: true,
     },
     workbenchStaticRotation: {
         path: '/workbench/static-rotation',
-        component: WorkBenchStaticRotation,
+        component: WorkbenchStaticRotation,
     },
     workbenchCardReveal: {
         path: '/workbench/card-reveal',
-        component: WorkBenchCardReveal,
+        component: WorkbenchCardReveal,
+    },
+    workbenchShuffleDeck: {
+        path: '/workbench/shuffle-deck',
+        component: WorkbenchShuffleDeck,
     },
 };
 

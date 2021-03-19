@@ -1,18 +1,29 @@
 import { Link } from 'react-router-dom'
+import styled from 'styled-components';
 import Routes from '../../System/Constants/Routes'
 import Grid from '../../Templates/Grid'
 
 const Workbench:React.FC = () => {
     return (
         <Grid>
-            <Link to={Routes.workbenchStaticRotation.path}>
+            <BlockLink to={Routes.workbenchStaticRotation.path}>
                 Static Rotation
-            </Link>
-            <Link to={Routes.workbenchCardReveal.path}>
+            </BlockLink>
+            <BlockLink to={Routes.workbenchCardReveal.path}>
                 Card Reveal
-            </Link>
+            </BlockLink>
+            <BlockLink to={Routes.workbenchShuffleDeck.path}>
+                Shuffle Deck
+            </BlockLink>
         </Grid>
     );
 }
 
 export default Workbench
+
+const BlockLink = styled(Link)`
+display: flex;
+align-items: center;
+justify-content: center;
+width: 100%;
+`;

@@ -23,6 +23,7 @@ export default TarotCard;
 const TarotCardDiv = styled(motion.div)`
 ${TarotCardFaceStyles}
 transform-style: preserve-3d;
+transform: rotateY(180deg);
 position: relative;
 `;
 
