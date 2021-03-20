@@ -1,75 +1,24 @@
-import { MotionStyle, useMotionValue, useTransform } from 'framer-motion';
 import TarotCard from '../../Molecules/TarotCard'
+import {
+    ShuffleLeft,
+    ShuffleRight,
+} from '../../Atoms/Animations/Shuffle';
+import styled, { css } from 'styled-components';
 
 const ShuffleDeck:React.FC = () => {
     return (
         <>
-            <TarotCard
-                style={DeckStyle}
-                animate={{
-                    rotate: [0, 5],
-                    translateX: [0, 300],
-                    translateZ: [0, 100],
-                    rotateY: [180, 180],
-                }}
-                transition={{
-                    duration: .5,
-                    repeatDelay: .38,
-                    repeat: Infinity,
-                    repeatType: 'mirror',
-                    ease: 'anticipate',
-                }}
+            <ShuffleLeftCard
+                style={{animationDelay: '0'}}
             />
-            <TarotCard
-                style={DeckStyle}
-                animate={{
-                    rotate: [0, -5],
-                    translateX: [0, -300],
-                    translateZ: [0, 100],
-                    rotateY: [180, 180],
-                }}
-                transition={{
-                    delay: .25,
-                    duration: .5,
-                    repeatDelay: .38,
-                    repeat: Infinity,
-                    repeatType: 'mirror',
-                    ease: 'anticipate',
-                }}
+            <ShuffleRightCard
+                style={{animationDelay: '.5s'}}
             />
-            <TarotCard
-                style={DeckStyle}
-                animate={{
-                    rotate: [0, 5],
-                    translateX: [0, 300],
-                    translateZ: [0, 100],
-                    rotateY: [180, 180],
-                }}
-                transition={{
-                    delay: .5,
-                    duration: .5,
-                    repeatDelay: .38,
-                    repeat: Infinity,
-                    repeatType: 'mirror',
-                    ease: 'anticipate',
-                }}
+            <ShuffleLeftCard
+                style={{animationDelay: '1s'}}
             />
-            <TarotCard
-                style={DeckStyle}
-                animate={{
-                    rotate: [0, -5],
-                    translateX: [0, -300],
-                    translateZ: [0, 100],
-                    rotateY: [180, 180],
-                }}
-                transition={{
-                    delay: .75,
-                    duration: .5,
-                    repeatDelay: .38,
-                    repeat: Infinity,
-                    repeatType: 'mirror',
-                    ease: 'anticipate',
-                }}
+            <ShuffleRightCard
+                style={{animationDelay: '1.5s'}}
             />
         </>
     );
@@ -77,9 +26,18 @@ const ShuffleDeck:React.FC = () => {
 
 export default ShuffleDeck;
 
-const DeckStyle: MotionStyle = {
-    position: 'absolute',
-    rotateX: 15,
-    animationFillMode: 'forwards',
-    rotateY: 180,
-}
+const ShuffleLeftCard = styled(TarotCard)`
+position: absolute;
+transform: translateX(0) translateZ(0) rotateY(180deg);
+z-index: 5;
+backface-visibility: visible;
+animation: ${ShuffleLeft} 1.5s ease-in-out infinite;
+`;
+
+const ShuffleRightCard = styled(TarotCard)`
+position: absolute;
+transform: translateX(0) translateZ(0) rotateY(180deg);
+z-index: 5;
+backface-visibility: visible;
+animation: ${ShuffleRight} 1.5s ease-in-out infinite;
+`;
