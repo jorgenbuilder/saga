@@ -15,6 +15,15 @@ const Workbench:React.FC = () => {
             <BlockLink to={Routes.workbenchShuffleDeck.path}>
                 Shuffle Deck
             </BlockLink>
+            <BlockLink to={Routes.workbenchSvgCard.path}>
+                ThreeJS
+            </BlockLink>
+            <BlockLink to={Routes.app.path}>
+                App
+            </BlockLink>
+            <BlockLink to={Routes.workbenchSplash.path}>
+                Splash
+            </BlockLink>
         </Grid>
     );
 }

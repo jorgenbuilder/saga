@@ -4,6 +4,10 @@ import Workbench from '../../Screens/Workbench';
 import WorkbenchStaticRotation from '../../Screens/Workbench/StaticRotation';
 import WorkbenchCardReveal from '../../Screens/Workbench/CardReveal';
 import WorkbenchShuffleDeck from '../../Screens/Workbench/ShuffleDeck';
+import WorkbenchSvgCard from '../../Screens/Workbench/SvgCard';
+import App from '../../Screens/App';
+import DrawScreen from '../../Screens/App/DrawScreen';
+import SplashScreen from '../../Screens/App/Splash';
 
 const Routes: {
     [key: string]: {
@@ -34,6 +38,22 @@ const Routes: {
         path: '/workbench/shuffle-deck',
         component: WorkbenchShuffleDeck,
     },
+    workbenchSvgCard: {
+        path: '/workbench/three-svg',
+        component: WorkbenchSvgCard,
+    },
+    workbenchSplash: {
+        path: '/workbench/splash',
+        component: SplashScreen,
+    },
+    app: {
+        path: '/app',
+        component: App,
+    },
+    draw: {
+        path: '/draw',
+        component: DrawScreen
+    }
 };
 
 export default Routes;
