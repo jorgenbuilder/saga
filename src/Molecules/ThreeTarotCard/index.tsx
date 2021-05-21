@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { MeshProps } from '@react-three/fiber';
 import { BackSide, FrontSide, MathUtils as M3 } from 'three';
 import Svg from '../../Atoms/ThreeSvg';
@@ -7,11 +7,15 @@ import cardFace from '../../Assets/cards/card-face.svg';
 import { animated } from '@react-spring/three';
 import Cards from '../../Assets/cards';
 
-const SvgCard: React.FC<MeshProps> = (props) => {
+interface Props extends MeshProps {
+    giraffe?: any;
+}
+
+const SvgCard: React.FC<Props> = (props) => {
     // This reference will give us direct access to the mesh
     const mesh = useRef<MeshProps | undefined>(undefined);
 
-    const card = Cards[Math.ceil(Math.random() * 78)];
+    const card = useMemo(() => Cards[Math.ceil(Math.random() * 78)], [props.giraffe]);
     
     return (
         <animated.mesh

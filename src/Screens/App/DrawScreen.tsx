@@ -7,6 +7,7 @@ import { useSpring } from '@react-spring/three';
 const DrawScreen: React.FC = () => {
 
     const [flipped, setFlipped] = useState<boolean>(false);
+    const [rando, setRando] = useState<number>(0);
 
     const props = useSpring({
         rotation: flipped ? [M3.degToRad(180), M3.degToRad(90), 0] : [0, M3.degToRad(270), 0],
@@ -16,6 +17,9 @@ const DrawScreen: React.FC = () => {
     const handleClick:EventHandler<MouseEvent> = (e) => {
         e.preventDefault();
         setFlipped(!flipped);
+        if (!flipped) {
+            setRando(Math.random());
+        }
     }
 
     return (
@@ -31,7 +35,7 @@ const DrawScreen: React.FC = () => {
                 {/* <spotLight intensity={.5} position={[.5, -8, -3]} color={new Color('hsl(351, 83%, 50%)').convertSRGBToLinear()} /> */}
                 <Suspense fallback={null}>
                     {/* @ts-ignore */}
-                    <SvgCard rotation={props.rotation} />
+                    <SvgCard rotation={props.rotation} giraffe={rando} />
                 </Suspense>
                 {/* <gridHelper args={[100, 100, `#888`, `#AAA`]} /> */}
                 {/* <axesHelper /> */}
