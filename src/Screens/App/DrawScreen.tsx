@@ -10,7 +10,7 @@ const DrawScreen: React.FC = () => {
 
     const props = useSpring({
         rotation: flipped ? [M3.degToRad(180), M3.degToRad(90), 0] : [0, M3.degToRad(270), 0],
-        config: { mass: 20, tension: 25 },
+        config: { mass: 20, tension: 250, friction: 100 },
     })
 
     const handleClick:EventHandler<MouseEvent> = (e) => {
