@@ -24,12 +24,9 @@ const SvgCard: React.FC<Props> = (props) => {
             rotation={props.rotation || [0, M3.degToRad(90), 0]}
         >
             <boxGeometry args={[6, 10, .025]} />
-            <meshPhongMaterial attachArray="material" color="white" />
-            <meshPhongMaterial attachArray="material" color="white" />
-            <meshPhongMaterial attachArray="material" color="white" />
-            <meshPhongMaterial attachArray="material" color="white" />
-            <group attachArray="material"><Svg side={BackSide} url={cardBack} args={[0, 0, 0]} /></group>
-            <group attachArray="material"><Svg side={FrontSide} url={card || cardFace} args={[0, 0, 0]} /></group>
+            <meshPhongMaterial attach="material" color='white' />
+            <Svg side={FrontSide} url={card || cardFace} position={[3, -5, .013,]} />
+            <Svg side={BackSide} url={cardBack} position={[3, -5, -.013,]} />
         </animated.mesh>
     )
 }

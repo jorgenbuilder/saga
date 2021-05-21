@@ -24,6 +24,9 @@ const Workbench:React.FC = () => {
             <BlockLink to={Routes.workbenchSplash.path}>
                 Splash
             </BlockLink>
+            <BlockLink to={Routes.workbenchThreeOnClick.path}>
+                Three On Click
+            </BlockLink>
         </Grid>
     );
 }

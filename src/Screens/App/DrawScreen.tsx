@@ -1,5 +1,5 @@
 import { MathUtils as M3, Color } from 'three';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, ThreeEvent } from '@react-three/fiber';
 import { EventHandler, MouseEvent, Suspense, useState } from 'react';
 import SvgCard from '../../Molecules/ThreeTarotCard'
 import { useSpring } from '@react-spring/three';
@@ -14,8 +14,8 @@ const DrawScreen: React.FC = () => {
         config: { mass: 20, tension: 250, friction: 100 },
     })
 
-    const handleClick:EventHandler<MouseEvent> = (e) => {
-        e.preventDefault();
+    const handleClick:EventHandler<MouseEvent>|ThreeEvent<MouseEvent> = (e) => {
+        e.stopPropagation();
         setFlipped(!flipped);
         if (!flipped) {
             setRando(Math.random());
@@ -30,12 +30,12 @@ const DrawScreen: React.FC = () => {
                 }}
             >
                 {/* <pointLight intensity={2} position={[.5, 8, 4]} color={new Color('hsl(43, 100%, 40%)').convertSRGBToLinear()} /> */}
-                <spotLight intensity={2} position={[.5, 8, 3]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
+                <spotLight intensity={2} position={[1, 8, 3]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
                 <ambientLight intensity={.033} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
                 {/* <spotLight intensity={.5} position={[.5, -8, -3]} color={new Color('hsl(351, 83%, 50%)').convertSRGBToLinear()} /> */}
                 <Suspense fallback={null}>
                     {/* @ts-ignore */}
-                    <SvgCard rotation={props.rotation} giraffe={rando} />
+                    <SvgCard rotation={props.rotation} giraffe={rando} onClick={handleClick} />
                 </Suspense>
                 {/* <gridHelper args={[100, 100, `#888`, `#AAA`]} /> */}
                 {/* <axesHelper /> */}

@@ -24,6 +24,13 @@ const TarotCardStyleConstants = {
     corners: '.125in',
 };
 
+const ThreeTarotCardSize = {
+    // Smallest whole numbers with preserved aspect ratio
+    width: 11,
+    height: 19,
+    corners: .5,
+};
+
 export {
     StyleConstants,
     TarotCardStyleConstants,

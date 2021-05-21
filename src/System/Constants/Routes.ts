@@ -8,6 +8,7 @@ import WorkbenchSvgCard from '../../Screens/Workbench/SvgCard';
 import App from '../../Screens/App';
 import DrawScreen from '../../Screens/App/DrawScreen';
 import SplashScreen from '../../Screens/App/Splash';
+import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
 
 const Routes: {
     [key: string]: {
@@ -45,6 +46,10 @@ const Routes: {
     workbenchSplash: {
         path: '/workbench/splash',
         component: SplashScreen,
+    },
+    workbenchThreeOnClick: {
+        path: '/workbench/three-on-click',
+        component: ThreeOnClickWorkbench,
     },
     app: {
         path: '/app',
