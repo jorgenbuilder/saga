@@ -3,10 +3,10 @@ import { Canvas } from '@react-three/fiber';
 import SvgCard from '../../Molecules/ThreeTarotCard';
 import { MathUtils } from 'three';
 import { useSpring } from '@react-spring/three';
-import { DeviceAccelerometerContext } from '../../Providers/DeviceAccelerometer';
+import { AccelerometerContext } from '../../Providers/DeviceAccelerometer';
 
 const TiltWorkbench:React.FC = () => {
-    const { acceleration, devicePermission, requestPermission } = useContext(DeviceAccelerometerContext);
+    const { acceleration, permission, requestPermission } = useContext(AccelerometerContext);
 
     const props = useSpring({
         rotation: [
@@ -47,7 +47,7 @@ const TiltWorkbench:React.FC = () => {
                 <div>rX: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.beta).toFixed(2)}</div>
                 <div>rY: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.gamma).toFixed(2)}</div>
                 <div>rZ: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.alpha).toFixed(2)}</div>
-                {devicePermission === 'pending' && <a href="#nothing" onClick={requestPermission}>Grant</a>}
+                {permission === 'pending' && <a href="#nothing" onClick={requestPermission}>Grant</a>}
             </div>
         </>
     );

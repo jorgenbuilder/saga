@@ -3,13 +3,13 @@ import { Canvas, ThreeEvent } from '@react-three/fiber';
 import { EventHandler, MouseEvent, Suspense, useContext, useEffect, useState } from 'react';
 import SvgCard from '../../Molecules/ThreeTarotCard'
 import { useSpring } from '@react-spring/three';
-import { DeviceAccelerometerContext } from '../../Providers/DeviceAccelerometer';
+import { AccelerometerContext } from '../../Providers/DeviceAccelerometer';
 import styled from 'styled-components';
 import ScrollHint from '../../Atoms/ScrollHint';
 
 const DrawDetailScreen: React.FC = () => {
 
-    const { acceleration, popPermissionToast, devicePermission } = useContext(DeviceAccelerometerContext);
+    const { acceleration, popPermissionToast, permission } = useContext(AccelerometerContext);
 
     const [flipped, setFlipped] = useState<boolean>(false);
     const [rando, setRando] = useState<number>(0);
@@ -47,10 +47,10 @@ const DrawDetailScreen: React.FC = () => {
     };
 
     useEffect(() => {
-        if (devicePermission === 'pending') {
+        if (permission === 'pending') {
             popPermissionToast();
         }
-    }, [devicePermission, popPermissionToast]);
+    }, [permission, popPermissionToast]);
 
     return (
         <>
