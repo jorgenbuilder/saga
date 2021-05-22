@@ -13,7 +13,7 @@ const App: React.FC = () => {
     const RouteConf = Routes[route];
     return <Route path={RouteConf.path} exact={RouteConf.exact} key={route}>
       <Fade>
-        <RouteConf.component />
+        <RouteConf.Component />
       </Fade>
     </Route>
   });

@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import { useLoader, Vector3 } from '@react-three/fiber';
-import { Box3, Color, Object3D, Side, Sphere, MathUtils as M3, Vector3 as V3 } from 'three';
+import { useLoader } from '@react-three/fiber';
+import { Color, Object3D, Side, MathUtils as M3, Vector3 as V3 } from 'three';
 
 
 const Svg:React.FC<{url: string, position?: number[], args?: any[], side: Side}> = ({ url, side, position }) => {

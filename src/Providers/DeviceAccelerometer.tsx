@@ -1,4 +1,4 @@
-import React, { createContext, MouseEventHandler, useEffect, useState } from 'react';
+import React, { createContext, MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface DeviceAccelerometerState {
@@ -46,23 +46,23 @@ const DeviceAccelerometerProvider:React.FC = ({ children }) => {
         });
     };
 
-    const deviceHasOrientationEvents = () => window.DeviceMotionEvent !== undefined;
-    const deviceRequiresOrientationPermission = () => typeof window.DeviceMotionEvent.requestPermission === 'function';
-    const bindOrientationEvents = () => window.addEventListener('devicemotion', ingestMotion, false);
-    const unbindOrientationEvents = () => window.removeEventListener('devicemotion', ingestMotion);
+    const deviceHasOrientationEvents = useCallback(() => window.DeviceMotionEvent !== undefined, []);
+    const deviceRequiresOrientationPermission = useCallback(() => typeof window.DeviceMotionEvent.requestPermission === 'function', []);
+    const bindOrientationEvents = useCallback(() => window.addEventListener('devicemotion', ingestMotion, false), []);
+    const unbindOrientationEvents = useCallback(() => window.removeEventListener('devicemotion', ingestMotion), []);
 
-    const requestPermission = () => {
+    const requestPermission = useCallback(() => {
         DeviceMotionEvent.requestPermission()
         .then(response => {
-            if (response == 'granted') {
+            if (response === 'granted') {
                 bindOrientationEvents();
                 setDevicePermission('granted');
-            } else if (response == 'denied') {
+            } else if (response === 'denied') {
                 setDevicePermission('denied');
             }
         })
         .catch(console.error);
-    };
+    }, [bindOrientationEvents]);
 
     const popPermissionToast = () => {
         setShowToast(true);
@@ -89,7 +89,7 @@ const DeviceAccelerometerProvider:React.FC = ({ children }) => {
             setDevicePermission('NA');
         }
         return unbindOrientationEvents;
-    }, []);
+    }, [setDevicePermission, requestPermission, unbindOrientationEvents, deviceRequiresOrientationPermission, deviceHasOrientationEvents]);
 
     const value = {
         deviceSupport,

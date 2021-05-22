@@ -3,7 +3,7 @@ import {
     ShuffleLeft,
     ShuffleRight,
 } from '../../Atoms/Animations/Shuffle';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const ShuffleDeck:React.FC = () => {
     return (

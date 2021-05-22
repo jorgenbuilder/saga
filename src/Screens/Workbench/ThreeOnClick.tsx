@@ -1,7 +1,6 @@
 import { Canvas, MeshProps } from '@react-three/fiber';
 import React, { useState, useRef, Suspense } from 'react';
-import SvgCard from '../../Molecules/ThreeTarotCard';
-import { BackSide, FrontSide, MathUtils as M3, Color, PerspectiveCamera } from 'three';
+import { BackSide, FrontSide, MathUtils as M3 } from 'three';
 import CameraController from '../../Atoms/ThreeCameraController';
 import Svg from '../../Atoms/ThreeSvg';
 import cardBack from '../../Assets/cards/card-back.svg';

@@ -34,4 +34,5 @@ const ThreeTarotCardSize = {
 export {
     StyleConstants,
     TarotCardStyleConstants,
+    ThreeTarotCardSize,
 }

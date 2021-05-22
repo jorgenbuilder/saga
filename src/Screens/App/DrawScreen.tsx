@@ -42,7 +42,7 @@ const DrawScreen: React.FC = () => {
         if (devicePermission === 'pending') {
             popPermissionToast();
         }
-    }, []);
+    }, [devicePermission, popPermissionToast]);
 
     return (
         <>
@@ -55,7 +55,7 @@ const DrawScreen: React.FC = () => {
                 <ambientLight intensity={.1} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
                 <Suspense fallback={null}>
                     {/* @ts-ignore */}
-                    <SvgCard rotation={props.rotation} position={props.position} giraffe={rando} onClick={handleClick} />
+                    <SvgCard rotation={props.rotation} position={props.position} randomSeed={rando} onClick={handleClick} />
                 </Suspense>
             </Canvas>
             <button onClick={handleClick}>

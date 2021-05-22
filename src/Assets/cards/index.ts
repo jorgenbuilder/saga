@@ -54,30 +54,30 @@ import Card53 from './card-lesser-swords-12.svg';
 import Card54 from './card-lesser-swords-12.svg';
 import Card55 from './card-lesser-swords-13.svg';
 import Card56 from './card-lesser-swords-14.svg';
-import Card57 from './card-greater-1.svg'
-import Card58 from './card-greater-2.svg'
-import Card59 from './card-greater-3.svg'
-import Card60 from './card-greater-4.svg'
-import Card61 from './card-greater-5.svg'
-import Card62 from './card-greater-6.svg'
-import Card63 from './card-greater-7.svg'
-import Card64 from './card-greater-8.svg'
-import Card65 from './card-greater-9.svg'
-import Card66 from './card-greater-10.svg'
-import Card67 from './card-greater-11.svg'
-import Card68 from './card-greater-12.svg'
-import Card69 from './card-greater-13.svg'
-import Card70 from './card-greater-14.svg'
-import Card71 from './card-greater-15.svg'
-import Card72 from './card-greater-16.svg'
-import Card73 from './card-greater-17.svg'
-import Card74 from './card-greater-18.svg'
-import Card75 from './card-greater-19.svg'
-import Card76 from './card-greater-20.svg'
-import Card77 from './card-greater-21.svg'
-import Card78 from './card-greater-22.svg'
+import Card57 from './card-greater-1.svg';
+import Card58 from './card-greater-2.svg';
+import Card59 from './card-greater-3.svg';
+import Card60 from './card-greater-4.svg';
+import Card61 from './card-greater-5.svg';
+import Card62 from './card-greater-6.svg';
+import Card63 from './card-greater-7.svg';
+import Card64 from './card-greater-8.svg';
+import Card65 from './card-greater-9.svg';
+import Card66 from './card-greater-10.svg';
+import Card67 from './card-greater-11.svg';
+import Card68 from './card-greater-12.svg';
+import Card69 from './card-greater-13.svg';
+import Card70 from './card-greater-14.svg';
+import Card71 from './card-greater-15.svg';
+import Card72 from './card-greater-16.svg';
+import Card73 from './card-greater-17.svg';
+import Card74 from './card-greater-18.svg';
+import Card75 from './card-greater-19.svg';
+import Card76 from './card-greater-20.svg';
+import Card77 from './card-greater-21.svg';
+import Card78 from './card-greater-22.svg';
 
-export default [
+const cards = [
     Card1,
     Card2,
     Card3,
@@ -156,4 +156,6 @@ export default [
     Card76,
     Card77,
     Card78,
-]
+];
+
+export default cards;

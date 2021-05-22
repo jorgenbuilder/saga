@@ -15,59 +15,59 @@ import TiltWorkbench from '../../Screens/Workbench/Tilt';
 const Routes: {
     [key: string]: {
         path: string;
-        component: React.FC;
+        Component: React.FC;
         exact?: boolean;
     };
 } = {
     index: {
         path: '/',
-        component: Index,
+        Component: Index,
         exact: true,
     },
     workbench: {
         path: '/workbench',
-        component: Workbench,
+        Component: Workbench,
         exact: true,
     },
     workbenchStaticRotation: {
         path: '/workbench/static-rotation',
-        component: WorkbenchStaticRotation,
+        Component: WorkbenchStaticRotation,
     },
     workbenchCardReveal: {
         path: '/workbench/card-reveal',
-        component: WorkbenchCardReveal,
+        Component: WorkbenchCardReveal,
     },
     workbenchShuffleDeck: {
         path: '/workbench/shuffle-deck',
-        component: WorkbenchShuffleDeck,
+        Component: WorkbenchShuffleDeck,
     },
     workbenchSvgCard: {
         path: '/workbench/three-svg',
-        component: WorkbenchSvgCard,
+        Component: WorkbenchSvgCard,
     },
     workbenchDraw: {
         path: '/workbench/three-draw',
-        component: WorkbenchDraw,
+        Component: WorkbenchDraw,
     },
     workbenchSplash: {
         path: '/workbench/splash',
-        component: SplashScreen,
+        Component: SplashScreen,
     },
     workbenchThreeOnClick: {
         path: '/workbench/three-on-click',
-        component: ThreeOnClickWorkbench,
+        Component: ThreeOnClickWorkbench,
     },
     workbenchTilt: {
         path: '/workbench/tilt',
-        component: TiltWorkbench,
+        Component: TiltWorkbench,
     },
     app: {
         path: '/app',
-        component: App,
+        Component: App,
     },
     draw: {
         path: '/draw',
-        component: DrawScreen
+        Component: DrawScreen
     }
 };
 

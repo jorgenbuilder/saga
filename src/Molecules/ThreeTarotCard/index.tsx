@@ -8,14 +8,14 @@ import { animated } from '@react-spring/three';
 import Cards from '../../Assets/cards';
 
 interface Props extends MeshProps {
-    giraffe?: any;
+    randomSeed?: number;
 }
 
 const SvgCard: React.FC<Props> = (props) => {
     // This reference will give us direct access to the mesh
     const mesh = useRef<MeshProps | undefined>(undefined);
 
-    const card = useMemo(() => Cards[Math.ceil(Math.random() * 78)], [props.giraffe]);
+    const card = useMemo(() => Cards[Math.ceil((props.randomSeed || Math.random()) * 78)], [props.randomSeed]);
     
     return (
         <animated.mesh
