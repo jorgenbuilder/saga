@@ -7,25 +7,31 @@ const Workbench:React.FC = () => {
     return (
         <Grid>
             <BlockLink to={Routes.workbenchStaticRotation.path}>
-                Static Rotation
+                Static Rotation (CSS)
             </BlockLink>
             <BlockLink to={Routes.workbenchCardReveal.path}>
-                Card Reveal
+                Draw (CSS)
             </BlockLink>
             <BlockLink to={Routes.workbenchShuffleDeck.path}>
-                Shuffle Deck
+                Shuffle Deck (CSS)
             </BlockLink>
             <BlockLink to={Routes.workbenchSvgCard.path}>
                 ThreeJS
+            </BlockLink>
+            <BlockLink to={Routes.workbenchDraw.path}>
+                Draw (Threejs)
+            </BlockLink>
+            <BlockLink to={Routes.workbenchThreeOnClick.path}>
+                Three On Click
+            </BlockLink>
+            <BlockLink to={Routes.workbenchTilt.path}>
+                Tilt
             </BlockLink>
             <BlockLink to={Routes.app.path}>
                 App
             </BlockLink>
             <BlockLink to={Routes.workbenchSplash.path}>
                 Splash
-            </BlockLink>
-            <BlockLink to={Routes.workbenchThreeOnClick.path}>
-                Three On Click
             </BlockLink>
         </Grid>
     );

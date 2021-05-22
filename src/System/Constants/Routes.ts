@@ -5,10 +5,12 @@ import WorkbenchStaticRotation from '../../Screens/Workbench/StaticRotation';
 import WorkbenchCardReveal from '../../Screens/Workbench/CardReveal';
 import WorkbenchShuffleDeck from '../../Screens/Workbench/ShuffleDeck';
 import WorkbenchSvgCard from '../../Screens/Workbench/SvgCard';
+import WorkbenchDraw  from '../../Screens/Workbench/Draw';
 import App from '../../Screens/App';
 import DrawScreen from '../../Screens/App/DrawScreen';
 import SplashScreen from '../../Screens/App/Splash';
 import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
+import TiltWorkbench from '../../Screens/Workbench/Tilt';
 
 const Routes: {
     [key: string]: {
@@ -43,6 +45,10 @@ const Routes: {
         path: '/workbench/three-svg',
         component: WorkbenchSvgCard,
     },
+    workbenchDraw: {
+        path: '/workbench/three-draw',
+        component: WorkbenchDraw,
+    },
     workbenchSplash: {
         path: '/workbench/splash',
         component: SplashScreen,
@@ -50,6 +56,10 @@ const Routes: {
     workbenchThreeOnClick: {
         path: '/workbench/three-on-click',
         component: ThreeOnClickWorkbench,
+    },
+    workbenchTilt: {
+        path: '/workbench/tilt',
+        component: TiltWorkbench,
     },
     app: {
         path: '/app',
