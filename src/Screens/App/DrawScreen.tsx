@@ -1,19 +1,18 @@
 import { MathUtils as M3, Color } from 'three';
 import { Canvas, ThreeEvent } from '@react-three/fiber';
-import { EventHandler, MouseEvent, Suspense, useContext, useState } from 'react';
+import { EventHandler, MouseEvent, Suspense, useContext, useEffect, useState } from 'react';
 import SvgCard from '../../Molecules/ThreeTarotCard'
 import { useSpring } from '@react-spring/three';
 import { DeviceAccelerometerContext } from '../../Providers/DeviceAccelerometer';
 
 const DrawScreen: React.FC = () => {
 
-    const { acceleration } = useContext(DeviceAccelerometerContext);
+    const { acceleration, popPermissionToast, devicePermission } = useContext(DeviceAccelerometerContext);
 
     const [flipped, setFlipped] = useState<boolean>(false);
     const [rando, setRando] = useState<number>(0);
 
     const props = useSpring({
-        // flipped ? [M3.degToRad(180), M3.degToRad(90), 0] : [0, M3.degToRad(270), 0],
         rotation: [
             M3.degToRad(-acceleration.alpha * .1 + (flipped ? 0 : 0)),
             M3.degToRad(-acceleration.beta * .1 + (flipped ? 0 : -180)),
@@ -24,7 +23,6 @@ const DrawScreen: React.FC = () => {
             M3.degToRad(acceleration.y * 50),
             0
         ],
-        // mass: 20, tension: 250, friction: 100
         config: {
             mass: 20,
             tension: 250,
@@ -39,6 +37,12 @@ const DrawScreen: React.FC = () => {
             setRando(Math.random());
         }
     }
+
+    useEffect(() => {
+        if (devicePermission === 'pending') {
+            popPermissionToast();
+        }
+    }, []);
 
     return (
         <>
