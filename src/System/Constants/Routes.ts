@@ -7,7 +7,7 @@ import WorkbenchShuffleDeck from '../../Screens/Workbench/ShuffleDeck';
 import WorkbenchSvgCard from '../../Screens/Workbench/SvgCard';
 import WorkbenchDraw  from '../../Screens/Workbench/Draw';
 import App from '../../Screens/App';
-import DrawScreen from '../../Screens/App/DrawScreen';
+import DrawDetailScreen from '../../Screens/App/DrawDetailScreen';
 import SplashScreen from '../../Screens/App/Splash';
 import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
 import TiltWorkbench from '../../Screens/Workbench/Tilt';
@@ -67,7 +67,7 @@ const Routes: {
     },
     draw: {
         path: '/draw',
-        Component: DrawScreen
+        Component: DrawDetailScreen
     }
 };
 

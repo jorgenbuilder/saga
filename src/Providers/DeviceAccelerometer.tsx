@@ -57,8 +57,10 @@ const DeviceAccelerometerProvider:React.FC = ({ children }) => {
             if (response === 'granted') {
                 bindOrientationEvents();
                 setDevicePermission('granted');
+                setShowToast(false);
             } else if (response === 'denied') {
                 setDevicePermission('denied');
+                setShowToast(false);
             }
         })
         .catch(console.error);
@@ -118,7 +120,7 @@ const PermissionToast:React.FC<{accept: MouseEventHandler, dismiss: MouseEventHa
     const Toast = styled.div<{open: boolean}>`
     position: absolute;
 
-    transform: translateY(-${props => props.open ? 200 : 0}%);
+    transform: translateY(-${props => props.open ? 150 : 0}%);
 
     display: flex;
     max-width: 90vw;

@@ -58,9 +58,6 @@ const DrawScreen: React.FC = () => {
                     <SvgCard rotation={props.rotation} position={props.position} randomSeed={rando} onClick={handleClick} />
                 </Suspense>
             </Canvas>
-            <button onClick={handleClick}>
-                Draw
-            </button>
         </>
     );
 }

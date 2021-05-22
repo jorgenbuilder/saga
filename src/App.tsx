@@ -7,6 +7,8 @@ import {
 import Routes from './System/Constants/Routes';
 import Fade from './Atoms/Animations/Fade';
 import DeviceAccelerometerProvider from './Providers/DeviceAccelerometer';
+import '@fontsource/noto-sans-jp';
+import '@fontsource/abril-fatface';
 
 const App: React.FC = () => {
   const routes = Object.keys(Routes).map(route => {

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fontsource/abril-fatface": "^4.3.0",
+    "@fontsource/noto-sans-jp": "^4.3.0",
     "@react-spring/three": "^9.1.2",
     "@react-three/fiber": "^6.1.5",
     "@testing-library/jest-dom": "^5.11.9",
