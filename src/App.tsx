@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Routes from './System/Constants/Routes';
 import Fade from './Atoms/Animations/Fade';
+import DeviceAccelerometerProvider from './Providers/DeviceAccelerometer';
 
 const App: React.FC = () => {
   const routes = Object.keys(Routes).map(route => {
@@ -18,12 +19,14 @@ const App: React.FC = () => {
   });
   return (
     <Router>
-      <AnimatePresence exitBeforeEnter>
-        <Switch>
-          {routes}
-          <Route path="*">Nothing here!</Route>
-        </Switch>
-      </AnimatePresence>
+      <DeviceAccelerometerProvider>
+        <AnimatePresence exitBeforeEnter>
+          <Switch>
+            {routes}
+            <Route path="*">Nothing here!</Route>
+          </Switch>
+        </AnimatePresence>
+      </DeviceAccelerometerProvider>
     </Router>
   );
 };

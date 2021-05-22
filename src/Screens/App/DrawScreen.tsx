@@ -1,18 +1,36 @@
 import { MathUtils as M3, Color } from 'three';
 import { Canvas, ThreeEvent } from '@react-three/fiber';
-import { EventHandler, MouseEvent, Suspense, useState } from 'react';
+import { EventHandler, MouseEvent, Suspense, useContext, useState } from 'react';
 import SvgCard from '../../Molecules/ThreeTarotCard'
 import { useSpring } from '@react-spring/three';
+import { DeviceAccelerometerContext } from '../../Providers/DeviceAccelerometer';
 
 const DrawScreen: React.FC = () => {
+
+    const { acceleration } = useContext(DeviceAccelerometerContext);
 
     const [flipped, setFlipped] = useState<boolean>(false);
     const [rando, setRando] = useState<number>(0);
 
     const props = useSpring({
-        rotation: flipped ? [M3.degToRad(180), M3.degToRad(90), 0] : [0, M3.degToRad(270), 0],
-        config: { mass: 20, tension: 250, friction: 100 },
-    })
+        // flipped ? [M3.degToRad(180), M3.degToRad(90), 0] : [0, M3.degToRad(270), 0],
+        rotation: [
+            M3.degToRad(-acceleration.alpha * .1 + (flipped ? 0 : 0)),
+            M3.degToRad(-acceleration.beta * .1 + (flipped ? 0 : -180)),
+            M3.degToRad(-acceleration.gamma * .1 + (flipped ? -180 : 0)),
+        ],
+        position: [
+            M3.degToRad(acceleration.x * 50),
+            M3.degToRad(acceleration.y * 50),
+            0
+        ],
+        // mass: 20, tension: 250, friction: 100
+        config: {
+            mass: 20,
+            tension: 250,
+            friction: 100,
+        }
+    });
 
     const handleClick:EventHandler<MouseEvent>|ThreeEvent<MouseEvent> = (e) => {
         e.stopPropagation();
@@ -26,19 +44,15 @@ const DrawScreen: React.FC = () => {
         <>
             <Canvas
                 camera={{
-                    position: [10, 0, 0],
+                    zoom: .62,
                 }}
             >
-                {/* <pointLight intensity={2} position={[.5, 8, 4]} color={new Color('hsl(43, 100%, 40%)').convertSRGBToLinear()} /> */}
-                <spotLight intensity={2} position={[1, 8, 3]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
-                <ambientLight intensity={.033} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
-                {/* <spotLight intensity={.5} position={[.5, -8, -3]} color={new Color('hsl(351, 83%, 50%)').convertSRGBToLinear()} /> */}
+                <spotLight intensity={2} position={[-4, 8, 5]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
+                <ambientLight intensity={.1} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
                 <Suspense fallback={null}>
                     {/* @ts-ignore */}
-                    <SvgCard rotation={props.rotation} giraffe={rando} onClick={handleClick} />
+                    <SvgCard rotation={props.rotation} position={props.position} giraffe={rando} onClick={handleClick} />
                 </Suspense>
-                {/* <gridHelper args={[100, 100, `#888`, `#AAA`]} /> */}
-                {/* <axesHelper /> */}
             </Canvas>
             <button onClick={handleClick}>
                 Draw

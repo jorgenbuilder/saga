@@ -1,73 +1,28 @@
-import { MouseEventHandler, Suspense, useEffect, useState } from 'react';
+import { Suspense, useContext } from 'react';
 import { Canvas } from '@react-three/fiber';
 import SvgCard from '../../Molecules/ThreeTarotCard';
 import { MathUtils } from 'three';
 import { useSpring } from '@react-spring/three';
+import { DeviceAccelerometerContext } from '../../Providers/DeviceAccelerometer';
 
 const TiltWorkbench:React.FC = () => {
-    const [aX, setAX] = useState<number>(0);
-    const [aY, setAY] = useState<number>(0);
-    const [aZ, setAZ] = useState<number>(0);
-    const [rX, setRX] = useState<number>(0);
-    const [rY, setRY] = useState<number>(0);
-    const [rZ, setRZ] = useState<number>(0);
-    const [permission, setPermission] = useState<'pending'|'granted'|'NA'>('pending');
-    
-    const handleOrientation = (e: DeviceMotionEvent) => {
-        requestAnimationFrame(() => {
-            setAX(Math.round(e.acceleration?.x || 0) * 100);
-            setAY(Math.round(e.acceleration?.y || 0) * 100);
-            setAZ(Math.round(e.acceleration?.z || 0) * 100);
-            setRX(Math.round(e.rotationRate?.beta || 0));
-            setRY(Math.round(e.rotationRate?.gamma || 0));
-            setRZ(Math.round(e.rotationRate?.alpha || 0));
-        });
-    };
-
-    const bindOrientation = () => {
-        window.addEventListener('devicemotion', handleOrientation, false);
-    }
-
-    const unbindOrientation = () => {
-        window.removeEventListener('devicemotion', handleOrientation);
-    }
-
-    const handlePermissions:MouseEventHandler = (e) => {
-        DeviceMotionEvent.requestPermission()
-        .then(response => {
-            if (response == 'granted') {
-                bindOrientation()
-                return unbindOrientation;
-            }
-        })
-        .catch(console.error)
-    };
-
-    useEffect(() => {
-        if (window.DeviceMotionEvent) {
-            if (typeof window.DeviceMotionEvent.requestPermission !== 'function') {
-                setPermission('NA');
-                bindOrientation();
-                return unbindOrientation();
-            }
-        }
-    }, []);
+    const { acceleration, devicePermission, requestPermission } = useContext(DeviceAccelerometerContext);
 
     const props = useSpring({
         rotation: [
-            0, // MathUtils.degToRad(-rZ),
-            0, // MathUtils.degToRad(-rX),
-            MathUtils.degToRad(-rY + 180),
+            MathUtils.degToRad(-acceleration.alpha * .1),
+            MathUtils.degToRad(-acceleration.beta * .1),
+            MathUtils.degToRad(-acceleration.gamma * .1 + 180),
         ],
         position: [
-            MathUtils.degToRad(aX),
-            MathUtils.degToRad(aY),
+            MathUtils.degToRad(acceleration.x * 50),
+            MathUtils.degToRad(acceleration.y * 50),
             0
         ],
         config: {
-            mass: 300,
-            tension: 1500,
-            friction: 1500,
+            mass: 20,
+            tension: 200,
+            friction: 50,
         }
     });
 
@@ -85,14 +40,14 @@ const TiltWorkbench:React.FC = () => {
                     <SvgCard rotation={props.rotation} position={props.position} />
                 </Suspense>
             </Canvas>
-            <div style={{color: 'white', flexDirection: 'column', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', height: '100%', width: '100%', position: 'absolute'}}>
-                <div>aX: {aX}</div>
-                <div>aY: {aY}</div>
-                <div>aZ: {aZ}</div>
-                <div>rX: {rX}</div>
-                <div>rY: {rY}</div>
-                <div>rZ: {rZ}</div>
-                {permission === 'pending' && <a href="#nothing" onClick={handlePermissions}>Grant</a>}
+            <div style={{boxSizing: 'border-box', fontFamily: 'monospace', color: 'white', flexDirection: 'column', display: 'flex', justifyContent: 'space-evenly', alignItems: 'flex-start', height: '100%', width: '100%', position: 'absolute', padding: '1rem'}}>
+                <div>aX: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.x).toFixed(2)}</div>
+                <div>aY: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.y).toFixed(2)}</div>
+                <div>aZ: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.z).toFixed(2)}</div>
+                <div>rX: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.beta).toFixed(2)}</div>
+                <div>rY: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.gamma).toFixed(2)}</div>
+                <div>rZ: {acceleration.x >= 0 ? '+' : '-'}{Math.abs(acceleration.alpha).toFixed(2)}</div>
+                {devicePermission === 'pending' && <a href="#nothing" onClick={requestPermission}>Grant</a>}
             </div>
         </>
     );
