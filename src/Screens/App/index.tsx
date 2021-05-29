@@ -11,7 +11,7 @@ const AppScreen:React.FC = () => {
         setTimeout(() => setLoaded(true), 4000);
     });
 
-    if (loaded) return <Redirect to={Routes.draw.path} />;
+    if (loaded) return <Redirect to={Routes.drawSelection.path} />;
     return <SplashScreen />;
 }
 

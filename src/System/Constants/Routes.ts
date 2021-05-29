@@ -12,6 +12,7 @@ import SplashScreen from '../../Screens/App/Splash';
 import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
 import TiltWorkbench from '../../Screens/Workbench/Tilt';
 import WorkbenchDrawExtrude from '../../Screens/Workbench/DrawExtrude';
+import DrawSelectionScreen from '../../Screens/App/DrawSelection';
 
 const Routes: {
     [key: string]: {
@@ -69,6 +70,10 @@ const Routes: {
     app: {
         path: '/app',
         Component: App,
+    },
+    drawSelection: {
+        path: '/draw-selection',
+        Component: DrawSelectionScreen
     },
     draw: {
         path: '/draw',

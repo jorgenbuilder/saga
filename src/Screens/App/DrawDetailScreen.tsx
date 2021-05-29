@@ -6,6 +6,7 @@ import { useSpring as useSpring3 } from '@react-spring/three';
 // import { useSpring as useSpringW } from '@react-spring/web';
 import { AccelerometerContext } from '../../Providers/DeviceAccelerometer';
 import styled from 'styled-components';
+import Routes from '../../System/Constants/Routes';
 // import ScrollHint from '../../Atoms/ScrollHint';
 // import { useDrag } from 'react-use-gesture';
 
@@ -78,6 +79,9 @@ const DrawDetailScreen: React.FC = () => {
                 </P>
                 <P>
                     So what is the interpretation in the context of your career?
+                </P>
+                <P>
+                    <a href={Routes.drawSelection.path}>Okay</a>
                 </P>
             </Body>
         </>
