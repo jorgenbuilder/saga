@@ -3,10 +3,10 @@ import React, { useState, useRef, Suspense } from 'react';
 import { BackSide, FrontSide, MathUtils as M3 } from 'three';
 import CameraController from '../../Atoms/ThreeCameraController';
 import Svg from '../../Atoms/ThreeSvg';
-import cardBack from '../../Assets/cards/card-back.svg';
-import cardFace from '../../Assets/cards/card-face.svg';
+import cardFace from '../../Assets/cards/svg-basic/card-face.svg';
 import { useSpring } from '@react-spring/three';
 import { animated } from '@react-spring/three';
+import { svgCards } from '../../Assets/cards';
 
 const ThreeOnClickWorkbench:React.FC = () => {
     const boxMesh = useRef<MeshProps | undefined>(undefined);
@@ -49,7 +49,7 @@ const ThreeOnClickWorkbench:React.FC = () => {
                     <boxGeometry args={[6, 10, .025]} />
                     <meshPhongMaterial attach="material" color='white' />
                     <Svg side={FrontSide} url={cardFace} position={[3, -5, .0126,]} />
-                    <Svg side={BackSide} url={cardBack} position={[3, -5, -.0126,]} />
+                    <Svg side={BackSide} url={svgCards[0]} position={[3, -5, -.0126,]} />
                 </animated.mesh>
                 </group>
             </Suspense>

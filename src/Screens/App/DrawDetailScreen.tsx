@@ -1,24 +1,25 @@
 import { MathUtils as M3, Color } from 'three';
 import { Canvas, ThreeEvent } from '@react-three/fiber';
 import { EventHandler, MouseEvent, Suspense, useContext, useEffect, useState } from 'react';
-import SvgCard from '../../Molecules/ThreeTarotCard'
-import { useSpring } from '@react-spring/three';
+import Card from '../../Molecules/ExtrudeTarotCard';
+import { useSpring as useSpring3 } from '@react-spring/three';
+// import { useSpring as useSpringW } from '@react-spring/web';
 import { AccelerometerContext } from '../../Providers/DeviceAccelerometer';
 import styled from 'styled-components';
-import ScrollHint from '../../Atoms/ScrollHint';
+// import ScrollHint from '../../Atoms/ScrollHint';
+// import { useDrag } from 'react-use-gesture';
 
 const DrawDetailScreen: React.FC = () => {
 
     const { acceleration, popPermissionToast, permission } = useContext(AccelerometerContext);
 
     const [flipped, setFlipped] = useState<boolean>(false);
-    const [rando, setRando] = useState<number>(0);
 
-    const props = useSpring({
+    const props = useSpring3({
         rotation: [
             M3.degToRad(-acceleration.alpha * .1 + (flipped ? 0 : 0)),
             M3.degToRad(-acceleration.beta * .1 + (flipped ? 0 : -180)),
-            M3.degToRad(-acceleration.gamma * .1 + (flipped ? -180 : 0)),
+            M3.degToRad(-acceleration.gamma * .1 + (flipped ? 0 : -180)),
         ],
         position: [
             M3.degToRad(acceleration.x * 50),
@@ -32,8 +33,8 @@ const DrawDetailScreen: React.FC = () => {
         }
     });
 
-    const slowProps = useSpring({
-        scale: flipped ? [1.25, 1.25, 1.25] : [1, 1, 1],
+    const slowProps = useSpring3({
+        scale: flipped ? [1.0, 1.0, 1.0] : [1, 1, 1],
         config: {
             mass: 150,
             tension: 100,
@@ -60,14 +61,14 @@ const DrawDetailScreen: React.FC = () => {
                         zoom: .62,
                     }}
                 >
-                    <spotLight intensity={2} position={[-4, 8, 5]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
-                    <ambientLight intensity={.1} color={new Color('hsl(43, 100%, 50%)').convertSRGBToLinear()} />
+                    <spotLight intensity={2} position={[-4, 8, 5]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 100%)').convertSRGBToLinear()} />
+                    <ambientLight intensity={.1} color={new Color('hsl(43, 100%, 100%)').convertSRGBToLinear()} />
                     <Suspense fallback={null}>
                         {/* @ts-ignore */}
-                        <SvgCard scale={slowProps.scale} rotation={props.rotation} position={props.position} randomSeed={rando} onClick={handleClick} />
+                        <Card scale={slowProps.scale} rotation={props.rotation} position={props.position} onClick={handleClick} />
                     </Suspense>
                 </Canvas>
-                <ScrollHint />
+                {/* <ScrollHint accept={() => null} show={flipped} /> */}
             </Header>
             <Body on={flipped}>
                 <H2>Your Career Card</H2>

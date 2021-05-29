@@ -33,6 +33,9 @@ const Workbench:React.FC = () => {
             <BlockLink to={Routes.workbenchSplash.path}>
                 Splash
             </BlockLink>
+            <BlockLink to={Routes.workbenchDrawExtrude.path}>
+                Draw (Extrude)
+            </BlockLink>
         </Grid>
     );
 }

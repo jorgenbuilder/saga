@@ -11,6 +11,7 @@ import DrawDetailScreen from '../../Screens/App/DrawDetailScreen';
 import SplashScreen from '../../Screens/App/Splash';
 import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
 import TiltWorkbench from '../../Screens/Workbench/Tilt';
+import WorkbenchDrawExtrude from '../../Screens/Workbench/DrawExtrude';
 
 const Routes: {
     [key: string]: {
@@ -48,6 +49,10 @@ const Routes: {
     workbenchDraw: {
         path: '/workbench/three-draw',
         Component: WorkbenchDraw,
+    },
+    workbenchDrawExtrude: {
+        path: '/workbench/three-draw-extrude',
+        Component: WorkbenchDrawExtrude,
     },
     workbenchSplash: {
         path: '/workbench/splash',
