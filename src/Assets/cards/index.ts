@@ -153,8 +153,6 @@ const cardLabels = range(78).map(x => {
     }
 });
 
-console.log(cardLabels);
-
 export {
     svgCards,
     RiderWaiteCards,

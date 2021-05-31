@@ -2,7 +2,7 @@ import TarotCard from '../../Molecules/TarotCard'
 import {
     ShuffleLeft,
     ShuffleRight,
-} from '../../Atoms/Animations/Shuffle';
+} from '../../Atoms/Animation/Shuffle';
 import styled from 'styled-components';
 
 const ShuffleDeck:React.FC = () => {

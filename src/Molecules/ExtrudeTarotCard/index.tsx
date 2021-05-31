@@ -15,11 +15,11 @@ const ExtrudeCard: React.FC<Props> = (props) => {
     const mesh = useRef<MeshProps | undefined>(undefined);
     const [[cardSeed, upsidedown], set] = useState<[number, boolean]>([1, false]);
 
-    const extrudeConf = {
+    const extrudeConf = useMemo(() => ({
         bevelEnabled: false,
         depth: .025,
         steps: 1,
-    };
+    }), []);
 
     useEffect(() => set(DrawCard()), [props.randomSeed])
 
@@ -77,7 +77,7 @@ const ExtrudeCard: React.FC<Props> = (props) => {
         geometry.addGroup(group_start[1] as number, group_count[1], 1);
         geometry.addGroup(group_start[2] as number, group_count[2], 0);
         return geometry;
-    }, []);
+    }, [shape, extrudeConf]);
 
     return (
         <animated.mesh

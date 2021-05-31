@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import TarotCard from '.';
-import Float from '../../Atoms/Animations/Float';
+import Float from '../../Atoms/Animation/Float';
 
 const HoverTiltTarotCard:React.FC = () => {
     const [mouse, setMouse] = useState<[number, number, boolean]>([0, 0, false]);
