@@ -13,6 +13,7 @@ import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
 import TiltWorkbench from '../../Screens/Workbench/Tilt';
 import WorkbenchDrawExtrude from '../../Screens/Workbench/DrawExtrude';
 import DrawSelectionScreen from '../../Screens/App/DrawSelection';
+import { AnimatedRoute, AnimatedSwitch } from '../../Atoms/Animation/Routes';
 
 export interface RouteConf {
     path: string;
@@ -82,5 +83,11 @@ const Routes: {
         Component: DrawDetailScreen
     }
 };
+
+export function AppRoutes () {
+    return <AnimatedSwitch>
+        {Object.values(Routes).map(r => <AnimatedRoute {...r} key={r.path} />)}
+    </AnimatedSwitch>;
+}
 
 export default Routes;

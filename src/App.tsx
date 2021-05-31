@@ -1,17 +1,12 @@
-import '@fontsource/noto-sans-jp';
-import '@fontsource/abril-fatface';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Routes from './System/Constants/Routes';
+import { BrowserRouter as Router } from 'react-router-dom';
 import DeviceAccelerometerProvider from './Providers/DeviceAccelerometer';
-import { AnimatedRoute, AnimatedSwitch } from './Atoms/Animation/Routes';
+import { AppRoutes } from './System/Constants/Routes';
 
 export default function App () {
   return (
     <DeviceAccelerometerProvider>
       <Router>
-        <AnimatedSwitch>
-          {Object.keys(Routes).map(route => <AnimatedRoute {...Routes[route]} />)}
-        </AnimatedSwitch>
+        <AppRoutes />
       </Router>
     </DeviceAccelerometerProvider>
   );
