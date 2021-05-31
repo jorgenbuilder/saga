@@ -14,12 +14,14 @@ import TiltWorkbench from '../../Screens/Workbench/Tilt';
 import WorkbenchDrawExtrude from '../../Screens/Workbench/DrawExtrude';
 import DrawSelectionScreen from '../../Screens/App/DrawSelection';
 
+export interface RouteConf {
+    path: string;
+    Component: React.FC;
+    exact?: boolean;
+}
+
 const Routes: {
-    [key: string]: {
-        path: string;
-        Component: React.FC;
-        exact?: boolean;
-    };
+    [key: string]: RouteConf;
 } = {
     index: {
         path: '/',
