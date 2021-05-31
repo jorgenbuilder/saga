@@ -4,7 +4,7 @@ import { MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
 import { RiderWaiteCards } from '../../Assets/cards';
 import * as THREE from 'three';
-import DrawCard from '../../Atoms/draw';
+import drawCard from '../../Services/Cards/Draws';
 
 
 interface Props extends MeshProps {
@@ -21,14 +21,20 @@ const ExtrudeCard: React.FC<Props> = (props) => {
         steps: 1,
     }), []);
 
-    useEffect(() => set(DrawCard()), [props.randomSeed])
+    useEffect(() => {
+        const { card, upsidedown } = drawCard({
+            handle: '@jørgen',
+            admin: true,
+            tokenBalance: 5,
+        });
+        set([card, upsidedown])
+    }, [props.randomSeed])
 
-    const card = RiderWaiteCards[cardSeed];
-    const backTexture = useLoader(THREE.TextureLoader, RiderWaiteCards[0]);
+    const backTexture = useLoader(THREE.TextureLoader, RiderWaiteCards[78].filePath);
     backTexture.wrapS = backTexture.wrapT = THREE.ClampToEdgeWrapping;
     backTexture.repeat.set(1 / 2.75, 1 / 4.75);
     backTexture.offset.set(.5, .5);
-    const faceTexture = useLoader(THREE.TextureLoader, card);
+    const faceTexture = useLoader(THREE.TextureLoader, RiderWaiteCards[cardSeed].filePath);
     faceTexture.wrapS = faceTexture.wrapT = THREE.ClampToEdgeWrapping;
     faceTexture.repeat.set(1 / 2.5, 1 / 4.5);
     faceTexture.offset.set(.485, .5);

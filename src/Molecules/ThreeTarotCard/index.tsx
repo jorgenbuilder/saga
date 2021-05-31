@@ -24,8 +24,8 @@ const SvgCard: React.FC<Props> = (props) => {
         >
             <boxGeometry args={[6, 10, .025]} />
             <meshPhongMaterial attach="material" color='white' />
-            <Svg side={FrontSide} url={card || cardFace} position={[3, -5, .013,]} />
-            <Svg side={BackSide} url={svgCards[0]} position={[3, -5, -.013,]} />
+            <Svg side={FrontSide} url={card.filePath || cardFace} position={[3, -5, .013,]} />
+            <Svg side={BackSide} url={svgCards[78].filePath} position={[3, -5, -.013,]} />
         </animated.mesh>
     )
 }
