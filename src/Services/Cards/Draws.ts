@@ -39,6 +39,7 @@ function allowAdminForcedDraw (): [number|undefined, boolean|undefined] {
     global.FORCE_NEXT_DRAW = undefined;
     return [F_CARD, F_UPSIDEDOWN];
 }
+
 function getRandomInt (min: number, max: number) {
     min = Math.ceil(min);
     max = Math.floor(max);

@@ -5,6 +5,7 @@ import { animated } from '@react-spring/three';
 import { RiderWaiteCards } from '../../Assets/cards';
 import * as THREE from 'three';
 import drawCard from '../../Services/Cards/Draws';
+import { defaultUser } from '../../Services/Users';
 
 
 interface Props extends MeshProps {
@@ -22,11 +23,7 @@ const ExtrudeCard: React.FC<Props> = (props) => {
     }), []);
 
     useEffect(() => {
-        const { card, upsidedown } = drawCard({
-            handle: '@jørgen',
-            admin: true,
-            tokenBalance: 5,
-        });
+        const { card, upsidedown } = drawCard(defaultUser);
         set([card, upsidedown])
     }, [props.randomSeed])
 
