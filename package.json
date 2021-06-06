@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dfinity/agent": "^0.9.0",
     "@fontsource/abril-fatface": "^4.3.0",
     "@fontsource/noto-sans-jp": "^4.3.0",
     "@react-spring/three": "^9.1.2",

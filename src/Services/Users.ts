@@ -1,3 +1,6 @@
+//@ts-ignore
+import { getUser, addUser } from 'ic:canisters/tarot';
+
 export interface User {
     handle: string;
     tokenBalance: number;
