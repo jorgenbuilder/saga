@@ -1,5 +1,9 @@
 # Buildnode's Tarot
 
+[saga.cards](https://saga.cards).
+
+[Figma](https://www.figma.com/file/fR4pUyIydAzbrfhump2WAI/Untitled?node-id=0%3A1)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 This project is configured to deploy to the Internet Computer. You will need [dfx](https://sdk.dfinity.org/docs/quickstart/local-quickstart.html#download-and-install).
