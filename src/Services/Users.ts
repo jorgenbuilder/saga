@@ -1,16 +1,20 @@
-//@ts-ignore
-import { getUser, addUser } from 'ic:canisters/tarot';
+import { Actor, HttpAgent } from '@dfinity/agent';
+import { idlFactory as tarotIdl, canisterId as tarotId } from 'ic:canisters/tarot/tarot';
 
 export interface User {
     handle: string;
     tokenBalance: number;
-    admin: boolean;
+    isAdmin: boolean;
 }
 
 export const defaultUser: User = {
     handle: '@default',
     tokenBalance: 100,
-    admin: true,
+    isAdmin: true,
 };
 
-console.log(getUser, addUser);
+const agent = new HttpAgent();
+const tarot = Actor.createActor(tarotIdl, { agent, canisterId: tarotId });
+tarot.getUser(defaultUser.handle).then(console.log).catch(console.error);
+tarot.addUser(defaultUser).then(console.log).catch(console.error);
+tarot.getUser(defaultUser.handle).then(console.log).catch(console.error);

@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -20,7 +21,13 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "paths": {
+    "ic:canisters/*": [
+      ".dfx/local/canisters/"
+    ]
+  },
   "include": [
-    "src"
+    "src",
+    ".dfx/local/canisters/"
   ]
 }

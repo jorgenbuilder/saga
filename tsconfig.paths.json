@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "ic:canisters/*": [".dfx/local/canisters/"]
+      }
+    }
+  }
