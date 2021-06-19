@@ -4,10 +4,12 @@ import { AppRoutes } from './constant/routes';
 
 export default function App () {
   return (
-    <DeviceAccelerometerProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
-    </DeviceAccelerometerProvider>
+    <>
+      <DeviceAccelerometerProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </DeviceAccelerometerProvider>
+    </>
   );
 };

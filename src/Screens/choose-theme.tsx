@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { LinkButton } from '../components/button';
 import Routes from '../constant/routes'
 
-const ChooseThemeScreen:React.FC = (props) => {
+const ChooseThemeScreen:React.FC = () => {
     return (
         <Container>
             <LinkButton to={Routes.drawGeneral.path}>

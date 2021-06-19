@@ -1,5 +1,5 @@
 import React from 'react';
-import Index from '../screens/Index';
+import Index from '../screens';
 import Workbench from '../screens/workbench';
 import WorkbenchDraw  from '../screens/workbench/draw';
 import App from '../screens/app-entry';
