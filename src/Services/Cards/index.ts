@@ -1,12 +1,12 @@
 import cardDraw, {
     randomCardIndex,
-} from './Draws';
+} from './draws';
 import TarotDeckData, {
     mapIntToCard,
     mapIntToSuit,
     mapIntToCardName,
     TarotMajorArcanaData,
-} from './Cards';
+} from './cards';
 
 export {
     cardDraw,

@@ -1,7 +1,7 @@
 {
   "canisters": {
     "tarot": {
-      "main": "IC/main.mo",
+      "main": "src/backend/main.mo",
       "type": "motoko"
     },
     "tarot_frontend": {

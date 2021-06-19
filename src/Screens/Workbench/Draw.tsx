@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import drawCard, { CardDraw } from '../../Services/Cards/Draws';
-import { defaultUser } from '../../Services/Users';
-import TarotCardReveal from '../../Molecules/TarotCardMesh/TarotCardReveal';
+import drawCard, { CardDraw } from '../../services/cards/draws';
+import { defaultUser } from '../../services/users';
+import TarotCardReveal from '../../three/card/tarot-reveal';
 import { useEffect } from 'react';
 
 const DrawWorkbench:React.FC = () => {

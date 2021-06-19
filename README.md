@@ -1,4 +1,4 @@
-# Buildnode's Tarot
+# Saga Tarot
 
 [saga.cards](https://saga.cards).
 

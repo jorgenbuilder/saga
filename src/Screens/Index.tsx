@@ -1,7 +1,6 @@
 import { Redirect } from 'react-router-dom';
-import Routes from '../System/Constants/Routes';
+import Routes from '../constant/routes';
 const Index:React.FC = () => {
-    console.log('Rendering index.')
     return (
         <Redirect push={true} to={Routes.workbench.path} />
     );

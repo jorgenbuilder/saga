@@ -1,5 +1,5 @@
-import { User } from '../Users';
-import { mapIntToCardName } from './Cards';
+import { User } from '../users';
+import { mapIntToCardName } from './cards';
 
 export interface CardDraw {
     user: User;

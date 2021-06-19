@@ -1,7 +1,7 @@
 import { Link, Redirect } from 'react-router-dom'
 import styled from 'styled-components';
-import Routes from '../../System/Constants/Routes'
-import Grid from '../../Templates/Grid'
+import Routes from '../../constant/routes'
+import Grid from '../../components/grid'
 
 const Workbench:React.FC = () => {
     if (process.env.NODE_ENV === 'production') {
@@ -9,26 +9,8 @@ const Workbench:React.FC = () => {
     }
     return (
         <Grid>
-            <BlockLink to={Routes.workbenchStaticRotation.path}>
-                Static Rotation (CSS)
-            </BlockLink>
-            <BlockLink to={Routes.workbenchCardReveal.path}>
-                Draw (CSS)
-            </BlockLink>
-            <BlockLink to={Routes.workbenchShuffleDeck.path}>
-                Shuffle Deck (CSS)
-            </BlockLink>
-            <BlockLink to={Routes.workbenchSvgCard.path}>
-                ThreeJS
-            </BlockLink>
             <BlockLink to={Routes.workbenchDraw.path}>
-                Draw (Threejs)
-            </BlockLink>
-            <BlockLink to={Routes.workbenchThreeOnClick.path}>
-                Three On Click
-            </BlockLink>
-            <BlockLink to={Routes.workbenchTilt.path}>
-                Tilt
+                Draw
             </BlockLink>
             <BlockLink to={Routes.app.path}>
                 App

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import DeviceAccelerometerProvider from './Providers/DeviceAccelerometer';
-import { AppRoutes } from './System/Constants/Routes';
+import DeviceAccelerometerProvider from './context/device-accelerometer';
+import { AppRoutes } from './constant/routes';
 
 export default function App () {
   return (
