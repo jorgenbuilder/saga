@@ -1,11 +1,14 @@
 import { useContext, useEffect, Suspense } from 'react';
-import { Color, Euler, MathUtils as M3, Vector3 } from 'three';
+import { Euler, MathUtils as M3, Vector3 } from 'three';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps } from '@react-three/fiber';
-import { AccelerometerContext } from '../../context/device-accelerometer';
-import { CardDraw } from '../../services/cards/draws';
-import { RiderWaiteTarotSkin, TarotDeckSkin } from '../../assets/cards';
-import TarotCardMesh from './tarot';
+import { Preload } from '@react-three/drei';
+import { AccelerometerContext } from 'context/device-accelerometer';
+import { CardDraw } from 'services/cards/draws';
+import { RiderWaiteTarotSkin, TarotDeckSkin } from 'assets/cards';
+import TarotCardMesh from 'three/card/tarot';
+import DefaultLighting from 'three/lighting';
+import BlankTarotCardMesh from './tarot-blank';
 
 interface Props extends MeshProps {
     draw: CardDraw;
@@ -75,7 +78,14 @@ export default function TarotCardReveal ({
     return (
         <Canvas camera={{ zoom: 1.2 }}>
             {/* TODO: This fallback sucks, obviously */}
-            <Suspense fallback={null}>
+            <Suspense fallback={<BlankTarotCardMesh
+                position={spring1.position as unknown as Vector3}
+                rotation={spring1.rotation as unknown as Euler}
+                scale={spring1.scale as unknown as Vector3}
+                skin={skin}
+                {...props}
+            />}>
+                <Preload all />
                 <TarotCardMesh
                     position={spring1.position as unknown as Vector3}
                     rotation={spring1.rotation as unknown as Euler}
@@ -85,9 +95,7 @@ export default function TarotCardReveal ({
                     {...props}
                 />
             </Suspense>
-            {/* TODO: Lighting elements could be nicer to look at */}
-            <spotLight intensity={2} position={[-4, 8, 5]} rotation={[M3.degToRad(180), 0, 0]} color={new Color('hsl(43, 100%, 100%)').convertSRGBToLinear()} />
-            <ambientLight intensity={.1} color={new Color('hsl(43, 100%, 100%)').convertSRGBToLinear()} />
+            <DefaultLighting />
         </Canvas>
     );
 }

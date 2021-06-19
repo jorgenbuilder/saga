@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import drawCard from '../services/cards/draws';
-import { defaultUser } from '../services/users';
-import TarotCardReveal from '../three/card/tarot-reveal';
-import Reading from '../components/reading-body';
+import drawCard from 'services/cards/draws';
+import { defaultUser } from 'services/users';
+import TarotCardReveal from 'three/card/tarot-reveal';
+import Reading from 'components/reading-body';
 
 export default function RevealScreen () {
 

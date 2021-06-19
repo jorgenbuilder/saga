@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
-import Routes from '../constant/routes';
+import Routes from 'constant/routes';
 import SplashScreen from './splash';
 
 const AppScreen:React.FC = () => {

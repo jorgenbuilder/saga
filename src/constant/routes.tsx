@@ -1,12 +1,12 @@
 import React from 'react';
-import Index from '../screens';
-import Workbench from '../screens/workbench';
-import WorkbenchDraw  from '../screens/workbench/draw';
-import App from '../screens/app-entry';
-import RevealScreen from '../screens/reveal';
-import SplashScreen from '../screens/splash';
-import ChooseThemeScreen from '../screens/choose-theme';
-import { AnimatedRoute, AnimatedSwitch } from '../components/animated-routes';
+import Index from 'screens';
+import Workbench from 'screens/workbench';
+import WorkbenchDraw  from 'screens/workbench/draw';
+import App from 'screens/app-entry';
+import RevealScreen from 'screens/reveal';
+import SplashScreen from 'screens/splash';
+import ChooseThemeScreen from 'screens/choose-theme';
+import { AnimatedRoute, AnimatedSwitch } from 'components/animated-routes';
 
 export interface RouteConf {
     path: string;

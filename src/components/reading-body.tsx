@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
-import Routes from '../constant/routes';
-import { CardDraw } from '../services/cards/draws';
-import { getCardData } from '../services/cards/cards';
-import { getLabrynthosKeywords, getLabrynthosMeaning, getReadingTheme } from '../services/readings';
+import Routes from 'constant/routes';
+import { CardDraw } from 'services/cards/draws';
+import { getCardData } from 'services/cards/cards';
+import { getLabrynthosKeywords, getLabrynthosMeaning, getReadingTheme } from 'services/readings';
 import { LinkButton } from './button';
 import Certification from './reading-cert';
 import UprightIndicator from './upright-indicator';
-import PromptCardReveal from '../three/card/prompt-reveal';
-import AirCoin from '../assets/coins/air.svg';
-import EarthCoin from '../assets/coins/earth.svg';
-import WaterCoin from '../assets/coins/water.svg';
-import FireCoin from '../assets/coins/fire.svg';
+import PromptCardReveal from 'three/card/prompt-reveal';
+import AirCoin from 'assets/coins/air.svg';
+import EarthCoin from 'assets/coins/earth.svg';
+import WaterCoin from 'assets/coins/water.svg';
+import FireCoin from 'assets/coins/fire.svg';
 
 interface Props {
     draw: CardDraw;

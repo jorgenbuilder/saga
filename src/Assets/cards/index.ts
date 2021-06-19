@@ -1,4 +1,4 @@
-import TarotDeckData from '../../services/cards/cards';
+import TarotDeckData from 'services/cards/cards';
 
 export interface TarotCardSkin {
     cardIndex: number;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import CertificationPattern from '../assets/certification-pattern.svg';
-import CertificationPatternBottom from '../assets/certification-pattern-bottom.svg';
+import CertificationPattern from 'assets/certification-pattern.svg';
+import CertificationPatternBottom from 'assets/certification-pattern-bottom.svg';
 
 interface Props {
     type: string;

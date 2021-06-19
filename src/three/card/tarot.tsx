@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { MeshProps } from '@react-three/fiber';
 import { MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
 import * as Card from './primitives';
-import { RiderWaiteTarotSkin, TarotDeckSkin } from '../../assets/cards';
-import { CardDraw } from '../../services/cards/draws';
+import { RiderWaiteTarotSkin, TarotDeckSkin } from 'assets/cards';
+import { CardDraw } from 'services/cards/draws';
 
 interface Props extends MeshProps {
     draw: CardDraw;

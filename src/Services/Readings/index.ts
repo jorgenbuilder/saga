@@ -1,4 +1,4 @@
-import { CardDraw } from '../cards/draws';
+import { CardDraw } from 'services/cards/draws';
 import data, { LabrynthosCardData } from './data';
 
 export type ReadingTheme = 'General' | 'Love' | 'Career';

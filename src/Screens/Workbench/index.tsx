@@ -1,7 +1,7 @@
 import { Link, Redirect } from 'react-router-dom'
 import styled from 'styled-components';
-import Routes from '../../constant/routes'
-import Grid from '../../components/grid'
+import Routes from 'constant/routes'
+import Grid from 'components/grid'
 
 const Workbench:React.FC = () => {
     if (process.env.NODE_ENV === 'production') {

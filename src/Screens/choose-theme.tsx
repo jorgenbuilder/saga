@@ -1,20 +1,27 @@
 import styled from 'styled-components';
-import { LinkButton } from '../components/button';
-import Routes from '../constant/routes'
+import Helmet from 'react-helmet';
+import { LinkButton } from 'components/button';
+import Routes from 'constant/routes';
+import CardBack from 'assets/cards/rider-waite/back.jpg';
 
 const ChooseThemeScreen:React.FC = () => {
     return (
-        <Container>
-            <LinkButton to={Routes.drawGeneral.path}>
-                General
-            </LinkButton>
-            <LinkButton to={Routes.drawLove.path}>
-                Love
-            </LinkButton>
-            <LinkButton to={Routes.drawCareer.path}>
-                Career
-            </LinkButton>
-        </Container>
+        <>
+            <Helmet>
+                <link rel="preload" as="image" href={CardBack} />
+            </Helmet>
+            <Container>
+                <LinkButton to={Routes.drawGeneral.path}>
+                    General
+                </LinkButton>
+                <LinkButton to={Routes.drawLove.path}>
+                    Love
+                </LinkButton>
+                <LinkButton to={Routes.drawCareer.path}>
+                    Career
+                </LinkButton>
+            </Container>
+        </>
     );
 }
 
