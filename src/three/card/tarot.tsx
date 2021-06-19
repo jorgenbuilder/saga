@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { useMemo } from 'react';
 import { MeshProps } from '@react-three/fiber';
 import { MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
@@ -9,6 +9,7 @@ import { CardDraw } from 'services/cards/draws';
 interface Props extends MeshProps {
     draw: CardDraw;
     skin?: TarotDeckSkin;
+    x?: any;
 }
 
 export default function TarotCardMesh ({draw, skin = RiderWaiteTarotSkin, ...props}: Props) {
@@ -30,6 +31,7 @@ export default function TarotCardMesh ({draw, skin = RiderWaiteTarotSkin, ...pro
 
     return (
         <animated.mesh
+            ref={props.x}
             {...props}
             rotation={props.rotation || [0, M3.degToRad(90), 0]}
             geometry={geometry}

@@ -1,7 +1,7 @@
+import * as THREE from 'three';
 import { useContext, useEffect, Suspense } from 'react';
-import { Euler, MathUtils as M3, Vector3 } from 'three';
 import { useSpring as useSpring3 } from '@react-spring/three';
-import { Canvas, MeshProps } from '@react-three/fiber';
+import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
 import { Preload } from '@react-three/drei';
 import { AccelerometerContext } from 'context/device-accelerometer';
 import { CardDraw } from 'services/cards/draws';
@@ -9,6 +9,7 @@ import { RiderWaiteTarotSkin, TarotDeckSkin } from 'assets/cards';
 import TarotCardMesh from 'three/card/tarot';
 import DefaultLighting from 'three/lighting';
 import BlankTarotCardMesh from './tarot-blank';
+import { useState } from 'react';
 
 interface Props extends MeshProps {
     draw: CardDraw;
@@ -23,7 +24,11 @@ export default function TarotCardReveal ({
     ...props
 }: Props) {
 
-    const { acceleration, popPermissionToast } = useContext(AccelerometerContext);
+    const { acceleration, popPermissionToast, } = useContext(AccelerometerContext);
+    const [mx, setMx] = useState<number>(0);
+    const [my, setMy] = useState<number>(0);
+    const [hover, setHover] = useState<boolean>(false);
+
     useEffect(popPermissionToast, [popPermissionToast]);
 
     const rotDeviceTilt = [
@@ -38,12 +43,6 @@ export default function TarotCardReveal ({
         0
     ];
 
-    const scaDeviceTilt = [
-        0,
-        0,
-        0,
-    ]
-
     const rotReveal = [
         (revealed ? 1 : 0),
         (revealed ? 0 : -180),
@@ -52,44 +51,53 @@ export default function TarotCardReveal ({
 
     const rotOrientation = [0, 0, draw?.upsidedown ? -180 : 0,];
 
+    const scaHover = [hover ? .025 : 0, hover ? .025 : 0, 0];
+
+    function hoverTilt (e: ThreeEvent<PointerEvent>) {
+        var bbox = new THREE.Box3().setFromObject(e.eventObject);
+        setMx(e.point.x >= 0 ? e.point.x / bbox.max.x : - e.point.x / bbox.min.x);
+        setMy(e.point.y >= 0 ? e.point.y / bbox.max.y : - e.point.y / bbox.min.y);
+    }
+
     const spring1 = useSpring3({
         rotation: [
-            M3.degToRad(rotDeviceTilt[0] + rotReveal[0] + rotOrientation[0]),
-            M3.degToRad(rotDeviceTilt[1] + rotReveal[1] + rotOrientation[1]),
-            M3.degToRad(rotDeviceTilt[2] + rotReveal[2] + rotOrientation[2]),
+            THREE.MathUtils.degToRad(rotDeviceTilt[0] + rotReveal[0] + rotOrientation[0] + my * 5),
+            THREE.MathUtils.degToRad(rotDeviceTilt[1] + rotReveal[1] + rotOrientation[1] - mx * 5),
+            THREE.MathUtils.degToRad(rotDeviceTilt[2] + rotReveal[2] + rotOrientation[2]),
         ],
         position: [
-            M3.degToRad(posDeviceTilt[0]),
-            M3.degToRad(posDeviceTilt[1]),
-            M3.degToRad(posDeviceTilt[2]),
+            THREE.MathUtils.degToRad(posDeviceTilt[0]),
+            THREE.MathUtils.degToRad(posDeviceTilt[1]),
+            THREE.MathUtils.degToRad(posDeviceTilt[2]),
         ],
         scale: [
-            1 + scaDeviceTilt[0],
-            1 + scaDeviceTilt[1],
-            1 + scaDeviceTilt[2],
+            1 + scaHover[0],
+            1 + scaHover[1],
+            1 + scaHover[2],
         ],
         config: {
-            mass: 20,
-            tension: 250,
-            friction: 100,
+            mass: 10,
+            tension: 300,
+            friction: 85,
         },
     });
 
     return (
         <Canvas camera={{ zoom: 1.2 }}>
-            {/* TODO: This fallback sucks, obviously */}
             <Suspense fallback={<BlankTarotCardMesh
-                position={spring1.position as unknown as Vector3}
-                rotation={spring1.rotation as unknown as Euler}
-                scale={spring1.scale as unknown as Vector3}
+                position={spring1.position as unknown as THREE.Vector3}
+                rotation={spring1.rotation as unknown as THREE.Euler}
                 skin={skin}
                 {...props}
             />}>
-                <Preload all />
+                <Preload all />{/* Dunno if this actually does anything */}
                 <TarotCardMesh
-                    position={spring1.position as unknown as Vector3}
-                    rotation={spring1.rotation as unknown as Euler}
-                    scale={spring1.scale as unknown as Vector3}
+                    onPointerMove={hoverTilt}
+                    onPointerEnter={() => setHover(true)}
+                    onPointerLeave={() => { setHover(false); setMx(0); setMy(0); }}
+                    position={spring1.position as unknown as THREE.Vector3}
+                    rotation={spring1.rotation as unknown as THREE.Euler}
+                    scale={spring1.scale as unknown as THREE.Vector3}
                     skin={skin}
                     draw={draw}
                     {...props}

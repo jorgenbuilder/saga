@@ -30,7 +30,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 flex-direction: column;
-min-height: 100vh;
+height: 100%;
 max-width: 420px;
 width: 100%;
 margin: 0 auto;
