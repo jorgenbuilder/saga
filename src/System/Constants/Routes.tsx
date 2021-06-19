@@ -11,7 +11,6 @@ import DrawDetailScreen from '../../Screens/App/DrawDetailScreen';
 import SplashScreen from '../../Screens/App/Splash';
 import ThreeOnClickWorkbench from '../../Screens/Workbench/ThreeOnClick';
 import TiltWorkbench from '../../Screens/Workbench/Tilt';
-import WorkbenchDrawExtrude from '../../Screens/Workbench/DrawExtrude';
 import DrawSelectionScreen from '../../Screens/App/DrawSelection';
 import { AnimatedRoute, AnimatedSwitch } from '../../Atoms/Animation/Routes';
 
@@ -54,10 +53,6 @@ const Routes: {
         path: '/workbench/three-draw',
         Component: WorkbenchDraw,
     },
-    workbenchDrawExtrude: {
-        path: '/workbench/three-draw-extrude',
-        Component: WorkbenchDrawExtrude,
-    },
     workbenchSplash: {
         path: '/workbench/splash',
         Component: SplashScreen,
@@ -81,7 +76,19 @@ const Routes: {
     draw: {
         path: '/draw',
         Component: DrawDetailScreen
-    }
+    },
+    drawGeneral: {
+        path: '/draw/general',
+        Component: DrawDetailScreen
+    },
+    drawCareer: {
+        path: '/draw/career',
+        Component: DrawDetailScreen
+    },
+    drawLove: {
+        path: '/draw/love',
+        Component: DrawDetailScreen
+    },
 };
 
 export function AppRoutes () {

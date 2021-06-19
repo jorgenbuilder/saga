@@ -1,4 +1,4 @@
-import TarotCard from '../../Molecules/TarotCard'
+import TarotCard from '../../Molecules/CSSTarotCard'
 import {
     ShuffleLeft,
     ShuffleRight,

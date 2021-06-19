@@ -4,6 +4,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '@fontsource/noto-sans-jp';
 import '@fontsource/abril-fatface';
+import '@fontsource/uncial-antiqua';
+import '@fontsource/astloch';
+import '@fontsource/almendra';
+import '@fontsource/cardo';
 
 ReactDOM.render(
   <React.StrictMode>

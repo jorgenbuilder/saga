@@ -69,8 +69,10 @@ const AccelerometerProvider:React.FC<AccelerometerProviderProps> = ({ children }
     }, [bindMotionEvents]);
 
     const popPermissionToast = useCallback(() => {
-        setShowToast(true);
-    }, []);
+        if (permission === 'pending') {
+            setShowToast(true);
+        }
+    }, [permission]);
 
     const acceptToast = () => {
         requestPermission();

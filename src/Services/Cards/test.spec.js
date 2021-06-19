@@ -59,3 +59,11 @@ it(`has expected name for each card in the store`, () => {
         expect(card.name).toBe(CardsService.mapIntToCardName(i));
     }
 });
+
+it(`has a valid elemental for each non-face non-major card`, () => {
+    for (const card of CardsService.TarotDeckData) {
+        if (card.suit !== 'Trump' && card.number <= 10) {
+            expect(['air', 'water', 'earth', 'fire']).toContain(card.element.toLowerCase());
+        }
+    }
+});

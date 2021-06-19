@@ -110,4 +110,8 @@ export function mapIntToCardName (int: number) {
     }
 }
 
+export function getCardData (index: number) {
+    return TarotDeckData.find(x => x.index === index) as TarotCard
+}
+
 export default TarotDeckData;

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import AnimationPlane from '../../Atoms/AnimationPlane';
 import StaticRotateY from '../../Atoms/Animation/StaticRotateY';
-import TarotCard from '../../Molecules/TarotCard';
+import TarotCard from '../../Molecules/CSSTarotCard';
 
 const WorkbenchStaticRotation:React.FC = () => {
     return (

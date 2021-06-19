@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import AnimationPlane from '../../Atoms/AnimationPlane';
-import TarotCard from '../../Molecules/TarotCard/HoverTilt';
+import TarotCard from '../../Molecules/CSSTarotCard/HoverTilt';
 
 const CardReveal:React.FC = () => {
     return (

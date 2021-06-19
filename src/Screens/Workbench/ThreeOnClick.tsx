@@ -6,7 +6,7 @@ import Svg from '../../Atoms/ThreeSvg';
 import cardFace from '../../Assets/cards/svg-basic/card-face.svg';
 import { useSpring } from '@react-spring/three';
 import { animated } from '@react-spring/three';
-import { svgCards } from '../../Assets/cards';
+import { SvgTarotSkin } from '../../Assets/cards';
 
 const ThreeOnClickWorkbench:React.FC = () => {
     const boxMesh = useRef<MeshProps | undefined>(undefined);
@@ -49,7 +49,7 @@ const ThreeOnClickWorkbench:React.FC = () => {
                     <boxGeometry args={[6, 10, .025]} />
                     <meshPhongMaterial attach="material" color='white' />
                     <Svg side={FrontSide} url={cardFace} position={[3, -5, .0126,]} />
-                    <Svg side={BackSide} url={svgCards[78].filePath} position={[3, -5, -.0126,]} />
+                    <Svg side={BackSide} url={SvgTarotSkin[78].filePath} position={[3, -5, -.0126,]} />
                 </animated.mesh>
                 </group>
             </Suspense>

@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import styled from 'styled-components';
 import Routes from '../../System/Constants/Routes'
 import Grid from '../../Templates/Grid'
 
 const Workbench:React.FC = () => {
+    if (process.env.NODE_ENV === 'production') {
+        return <Redirect to={Routes.app.path} />
+    }
     return (
         <Grid>
             <BlockLink to={Routes.workbenchStaticRotation.path}>
@@ -32,9 +35,6 @@ const Workbench:React.FC = () => {
             </BlockLink>
             <BlockLink to={Routes.workbenchSplash.path}>
                 Splash
-            </BlockLink>
-            <BlockLink to={Routes.workbenchDrawExtrude.path}>
-                Draw (Extrude)
             </BlockLink>
         </Grid>
     );

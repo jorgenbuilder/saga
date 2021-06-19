@@ -1,20 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { MeshProps, useLoader } from '@react-three/fiber';
+import { useMemo, useRef } from 'react';
+import { MeshProps } from '@react-three/fiber';
 import { MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
-import { RiderWaiteCards } from '../../Assets/cards';
 import * as THREE from 'three';
-import drawCard from '../../Services/Cards/Draws';
-import { defaultUser } from '../../Services/Users';
 
 
 interface Props extends MeshProps {
     randomSeed?: number;
+    card?: [number, boolean];
 }
 
-const ExtrudeCard: React.FC<Props> = (props) => {
+const PromptCard: React.FC<Props> = (props) => {
     const mesh = useRef<MeshProps | undefined>(undefined);
-    const [[cardSeed, upsidedown], set] = useState<[number, boolean]>([1, false]);
 
     const extrudeConf = useMemo(() => ({
         bevelEnabled: false,
@@ -22,31 +19,13 @@ const ExtrudeCard: React.FC<Props> = (props) => {
         steps: 1,
     }), []);
 
-    useEffect(() => {
-        const { card, upsidedown } = drawCard(defaultUser);
-        set([card, upsidedown])
-    }, [props.randomSeed])
-
-    const backTexture = useLoader(THREE.TextureLoader, RiderWaiteCards[78].filePath);
-    backTexture.wrapS = backTexture.wrapT = THREE.ClampToEdgeWrapping;
-    backTexture.repeat.set(1 / 2.75, 1 / 4.75);
-    backTexture.offset.set(.5, .5);
-    const faceTexture = useLoader(THREE.TextureLoader, RiderWaiteCards[cardSeed].filePath);
-    faceTexture.wrapS = faceTexture.wrapT = THREE.ClampToEdgeWrapping;
-    faceTexture.repeat.set(1 / 2.5, 1 / 4.5);
-    faceTexture.offset.set(.485, .5);
-    faceTexture.rotation = M3.degToRad(upsidedown ? 180 : 0)
     const shape = useMemo(() => {
         const shape = new THREE.Shape();
-        shape.lineTo(-1.250, -2.375);
-        shape.lineTo(1.250, -2.375);
-        shape.bezierCurveTo(1.375, -2.375, 1.375, -2.250, 1.375, -2.250);
-        shape.lineTo(1.375, 2.250);
-        shape.bezierCurveTo(1.375, 2.375, 1.250, 2.375, 1.250, 2.375);
-        shape.lineTo(-1.250, 2.375);
-        shape.bezierCurveTo(-1.375, 2.375, -1.375, 2.250, -1.375, 2.250);
-        shape.lineTo(-1.375, -2.250);
-        shape.bezierCurveTo(-1.375, -2.375, -1.250, -2.375, -1.250, -2.375);
+        shape.lineTo(-1.250, -0.500);
+        shape.lineTo(1.250, -0.500);
+        shape.lineTo(1.250, 1.000);
+        shape.lineTo(-1.250, 1.000);
+        shape.lineTo(-1.250, -0.500);
         return shape;
     }, []);
 
@@ -89,11 +68,11 @@ const ExtrudeCard: React.FC<Props> = (props) => {
             rotation={props.rotation || [0, M3.degToRad(90), 0]}
             geometry={geometry}
         >
-            <meshPhongMaterial attachArray="material" map={backTexture} />
+            <meshPhongMaterial attachArray="material" color='grey' />
             <meshPhongMaterial attachArray="material" color='white' />
-            <meshPhongMaterial attachArray="material" map={faceTexture} />
+            <meshPhongMaterial attachArray="material" color='grey' />
         </animated.mesh>
     )
 }
 
-export default ExtrudeCard;
+export default PromptCard;

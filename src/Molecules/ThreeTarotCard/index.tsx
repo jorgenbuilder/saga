@@ -4,7 +4,7 @@ import { BackSide, FrontSide, MathUtils as M3 } from 'three';
 import Svg from '../../Atoms/ThreeSvg';
 import cardFace from '../../Assets/cards/svg-basic/card-face.svg';
 import { animated } from '@react-spring/three';
-import { svgCards } from '../../Assets/cards';
+import { SvgTarotSkin } from '../../Assets/cards';
 
 interface Props extends MeshProps {
     randomSeed?: number;
@@ -14,7 +14,7 @@ const SvgCard: React.FC<Props> = (props) => {
     // This reference will give us direct access to the mesh
     const mesh = useRef<MeshProps | undefined>(undefined);
 
-    const card = useMemo(() => svgCards[Math.ceil((props.randomSeed || Math.random()) * 78)], [props.randomSeed]);
+    const card = useMemo(() => SvgTarotSkin[Math.ceil((props.randomSeed || Math.random()) * 78)], [props.randomSeed]);
     
     return (
         <animated.mesh
@@ -25,7 +25,7 @@ const SvgCard: React.FC<Props> = (props) => {
             <boxGeometry args={[6, 10, .025]} />
             <meshPhongMaterial attach="material" color='white' />
             <Svg side={FrontSide} url={card.filePath || cardFace} position={[3, -5, .013,]} />
-            <Svg side={BackSide} url={svgCards[78].filePath} position={[3, -5, -.013,]} />
+            <Svg side={BackSide} url={SvgTarotSkin[78].filePath} position={[3, -5, -.013,]} />
         </animated.mesh>
     )
 }
