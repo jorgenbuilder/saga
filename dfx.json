@@ -17,7 +17,7 @@
       "type": "assets"
     }
   },
-  "dfx": "0.7.0-beta.7",
+  "dfx": "0.7.0-beta.8",
   "networks": {
     "local": {
       "bind": "127.0.0.1:8000",
