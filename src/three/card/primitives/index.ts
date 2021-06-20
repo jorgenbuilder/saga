@@ -3,7 +3,7 @@ import {
     TarotCardShape,
     PromptCardShape,
     getDimensions,
-    fromDimensions,
+    rectFromDimensions,
     fromSVG,
 } from './shapes';
 import {
@@ -16,6 +16,6 @@ export {
     TarotCardShape,
     PromptCardShape,
     getDimensions,
-    fromDimensions,
+    rectFromDimensions,
     fromSVG,
 }

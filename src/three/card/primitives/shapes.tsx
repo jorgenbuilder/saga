@@ -1,27 +1,11 @@
 import * as THREE from 'three';
 
 export function TarotCardShape () {
-    const shape = new THREE.Shape();
-    shape.lineTo(-1.250, -2.375);
-    shape.lineTo(1.250, -2.375);
-    shape.bezierCurveTo(1.375, -2.375, 1.375, -2.250, 1.375, -2.250);
-    shape.lineTo(1.375, 2.250);
-    shape.bezierCurveTo(1.375, 2.375, 1.250, 2.375, 1.250, 2.375);
-    shape.lineTo(-1.250, 2.375);
-    shape.bezierCurveTo(-1.375, 2.375, -1.375, 2.250, -1.375, 2.250);
-    shape.lineTo(-1.375, -2.250);
-    shape.bezierCurveTo(-1.375, -2.375, -1.250, -2.375, -1.250, -2.375);
-    return shape;
+    return roundedRectFromDimensions(2.5, 4.75, .125);
 }
 
 export function PromptCardShape () {
-    const shape = new THREE.Shape();
-    shape.lineTo(-1.250, -0.500);
-    shape.lineTo(1.250, -0.500);
-    shape.lineTo(1.250, 1.000);
-    shape.lineTo(-1.250, 1.000);
-    shape.lineTo(-1.250, -0.500);
-    return shape;
+    return roundedRectFromDimensions(2.5, 1.5, .125);
 }
 
 export function fromSVG () {
@@ -30,9 +14,50 @@ export function fromSVG () {
     return shape;
 }
 
-export function fromDimensions () {
+export function rectFromDimensions (width: number, height: number) {
     const shape = new THREE.Shape();
-    // TODO
+    const w = width / 2;
+    const h = height / 2;
+    shape.lineTo(-w, +h); // top left
+    shape.lineTo(+w, +h); // top right
+    shape.lineTo(+w, -h); // bottom right
+    shape.lineTo(-w, -h); // bottom left
+    shape.lineTo(-w, +h); // close
+    return shape;
+}
+
+export function roundedRectFromDimensions (width: number, height: number, corners: number) {
+    // This seems like a really garbage way to do this (I'm terrible at math)
+    const shape = new THREE.Shape();
+    const w = width / 2;
+    const h = height / 2;
+    const c = corners;
+    shape.lineTo(-w  , +h-c); // top left 1
+    shape.bezierCurveTo(
+        -w  , +h  ,  // Control point should hit the real corner
+        -w+c, +h  ,  // Last two pairs are what lineTo would have been
+        -w+c, +h  ,
+    ); // top left 2
+    shape.lineTo(+w-c, +h  ); // top right 1
+    shape.bezierCurveTo(
+        +w  , +h  ,
+        +w  , +h-c,
+        +w  , +h-c,
+    ); // top right 2
+    shape.lineTo(+w  , -h+c); // bottom right 1
+    shape.bezierCurveTo(
+        +w  , -h  ,
+        +w-c, -h  ,
+        +w-c, -h  ,
+    ); // bottom right 2
+    shape.lineTo(-w+c, -h  ); // bottom left 1
+    shape.bezierCurveTo(
+        -w  , -h  ,
+        -w  , -h+c,
+        -w  , -h+c,
+    ); // bottom left 2
+    shape.lineTo(-w  , +h-c); // close
+    shape.autoClose = true;
     return shape;
 }
 

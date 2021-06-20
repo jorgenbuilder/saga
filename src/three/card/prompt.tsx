@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { createPortal, MeshProps, useFrame } from '@react-three/fiber';
 import { Camera, MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';

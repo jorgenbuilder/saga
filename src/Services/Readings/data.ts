@@ -16,6 +16,9 @@ export interface LabrynthosCardData {
   meaningCareerReversed: string;
 };
 
+// Scraped from Labrynthos. Placeholder while we write our own copy.
+// https://github.com/jorgenbuilder/labrynthos-scape
+
 const LabrynthosData: LabrynthosCardData[] = [
   {
     name: 'The World',

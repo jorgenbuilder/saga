@@ -46,7 +46,7 @@ export default function PromptCardReveal ({
 
     const posReveal = [
         revealed ? 0 : 0,
-        revealed ? -10 : 20,
+        revealed ? 0 : 0,
         revealed ? 0 : 0,
     ]
 
