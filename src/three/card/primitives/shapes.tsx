@@ -5,7 +5,7 @@ export function TarotCardShape () {
 }
 
 export function PromptCardShape () {
-    return roundedRectFromDimensions(2.5, 1.5, .125);
+    return roundedRectFromDimensions(2.85, 1.8, .125);
 }
 
 export function fromSVG () {

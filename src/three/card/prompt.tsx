@@ -6,19 +6,20 @@ import { animated } from '@react-spring/three';
 import * as Card from './primitives';
 import { useRef } from 'react';
 import { OrthographicCamera, Text } from '@react-three/drei';
+import Back from 'assets/prompt-card-back.png';
 
 interface Props extends MeshProps {
     prompt: string;
 }
 
 export default function PromptCardMesh ({prompt, children, ...props}: Props) {
+    const cam = useRef<Camera>();
     const shape = useMemo(() => Card.PromptCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
-    const cam = useRef<Camera>();
 
     const [scene, target] = useMemo(() => {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color('white');
+        scene.background = new THREE.Color('#292929');
         const target = new THREE.WebGLMultisampleRenderTarget(2048, 2048, {
             format: THREE.RGBFormat,
             stencilBuffer: false
@@ -26,6 +27,12 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
         target.samples = 8;
         return [scene, target];
     }, []);
+
+    const back = useMemo(() => Card.CardTextureJPEG({
+        shape,
+        filePath: Back,
+        padding: [0, .075]
+    }), [shape]);
 
     useFrame(state => {
         state.gl.setRenderTarget(target);
@@ -39,7 +46,7 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
             <OrthographicCamera ref={cam} position={[0, 0, 1]} zoom={10} />
             {createPortal(
                 <Text
-                    color="#171717"
+                    color="#ffffff"
                     fontSize={10}
                     maxWidth={80}
                     lineHeight={1}
@@ -59,7 +66,7 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
                 rotation={props.rotation || [0, M3.degToRad(90), 0]}
                 geometry={geometry}
             >
-                <meshPhongMaterial attachArray="material" color='grey' />
+                <meshPhongMaterial attachArray="material" map={back} />
                 <meshPhongMaterial attachArray="material" color='white' />
                 <meshPhongMaterial attachArray="material" map={target.texture} />
             </animated.mesh>
