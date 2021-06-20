@@ -13,6 +13,7 @@ import AirCoin from 'assets/coins/air.svg';
 import EarthCoin from 'assets/coins/earth.svg';
 import WaterCoin from 'assets/coins/water.svg';
 import FireCoin from 'assets/coins/fire.svg';
+import { useMemo } from 'react';
 
 interface Props {
     draw: CardDraw;
@@ -32,6 +33,7 @@ export default function Reading ({ draw }: Props) {
         fire: FireCoin,
     };
     const coin = Object.keys(coinMap).includes(cardData.element.toLowerCase()) ? coinMap[cardData.element.toLowerCase() as 'fire' | 'air' | 'earth' | 'water'] : undefined;
+    const prompt = useMemo(() => cardData.questions[Math.floor(cardData.questions.length * Math.random())], [cardData]);
 
     const [promptRevealed, setPromptRevealed] = useState<boolean>(false);
 
@@ -75,7 +77,7 @@ export default function Reading ({ draw }: Props) {
                     <PromptCardReveal
                         onClick={() => setPromptRevealed(!promptRevealed)}
                         revealed={promptRevealed}
-                        prompt={'Have you considered turning it off and on again?'}
+                        prompt={prompt}
                     />
                 </ReadingPrompt>
                 <div style={{position: 'relative', zIndex: 100}}>
