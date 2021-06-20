@@ -36,7 +36,7 @@ export default function PromptCardReveal ({
         0
     ];
 
-    const scaHover = [hover ? .025 : 0, hover ? .025 : 0, 0];
+    const scaHover = [hover ? .05 : 0, hover ? .05 : 0, 0];
 
     const rotReveal = [
         revealed ? 180 : 0,
