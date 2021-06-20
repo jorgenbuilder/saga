@@ -51,7 +51,7 @@ export default function TarotCardReveal ({
 
     const rotOrientation = [0, 0, draw?.upsidedown ? -180 : 0,];
 
-    const scaHover = [hover ? .025 : 0, hover ? .025 : 0, 0];
+    const scaHover = [hover ? .05 : 0, hover ? .05 : 0, 0];
 
     function hoverTilt (e: ThreeEvent<PointerEvent>) {
         var bbox = new THREE.Box3().setFromObject(e.eventObject);

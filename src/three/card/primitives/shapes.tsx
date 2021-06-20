@@ -46,5 +46,5 @@ export function getDimensions (shape: THREE.Shape) {
             Math.min(range[1][0], curve.getPoint(0).y, curve.getPoint(0).y),
             Math.max(range[1][1], curve.getPoint(0).y, curve.getPoint(0).y)
         ],
-    ], [[0, 0], [0, 0]]).map((x) => Math.abs(x[0]) + Math.abs(x[1]));
+    ], [[0, 0], [0, 0]]).map((x) => Math.abs(x[0]) + Math.abs(x[1])) as [number, number];
 }

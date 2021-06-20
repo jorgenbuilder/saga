@@ -39,14 +39,14 @@ export default function PromptCardReveal ({
     const scaHover = [hover ? .05 : 0, hover ? .05 : 0, 0];
 
     const rotReveal = [
-        revealed ? 180 : 0,
+        revealed ? 0 : 180,
         revealed ? 0 : 0,
         revealed ? 0 : 0,
     ];
 
     const posReveal = [
         revealed ? 0 : 0,
-        revealed ? 20 : -10,
+        revealed ? -10 : 20,
         revealed ? 0 : 0,
     ]
 

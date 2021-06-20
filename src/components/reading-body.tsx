@@ -75,7 +75,7 @@ export default function Reading ({ draw }: Props) {
                     <PromptCardReveal
                         onClick={() => setPromptRevealed(!promptRevealed)}
                         revealed={promptRevealed}
-                        prompt={''}
+                        prompt={'Have you considered turning it off and on again?'}
                     />
                 </ReadingPrompt>
                 <div style={{position: 'relative', zIndex: 100}}>
