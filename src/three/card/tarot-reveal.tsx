@@ -66,6 +66,7 @@ export default function TarotCardReveal ({
             THREE.MathUtils.degToRad(rotDeviceTilt[2] + rotReveal[2] + rotOrientation[2]),
         ],
         position: [
+            // Lol why did I degToRad this?
             THREE.MathUtils.degToRad(posDeviceTilt[0]),
             THREE.MathUtils.degToRad(posDeviceTilt[1]),
             THREE.MathUtils.degToRad(posDeviceTilt[2]),
@@ -81,6 +82,20 @@ export default function TarotCardReveal ({
             friction: 85,
         },
     });
+
+    // Dunno why this isn't doing anything
+    const spring2 = useSpring3({
+        position: [
+            revealed ? 0 : 0,
+            revealed ? 0 : 0,
+            10
+        ],
+        config: {
+            mass: 10,
+            tension: 300,
+            friction: 85,
+        },
+    })
 
     return (
         <Canvas camera={{ zoom: 1.2 }}>
@@ -104,6 +119,11 @@ export default function TarotCardReveal ({
                 />
             </Suspense>
             <DefaultLighting />
+            <pointLight
+                position={spring2.position as unknown as THREE.Vector3}
+                intensity={100}
+                color={'white'}
+            />
         </Canvas>
     );
 }

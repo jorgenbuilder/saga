@@ -1,4 +1,4 @@
-import * as CardsService from './';
+import * as CardsService from '.';
 
 it(`generates random numbers to select cards`, () => {
     for (let i = 0; i < 1000; i++) {
