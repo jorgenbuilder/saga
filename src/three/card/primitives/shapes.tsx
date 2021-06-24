@@ -28,6 +28,8 @@ export function rectFromDimensions (width: number, height: number) {
 
 export function roundedRectFromDimensions (width: number, height: number, corners: number) {
     // This seems like a really garbage way to do this (I'm terrible at math)
+    // TODO: try this out: Shape.absarc(2, 4, 2, Math.PI, Math.PI * 2);
+    // https://stackoverflow.com/questions/52219731/threejs-how-to-draw-shape-with-curved-edges
     const shape = new THREE.Shape();
     const w = width / 2;
     const h = height / 2;

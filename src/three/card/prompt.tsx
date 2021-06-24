@@ -7,7 +7,7 @@ import * as Card from './primitives';
 import { useRef } from 'react';
 import { OrthographicCamera, Text } from '@react-three/drei';
 import Back from 'assets/prompt-card-back.png';
-import Almendra from '@fontsource/almendra/files/almendra-all-400-normal.woff';
+import Almendra from '@fontsource/almendra/files/almendra-all-400-italic.woff';
 
 interface Props extends MeshProps {
     prompt: string;
@@ -20,8 +20,12 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
 
     const [scene, target] = useMemo(() => {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color('white');
-        const target = new THREE.WebGLMultisampleRenderTarget(2048, 2048);
+        scene.background = new THREE.Color('#222');
+        const target = new THREE.WebGLMultisampleRenderTarget(2048, 2048, {
+
+        });
+        target.texture.offset.set(.5, .5);
+        target.repeat.set(1 / 2.85, 1 / 1.8);
         return [scene, target];
       }, []);
 
@@ -40,20 +44,18 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
 
     return (
         <>
-            <OrthographicCamera ref={cam} position={[0, 0, 1]} zoom={10} />
+            <camera ref={cam} />
             {createPortal(
                 <Text
-                    color="#ffffff"
-                    fontSize={4}
-                    maxWidth={50}
+                    color="#fff"
+                    fontSize={.2}
+                    maxWidth={1.75}
                     textAlign="center"
                     font={Almendra}
-                    anchorX="center"
-                    anchorY="middle"
                     outlineWidth={0}
-                    outlineOffsetX={.5}
-                    outlineOffsetY={.5}
-                    outlineColor={'black'}
+                    outlineOffsetX={.015}
+                    outlineOffsetY={.015}
+                    outlineColor='black'
                 >
                     {prompt}
                 </Text>,
@@ -65,7 +67,7 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
                 geometry={geometry}
             >
                 <meshStandardMaterial attachArray="material" map={back} />
-                <meshStandardMaterial attachArray="material" color='white' />
+                <meshStandardMaterial attachArray="material" color='#222' />
                 <meshStandardMaterial attachArray="material" map={target.texture} precision={'highp'} />
             </animated.mesh>
         </>
