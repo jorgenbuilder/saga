@@ -5,9 +5,9 @@ import { Camera, MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
 import * as Card from './primitives';
 import { useRef } from 'react';
-import { OrthographicCamera, Text } from '@react-three/drei';
-import Back from 'assets/prompt-card-back.png';
-import Almendra from '@fontsource/almendra/files/almendra-all-400-italic.woff';
+import { Text } from '@react-three/drei';
+import Back from 'assets/cards/rider-waite/prompt-back.jpg';
+import Almendra from '@fontsource/almendra/files/almendra-all-700-italic.woff';
 
 interface Props extends MeshProps {
     prompt: string;
@@ -20,12 +20,12 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
 
     const [scene, target] = useMemo(() => {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color('#222');
+        scene.background = new THREE.Color('#fff');
         const target = new THREE.WebGLMultisampleRenderTarget(2048, 2048, {
 
         });
         target.texture.offset.set(.5, .5);
-        target.repeat.set(1 / 2.85, 1 / 1.8);
+        target.repeat.set(1 / 4.75, 1 / 2.5);
         return [scene, target];
       }, []);
 
@@ -36,8 +36,8 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
     }), [shape]);
 
     useFrame(state => {
+        if (!cam.current) return;
         state.gl.setRenderTarget(target);
-        //@ts-ignore
         state.gl.render(scene, cam.current);
         state.gl.setRenderTarget(null);
     });
@@ -47,15 +47,15 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
             <camera ref={cam} />
             {createPortal(
                 <Text
-                    color="#fff"
-                    fontSize={.2}
-                    maxWidth={1.75}
-                    textAlign="center"
+                    color="#050505"
+                    fontSize={.16}
+                    maxWidth={1.5}
+                    textAlign="left"
                     font={Almendra}
-                    outlineWidth={0}
-                    outlineOffsetX={.015}
-                    outlineOffsetY={.015}
-                    outlineColor='black'
+                    // outlineWidth={0}
+                    // outlineOffsetX={.015}
+                    // outlineOffsetY={.015}
+                    // outlineColor='#000'
                 >
                     {prompt}
                 </Text>,

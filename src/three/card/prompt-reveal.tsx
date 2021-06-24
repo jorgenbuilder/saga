@@ -81,7 +81,7 @@ export default function PromptCardReveal ({
 
     return (
         // @ts-ignore
-        <Canvas camera={{ zoom: 2 }} colorManagement pixelRatio={window.devicePixelRatio}>
+        <Canvas camera={{ zoom: 1.38 }} colorManagement pixelRatio={window.devicePixelRatio}>
             {/* TODO: This fallback sucks, obviously */}
             <Suspense fallback={null}>
                 <PromptCardMesh

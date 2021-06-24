@@ -60,6 +60,11 @@ const RiderWaiteTarotSkin: TarotDeckSkin = {
         cardIndex: 78,
         cardName: 'CARD BACK',
         filePath: require('./rider-waite/back.jpg').default,
+    },
+    {
+        cardIndex: 79,
+        cardName: 'PROMPT CARD BACK',
+        filePath: require(`./rider-waite/prompt-back.jpg`).default,
     }]).sort((a, b) => a.cardIndex - b.cardIndex)
 };
 
