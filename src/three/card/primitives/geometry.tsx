@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-// import { CoverUVGenerator } from './uv';
+import { CardUVGenerator } from './uv';
 
 export default function CardGeometry (shape: THREE.Shape) {
     const geometry = new THREE.ExtrudeGeometry(shape, {
         bevelEnabled: false,
         depth: .025,
         steps: 1,
-        // UVGenerator: CoverUVGenerator
+        UVGenerator: CardUVGenerator(shape),
     });
 
     // Break the geometry into front, back and side groups for texturing.

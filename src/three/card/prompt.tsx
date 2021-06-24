@@ -5,15 +5,39 @@ import { Camera, MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
 import * as Card from './primitives';
 import { useRef } from 'react';
-import { Text } from '@react-three/drei';
+import { Text, OrthographicCamera } from '@react-three/drei';
 import Back from 'assets/cards/rider-waite/prompt-back.jpg';
-import Almendra from '@fontsource/almendra/files/almendra-all-700-italic.woff';
+import Almendra from '@fontsource/almendra/files/almendra-all-400-italic.woff';
 
 interface Props extends MeshProps {
     prompt: string;
 }
 
-export default function PromptCardMesh ({prompt, children, ...props}: Props) {
+function PromptCardFace({ text }: { text: string }) {
+    return (
+        <>
+            <mesh>
+                <Text
+                    color="#050505"
+                    fontSize={4}
+                    maxWidth={38}
+                    textAlign="left"
+                    font={Almendra}
+                    // @ts-ignore
+                    sdfGlyphSize={256}
+                    // outlineWidth={0}
+                    // outlineOffsetX={.015}
+                    // outlineOffsetY={.015}
+                    // outlineColor='#000'
+                >
+                    {text}
+                </Text>
+            </mesh>
+        </>
+    );
+}
+
+export default function PromptCardMesh({ prompt, children, ...props }: Props) {
     const cam = useRef<Camera>();
     const shape = useMemo(() => Card.PromptCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
@@ -21,19 +45,14 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
     const [scene, target] = useMemo(() => {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color('#fff');
-        const target = new THREE.WebGLMultisampleRenderTarget(2048, 2048, {
-
-        });
-        target.texture.offset.set(.5, .5);
-        target.repeat.set(1 / 4.75, 1 / 2.5);
+        const target = new THREE.WebGLMultisampleRenderTarget(2048, 2048);
+        target.samples = 8;
         return [scene, target];
-      }, []);
+    }, []);
 
     const back = useMemo(() => Card.CardTextureJPEG({
-        shape,
         filePath: Back,
-        padding: [0, .075]
-    }), [shape]);
+    }), []);
 
     useFrame(state => {
         if (!cam.current) return;
@@ -44,23 +63,8 @@ export default function PromptCardMesh ({prompt, children, ...props}: Props) {
 
     return (
         <>
-            <camera ref={cam} />
-            {createPortal(
-                <Text
-                    color="#050505"
-                    fontSize={.16}
-                    maxWidth={1.5}
-                    textAlign="left"
-                    font={Almendra}
-                    // outlineWidth={0}
-                    // outlineOffsetX={.015}
-                    // outlineOffsetY={.015}
-                    // outlineColor='#000'
-                >
-                    {prompt}
-                </Text>,
-                scene
-            )}
+            <OrthographicCamera ref={cam} position={[0, 0, 10]} zoom={10} />
+            {createPortal(<PromptCardFace text={prompt} />, scene)}
             <animated.mesh
                 {...props}
                 rotation={props.rotation || [0, M3.degToRad(90), 0]}

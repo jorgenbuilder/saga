@@ -17,17 +17,11 @@ export default function TarotCardMesh ({draw, skin = RiderWaiteTarotSkin, ...pro
     const shape = useMemo(() => Card.TarotCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
     const back = useMemo(() => Card.CardTextureJPEG({
-        shape,
         filePath: skin.cards[78].filePath,
-        offset: skin?.config?.offsetBack,
-        padding: skin?.config?.paddingBack,
-    }), [shape, skin]);
+    }), [skin]);
     const face = useMemo(() => Card.CardTextureJPEG({
-        shape,
         filePath: skin.cards[draw.card].filePath,
-        offset: skin?.config?.offsetFace,
-        padding: skin?.config?.paddingFace,
-    }), [shape, skin, draw]);
+    }), [skin, draw]);
 
     return (
         <animated.mesh

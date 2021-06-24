@@ -98,7 +98,8 @@ export default function TarotCardReveal ({
     })
 
     return (
-        <Canvas camera={{ zoom: 1.2 }}>
+        // @ts-ignore
+        <Canvas camera={{ position: [0, 0, 4] }} colorManagement pixelRatio={window.devicePixelRatio}>
             <Suspense fallback={<BlankTarotCardMesh
                 position={spring1.position as unknown as THREE.Vector3}
                 rotation={spring1.rotation as unknown as THREE.Euler}
