@@ -112,3 +112,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
     - [ ] users can export a png image version of their reading so that they can share it arbitrarily
     - [ ] users can export a png image summary version of their reading so that they can share a summary with the link to the full reading
     - [ ] users can share a fully interactive version of their reading with other users in the app
+
+# Card Inspiration
+
+[Link](inspiration.md)
