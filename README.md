@@ -119,3 +119,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [Token Example: HZLD](https://github.com/SuddenlyHazel/hzld_token/blob/main/token.mo)
 - [Canister Architecture Example: Reversi](https://github.com/ninegua/reversi/blob/master/src/reversi/main.mo)
 - [Canister Architecture Example: CanCan](https://github.com/dfinity/cancan/tree/6b28a79b5415261174bd82bc6f75ff1a3c316b7e/backend)
+- [Motoko NPM](https://npm.io/search/keyword:motoko)
