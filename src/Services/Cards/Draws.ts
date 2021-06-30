@@ -1,5 +1,16 @@
+import { Actor, HttpAgent } from '@dfinity/agent';
+import { idlFactory as tarotIdl, canisterId as tarotId } from 'ic:canisters/tarot/tarot';
 import { User } from '../users';
 import { mapIntToCardName } from './cards';
+
+const agent = new HttpAgent();
+agent.fetchRootKey();  // This is some local development carp
+const tarot = Actor.createActor(tarotIdl, { agent, canisterId: tarotId });
+
+async function test () {
+    await tarot.drawCard().then(console.log)
+    test();
+}
 
 export interface CardDraw {
     user: User;
@@ -10,7 +21,7 @@ export interface CardDraw {
     message: string;
 }
 
-export default function drawCard (user: User): CardDraw {
+export default async function drawCard (user: User): Promise<CardDraw> {
     if (user.tokenBalance < 1) {
         throw new Error(`User doesn't have any draw tokens.`);
     }
