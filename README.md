@@ -113,6 +113,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
     - [ ] users can export a png image summary version of their reading so that they can share a summary with the link to the full reading
     - [ ] users can share a fully interactive version of their reading with other users in the app
 
-# Card Inspiration
+# Reference Materials
 
-[Link](inspiration.md)
+- [Card Inspiration](inspiration.md)
+- [Token Example: HZLD](https://github.com/SuddenlyHazel/hzld_token/blob/main/token.mo)
+- [Canister Architecture Example: Reversi](https://github.com/ninegua/reversi/blob/master/src/reversi/main.mo)
+- [Canister Architecture Example: CanCan](https://github.com/dfinity/cancan/tree/6b28a79b5415261174bd82bc6f75ff1a3c316b7e/backend)
