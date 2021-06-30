@@ -1,12 +1,13 @@
 import React from 'react';
-import Index from 'screens';
-import Workbench from 'screens/workbench';
-import WorkbenchDraw  from 'screens/workbench/draw';
-import App from 'screens/app-entry';
-import RevealScreen from 'screens/reveal';
-import SplashScreen from 'screens/splash';
-import ChooseThemeScreen from 'screens/choose-theme';
-import { AnimatedRoute, AnimatedSwitch } from 'components/animated-routes';
+import Index from 'src/screens';
+import Workbench from 'src/screens/workbench';
+import WorkbenchDraw  from 'src/screens/workbench/draw';
+import App from 'src/screens/app-entry';
+import RevealScreen from 'src/screens/reveal';
+import SplashScreen from 'src/screens/splash';
+import ChooseThemeScreen from 'src/screens/choose-theme';
+import AuthScreen from 'src/screens/auth';
+import { AnimatedRoute, AnimatedSwitch } from 'src/components/animated-routes';
 
 export interface RouteConf {
     path: string;
@@ -39,25 +40,29 @@ const Routes: {
         path: '/app',
         Component: App,
     },
+    auth: {
+        path: '/auth',
+        Component: AuthScreen,
+    },
     drawSelection: {
         path: '/draw-selection',
-        Component: ChooseThemeScreen
+        Component: ChooseThemeScreen,
     },
     draw: {
         path: '/draw',
-        Component: RevealScreen
+        Component: RevealScreen,
     },
     drawGeneral: {
         path: '/draw/general',
-        Component: RevealScreen
+        Component: RevealScreen,
     },
     drawCareer: {
         path: '/draw/career',
-        Component: RevealScreen
+        Component: RevealScreen,
     },
     drawLove: {
         path: '/draw/love',
-        Component: RevealScreen
+        Component: RevealScreen,
     },
 };
 

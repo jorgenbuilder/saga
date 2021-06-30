@@ -3,16 +3,16 @@ import { useContext, useEffect, Suspense } from 'react';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
 import { Preload } from '@react-three/drei';
-import { AccelerometerContext } from 'context/device-accelerometer';
-import { CardDraw } from 'services/cards/draws';
-import { RiderWaiteTarotSkin, TarotDeckSkin } from 'assets/cards';
-import TarotCardMesh from 'three/card/tarot';
-import DefaultLighting from 'three/lighting';
+import { AccelerometerContext } from 'src/context/device-accelerometer';
+import { CardDraw } from 'src/services/cards/draws';
+import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
+import TarotCardMesh from 'src/three/card/tarot';
+import DefaultLighting from 'src/three/lighting';
 import BlankTarotCardMesh from './tarot-blank';
 import { useState } from 'react';
 
 interface Props extends MeshProps {
-    draw: CardDraw;
+    draw?: CardDraw;
     skin?: TarotDeckSkin;
     revealed: boolean;
 }

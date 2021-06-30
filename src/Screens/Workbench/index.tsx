@@ -1,19 +1,22 @@
 import { Link, Redirect } from 'react-router-dom'
 import styled from 'styled-components';
-import Routes from 'constant/routes'
-import Grid from 'components/grid'
+import Routes from 'src/constant/routes'
+import Grid from 'src/components/grid'
 
 const Workbench:React.FC = () => {
-    if (process.env.NODE_ENV === 'production') {
-        return <Redirect to={Routes.app.path} />
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //     return <Redirect to={Routes.app.path} />
+    // }
     return (
         <Grid>
+            <BlockLink to={Routes.app.path}>
+                App
+            </BlockLink>
             <BlockLink to={Routes.workbenchDraw.path}>
                 Draw
             </BlockLink>
-            <BlockLink to={Routes.app.path}>
-                App
+            <BlockLink to={Routes.auth.path}>
+                Auth
             </BlockLink>
             <BlockLink to={Routes.workbenchSplash.path}>
                 Splash

@@ -1,14 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import drawCard from 'services/cards/draws';
-import { defaultUser } from 'services/users';
-import TarotCardReveal from 'three/card/tarot-reveal';
-import Reading from 'components/reading-body';
+import drawCard, { CardDraw } from 'src/services/cards/draws';
+import { defaultUser } from 'src/services/users';
+import TarotCardReveal from 'src/three/card/tarot-reveal';
+import Reading from 'src/components/reading-body';
 
 export default function RevealScreen () {
 
-    const draw = useMemo(() => drawCard(defaultUser), []);
+    const [draw, setDraw] = useState<CardDraw>()
     const [revealed, setRevealed] = useState<boolean>(false);
+
+    useEffect(() => {
+        drawCard(defaultUser).then(setDraw)
+    }, [])
 
     return (
         <Container revealed={revealed}>

@@ -20,15 +20,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "."
   },
   "paths": {
-    "ic:canisters/*": [
-      ".dfx/local/canisters/"
+    "dfx-generated/tarot": [
+      ".dfx/local/canisters/tarot/tarot.js"
     ]
   },
   "include": [
-    "src",
-    ".dfx/local/canisters/"
+    "src"
   ]
 }

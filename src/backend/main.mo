@@ -18,7 +18,7 @@ actor {
 
     // Card Draw
 
-    public func drawCard () : async Types.CardDraw {
+    public func drawCard () : async Types.DrawSeed {
 
         // Provides two random bytes to generate card index and orientation.
         // TODO: Validate user has tokens available. Don't burn.

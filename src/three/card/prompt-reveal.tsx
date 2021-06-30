@@ -3,9 +3,9 @@ import { useContext, useEffect, Suspense, useState } from 'react';
 import { Euler, MathUtils as M3, Vector3 } from 'three';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
-import { AccelerometerContext } from 'context/device-accelerometer';
-import DefaultLighting from 'three/lighting';
-import PromptCardMesh from 'three/card/prompt';
+import { AccelerometerContext } from 'src/context/device-accelerometer';
+import DefaultLighting from 'src/three/lighting';
+import PromptCardMesh from 'src/three/card/prompt';
 
 interface Props extends MeshProps {
     prompt: string;

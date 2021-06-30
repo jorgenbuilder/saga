@@ -5,7 +5,7 @@ import {
     useLocation,
 } from 'react-router';
 import { AnimatePresence, AnimatePresenceProps } from 'framer-motion';
-import { RouteConf } from 'constant/routes';
+import { RouteConf } from 'src/constant/routes';
 import { Fade } from './animated-presence';
 
 export interface AnimatedSwitchProps extends SwitchProps, AnimatePresenceProps {

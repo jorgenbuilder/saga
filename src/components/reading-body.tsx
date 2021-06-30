@@ -1,31 +1,31 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
-import Routes from 'constant/routes';
-import { CardDraw } from 'services/cards/draws';
-import { getCardData } from 'services/cards/cards';
-import { getLabrynthosKeywords, getLabrynthosMeaning, getReadingTheme } from 'services/readings';
+import Routes from 'src/constant/routes';
+import { CardDraw } from 'src/services/cards/draws';
+import { getCardData } from 'src/services/cards/cards';
+import { getLabrynthosKeywords, getLabrynthosMeaning, getReadingTheme } from 'src/services/readings';
 import { LinkButton } from './button';
 import Certification from './reading-cert';
 import UprightIndicator from './upright-indicator';
-import PromptCardReveal from 'three/card/prompt-reveal';
-import AirCoin from 'assets/coins/air.svg';
-import EarthCoin from 'assets/coins/earth.svg';
-import WaterCoin from 'assets/coins/water.svg';
-import FireCoin from 'assets/coins/fire.svg';
+import PromptCardReveal from 'src/three/card/prompt-reveal';
+import AirCoin from 'src/assets/coins/air.svg';
+import EarthCoin from 'src/assets/coins/earth.svg';
+import WaterCoin from 'src/assets/coins/water.svg';
+import FireCoin from 'src/assets/coins/fire.svg';
 import { useMemo } from 'react';
 
 interface Props {
-    draw: CardDraw;
+    draw?: CardDraw;
 };
 
 export default function Reading ({ draw }: Props) {
     const { pathname } = useLocation();
     const theme = getReadingTheme(pathname);
-    const cardData = getCardData(draw.card);
-    const keywords = getLabrynthosKeywords(draw, theme);
-    const meaning = getLabrynthosMeaning(draw, theme);
-    const timestamp = new Date(draw.timestamp);
+    const cardData = draw ? getCardData(draw.card) : getCardData(0);
+    const keywords = draw ? getLabrynthosKeywords(draw, theme) : [];
+    const meaning = draw ? getLabrynthosMeaning(draw, theme) : '';
+    const timestamp = draw ? new Date(draw.timestamp) : new Date();
     const coinMap = {
         air: AirCoin,
         earth: EarthCoin,
@@ -42,7 +42,7 @@ export default function Reading ({ draw }: Props) {
             <ReadingHead>
                 <ReadingCardName>
                     <H1 length={cardData.name.length}>{cardData.name}</H1>
-                    <UprightIndicator reversed={draw.upsidedown} />
+                    <UprightIndicator reversed={draw?.upsidedown || false} />
                 </ReadingCardName>
                 <Keywords>
                     {keywords.map((x, i) => <>

@@ -2,7 +2,9 @@
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "ic:canisters/*": [".dfx/local/canisters/"]
+        "dfx-generated/tarot": [
+          ".dfx/local/canisters/tarot/tarot.js"
+        ]
       }
     }
   }

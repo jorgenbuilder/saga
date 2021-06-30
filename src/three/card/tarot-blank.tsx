@@ -1,6 +1,6 @@
 import { MathUtils as M3 } from 'three';
 import { MeshProps } from '@react-three/fiber';
-import { RiderWaiteTarotSkin, TarotDeckSkin } from 'assets/cards';
+import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
 import { useMemo } from 'react';
 import * as Card from './primitives';
 import { animated } from '@react-spring/three';

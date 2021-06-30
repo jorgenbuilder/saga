@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { ReactComponent as BigLoader } from 'assets/loader-big.svg';
+import { ReactComponent as BigLoader } from 'src/assets/loader-big.svg';
 
 const SplashScreen:React.FC = () => {
 

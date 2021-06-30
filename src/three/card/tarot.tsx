@@ -3,11 +3,11 @@ import { MeshProps } from '@react-three/fiber';
 import { MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
 import * as Card from './primitives';
-import { RiderWaiteTarotSkin, TarotDeckSkin } from 'assets/cards';
-import { CardDraw } from 'services/cards/draws';
+import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
+import { CardDraw } from 'src/services/cards/draws';
 
 interface Props extends MeshProps {
-    draw: CardDraw;
+    draw?: CardDraw;
     skin?: TarotDeckSkin;
     x?: any;
 }
@@ -19,9 +19,16 @@ export default function TarotCardMesh ({draw, skin = RiderWaiteTarotSkin, ...pro
     const back = useMemo(() => Card.CardTextureJPEG({
         filePath: skin.cards[78].filePath,
     }), [skin]);
-    const face = useMemo(() => Card.CardTextureJPEG({
-        filePath: skin.cards[draw.card].filePath,
-    }), [skin, draw]);
+    const face = useMemo(() => {
+        if (draw) {
+            return Card.CardTextureJPEG({
+                filePath: skin.cards[draw.card].filePath,
+            });
+        } else {
+            return;
+        }
+    }, [skin, draw])
+        
 
     return (
         <animated.mesh

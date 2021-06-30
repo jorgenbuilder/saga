@@ -1,5 +1,5 @@
-import DirectionIndicator from 'assets/direction-indicator.svg';
-import DirectionIndicatorFlipped from 'assets/direction-indicator-flipped.svg';
+import DirectionIndicator from 'src/assets/direction-indicator.svg';
+import DirectionIndicatorFlipped from 'src/assets/direction-indicator-flipped.svg';
 
 interface Props {
     reversed: boolean;

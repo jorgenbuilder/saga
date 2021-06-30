@@ -6,7 +6,7 @@ import { animated } from '@react-spring/three';
 import * as Card from './primitives';
 import { useRef } from 'react';
 import { Text, OrthographicCamera } from '@react-three/drei';
-import Back from 'assets/cards/rider-waite/prompt-back.jpg';
+import Back from 'src/assets/cards/rider-waite/prompt-back.jpg';
 import Almendra from '@fontsource/almendra/files/almendra-all-400-italic.woff';
 
 interface Props extends MeshProps {
