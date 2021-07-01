@@ -1,4 +1,10 @@
-https://www.artstation.com/artwork/582nmg
+- https://www.artstation.com/artwork/582nmg
+- https://twitter.com/MAKIO135/status/1410308124582494215
+- https://twitter.com/MAKIO135/status/1409986809984163850
+- https://twitter.com/MAKIO135/status/1407962795883257857
+- https://twitter.com/MAKIO135/status/1409245167681511424
+- https://twitter.com/MAKIO135/status/1409617086977089540
+- https://twitter.com/MAKIO135/status/1409245167681511424
 
 ![1](documents/1.gif)
 ![2](documents/2.gif)
