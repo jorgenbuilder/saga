@@ -1,5 +1,4 @@
 import {
-    Route,
     Switch,
     SwitchProps,
     useLocation,
@@ -7,6 +6,7 @@ import {
 import { AnimatePresence, AnimatePresenceProps } from 'framer-motion';
 import { RouteConf } from 'src/constant/routes';
 import { Fade } from './animated-presence';
+import PrivateRoute from './private-routes';
 
 export interface AnimatedSwitchProps extends SwitchProps, AnimatePresenceProps {
     children: React.ReactNode;
@@ -23,12 +23,10 @@ export function AnimatedSwitch({ exitBeforeEnter = true, initial = false, childr
     );
 };
 
-export interface AnimatedRouteProps extends RouteConf {};
-
-export function AnimatedRoute({ path, exact, Component, ...rest }: AnimatedRouteProps) {
-    return <Route path={path} exact={exact} {...rest}>
+export function AnimatedRoute({ path, exact, Component, ...rest }: RouteConf) {
+    return <PrivateRoute path={path} exact={exact} {...rest} Component={Component}>
         <Fade>
             <Component />
         </Fade>
-    </Route>
+    </PrivateRoute>
 };

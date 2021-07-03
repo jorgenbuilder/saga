@@ -13,6 +13,7 @@ export interface RouteConf {
     path: string;
     Component: React.FC;
     exact?: boolean;
+    requiresAuth?: boolean;
 }
 
 const Routes: {
@@ -39,6 +40,7 @@ const Routes: {
     app: {
         path: '/app',
         Component: App,
+        requiresAuth: true,
     },
     auth: {
         path: '/auth',
@@ -47,22 +49,27 @@ const Routes: {
     drawSelection: {
         path: '/draw-selection',
         Component: ChooseThemeScreen,
-    },
-    draw: {
-        path: '/draw',
-        Component: RevealScreen,
+        requiresAuth: true,
     },
     drawGeneral: {
         path: '/draw/general',
         Component: RevealScreen,
+        requiresAuth: true,
     },
     drawCareer: {
         path: '/draw/career',
         Component: RevealScreen,
+        requiresAuth: true,
     },
     drawLove: {
         path: '/draw/love',
         Component: RevealScreen,
+        requiresAuth: true,
+    },
+    draw: {
+        path: '/draw',
+        Component: RevealScreen,
+        requiresAuth: true,
     },
 };
 
