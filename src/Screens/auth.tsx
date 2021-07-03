@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import Button from 'src/components/button';
 import { InternetIdentityContext } from 'src/context/internet-identity';
