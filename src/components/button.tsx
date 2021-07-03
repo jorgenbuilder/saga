@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -38,9 +38,9 @@ font-family: Uncial Antiqua;
 font-size: 20px;
 `;
 
-export default function Button ({ children }: {children: ReactNode}) {
+export default function Button ({ children, onClick }: {children: ReactNode, onClick?: MouseEventHandler<HTMLDivElement>}) {
     return (
-        <NButton>
+        <NButton onClick={onClick}>
             {children}
         </NButton>
     );

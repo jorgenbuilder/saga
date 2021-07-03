@@ -121,3 +121,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [Canister Architecture Example: CanCan](https://github.com/dfinity/cancan/tree/6b28a79b5415261174bd82bc6f75ff1a3c316b7e/backend)
 - [Motoko NPM](https://npm.io/search/keyword:motoko)
 - [II Client Auth Flow](https://github.com/dfinity/internet-identity/blob/main/docs/internet-identity-spec.adoc#client-auth-protocol)
+- https://www.npmjs.com/package/@dfinity/identity
