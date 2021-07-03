@@ -2,6 +2,8 @@ import { createContext, ReactNode, useState } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { useEffect } from 'react';
 import { Identity } from '@dfinity/agent';
+import SplashScreen from 'src/screens/splash';
+import { useContext } from 'react';
 
 interface InternetIdentityState {
     authenticate: () => void;
@@ -15,7 +17,9 @@ const DefaultState: InternetIdentityState = {
     identity: undefined,
 };
 
-const InternetIdentityContext = createContext<InternetIdentityState>(DefaultState);
+export const InternetIdentityContext = createContext<InternetIdentityState>(DefaultState);
+
+export const useInternetIdentity = () => useContext(InternetIdentityContext);
 
 export default function InternetIdentityProvider({ children }: { children?: ReactNode }) {
 
@@ -47,13 +51,13 @@ export default function InternetIdentityProvider({ children }: { children?: Reac
         identity,
     };
 
+    if (isAuthed === undefined) {
+        return <SplashScreen />;
+    }
+
     return <InternetIdentityContext.Provider
         value={value}
     >
         {children}
     </InternetIdentityContext.Provider>;
-};
-
-export {
-    InternetIdentityContext,
 };

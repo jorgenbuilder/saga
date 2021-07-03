@@ -1,4 +1,5 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import PermissionToast from './toast';
 
 interface AccelerometerState {
@@ -19,6 +20,7 @@ interface AccelerometerState {
 
 interface AccelerometerProviderProps {
     // permissionUI?: React.Component;
+    children?: ReactNode;
 };
 
 const DefaultState: AccelerometerState = {
@@ -29,9 +31,11 @@ const DefaultState: AccelerometerState = {
     popPermissionToast: () => console.warn('popPermissionToast is not yet initialized'),
 };
 
-const AccelerometerContext = createContext<AccelerometerState>(DefaultState);
+export const AccelerometerContext = createContext<AccelerometerState>(DefaultState);
 
-const AccelerometerProvider:React.FC<AccelerometerProviderProps> = ({ children }) => {
+export const useAccelerometer = () => useContext(AccelerometerContext);
+
+export default function AccelerometerProvider ({ children }: AccelerometerProviderProps) {
     const [isSupported, setIsSupported] = useState<boolean>(DefaultState.isSupported);
     const [permission, setPermission] = useState<AccelerometerState['permission']>(DefaultState.permission);
     const [acceleration, setAcceleration] = useState<AccelerometerState['acceleration']>(DefaultState.acceleration);
@@ -110,10 +114,4 @@ const AccelerometerProvider:React.FC<AccelerometerProviderProps> = ({ children }
         <PermissionToast accept={acceptToast} dismiss={dismissToast} open={showToast} />
         {children}
     </AccelerometerContext.Provider>;
-};
-
-export default AccelerometerProvider;
-
-export {
-    AccelerometerContext,
 };

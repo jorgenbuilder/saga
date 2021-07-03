@@ -1,10 +1,11 @@
-import React, { createContext } from 'react';
+import React, { createContext, ReactNode } from 'react';
 
 import { Actor, ActorSubclass, HttpAgent } from '@dfinity/agent';
 import * as TarotCanister from 'dfx-generated/tarot';
 
 import { defaultUser, User } from 'src/services/users';
 import { useMemo } from 'react';
+import { useContext } from 'react';
 
 
 interface TarotCanisterInterface {
@@ -21,7 +22,9 @@ interface CanistersState {
     testUsers: () => void;
 };
 
-interface CanistersProviderProps {};
+interface CanistersProviderProps {
+    children?: ReactNode;
+};
 
 const agent = new HttpAgent({
     // TODO: Handle mainnet and devnet
@@ -34,9 +37,10 @@ const DefaultState: CanistersState = {
     testUsers: () => {},
 };
 
-const CanistersContext = createContext<CanistersState>(DefaultState);
+export const CanistersContext = createContext<CanistersState>(DefaultState);
+export const useCanister = () => useContext(CanistersContext);
 
-const CanistersProvider:React.FC<CanistersProviderProps> = ({ children }) => {
+export default function CanistersProvider ({ children }: CanistersProviderProps) {
 
     const agent = useMemo(() => DefaultState.agent, []);
     const tarot = useMemo(() => DefaultState.tarot, []);
@@ -62,10 +66,4 @@ const CanistersProvider:React.FC<CanistersProviderProps> = ({ children }) => {
     >
         {children}
     </CanistersContext.Provider>;
-};
-
-export default CanistersProvider;
-
-export {
-    CanistersContext,
 };

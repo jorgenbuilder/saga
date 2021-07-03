@@ -1,13 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import drawCard, { CardDraw } from 'src/services/cards/draws';
 import { defaultUser } from 'src/services/users';
 import TarotCardReveal from 'src/three/card/tarot-reveal';
-import { useEffect } from 'react';
-import { useContext } from 'react';
-import { CanistersContext } from 'src/context/canisters';
+import { useCanister } from 'src/context/canisters';
 
 const DrawWorkbench:React.FC = () => {
-    const { tarot } = useContext(CanistersContext);
+    const { tarot } = useCanister();
 
     const [revealed, setRevealed] = useState<boolean>(false);
     const [draw, setDraw] = useState<CardDraw>();

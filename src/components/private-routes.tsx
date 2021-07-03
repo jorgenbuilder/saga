@@ -1,16 +1,17 @@
-import { ReactNode, useContext } from 'react';
-import { Redirect, Route } from 'react-router-dom';
-import Routes, { RouteConf } from 'src/constant/routes';
-import { InternetIdentityContext } from 'src/context/internet-identity';
+import { ReactNode } from 'react';
+import { Route } from 'react-router-dom';
+import { RouteConf } from 'src/constant/routes';
+import { useInternetIdentity } from 'src/context/internet-identity';
+import AuthScreen from 'src/screens/auth';
 
 interface PrivateRouteProps extends RouteConf {
     children?: ReactNode;
 }
 
 export default function PrivateRoute({ path, exact, Component, requiresAuth, ...rest }: PrivateRouteProps) {
-    const { isAuthed } = useContext(InternetIdentityContext);
+    const { isAuthed } = useInternetIdentity();
     if (requiresAuth && !isAuthed) {
-        return <Redirect to={{ pathname: Routes.auth.path, state: { referrer: path }}}  />
+        return <AuthScreen />
     }
     return <Route path={path} exact={exact} {...rest} />
 }

@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { useContext, useEffect, Suspense } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
 import { Preload } from '@react-three/drei';
-import { AccelerometerContext } from 'src/context/device-accelerometer';
+import { useAccelerometer } from 'src/context/device-accelerometer';
 import { CardDraw } from 'src/services/cards/draws';
 import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
 import TarotCardMesh from 'src/three/card/tarot';
@@ -24,7 +24,7 @@ export default function TarotCardReveal ({
     ...props
 }: Props) {
 
-    const { acceleration, popPermissionToast, } = useContext(AccelerometerContext);
+    const { acceleration, popPermissionToast, } = useAccelerometer();
     const [mx, setMx] = useState<number>(0);
     const [my, setMy] = useState<number>(0);
     const [hover, setHover] = useState<boolean>(false);

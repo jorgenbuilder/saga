@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { useContext, useEffect, Suspense, useState } from 'react';
+import { useEffect, Suspense, useState } from 'react';
 import { Euler, MathUtils as M3, Vector3 } from 'three';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
-import { AccelerometerContext } from 'src/context/device-accelerometer';
+import { useAccelerometer } from 'src/context/device-accelerometer';
 import DefaultLighting from 'src/three/lighting';
 import PromptCardMesh from 'src/three/card/prompt';
 
@@ -18,7 +18,7 @@ export default function PromptCardReveal ({
     ...props
 }: Props) {
 
-    const { acceleration, popPermissionToast } = useContext(AccelerometerContext);
+    const { acceleration, popPermissionToast } = useAccelerometer();
     const [mx, setMx] = useState<number>(0);
     const [my, setMy] = useState<number>(0);
     const [hover, setHover] = useState<boolean>(false);
