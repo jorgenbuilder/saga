@@ -22,11 +22,6 @@
     "jsx": "react-jsx",
     "baseUrl": "."
   },
-  "paths": {
-    "dfx-generated/tarot": [
-      ".dfx/local/canisters/tarot/tarot.js"
-    ]
-  },
   "include": [
     "src"
   ]
