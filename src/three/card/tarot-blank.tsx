@@ -4,7 +4,6 @@ import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
 import { useMemo } from 'react';
 import * as Card from './primitives';
 import { animated } from '@react-spring/three';
-import { Suspense } from 'react';
 
 interface Props extends MeshProps {
     skin?: TarotDeckSkin | null;
@@ -24,7 +23,7 @@ export default function BlankTarotCardMesh ({skin = RiderWaiteTarotSkin, ...prop
                 filePath: skin.cards[78].filePath,
             })
         }
-    }, []);
+    }, [skin]);
 
     return (
         <animated.mesh

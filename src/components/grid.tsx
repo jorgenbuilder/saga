@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { StyleConstants } from 'src/constant/style';
+import { StyleConstants } from 'src/constants/style';
 
 const Grid:React.FC = ({children}) => {
     return (

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import { LinkButton } from 'src/components/button';
-import Routes from 'src/constant/routes';
+import Routes from 'src/constants/routes';
 import CardBack from 'src/assets/cards/rider-waite/back.jpg';
 
 const ChooseThemeScreen:React.FC = () => {

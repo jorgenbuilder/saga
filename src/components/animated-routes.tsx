@@ -4,7 +4,7 @@ import {
     useLocation,
 } from 'react-router';
 import { AnimatePresence, AnimatePresenceProps } from 'framer-motion';
-import { RouteConf } from 'src/constant/routes';
+import { RouteConf } from 'src/constants/routes';
 import { Fade } from './animated-presence';
 import PrivateRoute from './private-routes';
 

@@ -1,6 +1,6 @@
 import { Link, Redirect } from 'react-router-dom'
 import styled from 'styled-components';
-import Routes from 'src/constant/routes'
+import Routes from 'src/constants/routes'
 import Grid from 'src/components/grid'
 
 const Workbench:React.FC = () => {

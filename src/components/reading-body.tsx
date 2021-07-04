@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
-import Routes from 'src/constant/routes';
+import Routes from 'src/constants/routes';
 import { CardDraw } from 'src/services/cards/draws';
 import { getCardData } from 'src/services/cards/cards';
 import { getLabrynthosKeywords, getLabrynthosMeaning, getReadingTheme } from 'src/services/readings';

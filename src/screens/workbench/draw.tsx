@@ -14,7 +14,7 @@ const DrawWorkbench:React.FC = () => {
     useEffect(() => {
         if (!identity) return;
         drawCard(identity?.getPrincipal().toHex()).then(setDraw)
-    }, [tarot]);
+    }, [tarot, identity]);
 
     function handleClick () {
         if (!revealed && identity) {

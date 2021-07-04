@@ -15,7 +15,7 @@ export default function RevealScreen () {
     useEffect(() => {
         if (!identity) return;
         drawCard(identity?.getPrincipal().toHex()).then(setDraw)
-    }, [])
+    }, [identity]);
 
     return (
         <Container revealed={revealed}>
