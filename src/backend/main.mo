@@ -75,10 +75,20 @@ actor {
         theme: Text;
     };
 
+    type NextAvailableDraw = {
+        principal : Principal;
+        theme : Text;
+        now : Timestamp;
+        lastDraw : ?Timestamp;
+        interval : Timestamp;
+        nextDraw : Timestamp;
+    };
+
 
     // Constants --------
 
     let drawThemes : [Text] = ["general", "love", "career"];
+    let drawInterval : Int = 1 * Float.toInt(1e9) * 60 * 60 * 24;
 
 
     // Data Store --------
@@ -144,47 +154,112 @@ actor {
 
     // Card Draw
 
-    public func createDailyDraw (principalText : Text, theme : Text) : async CardDraw {
+    public func getExistingDraw (principalText : Text, theme : Text) : async ?(Id, CardDraw) {
         // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
-        // TODO: Check to see if a draw already exists for today + principal + theme
+        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
+
         if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
             throw Error.reject("Unsupported draw theme");
         };
 
-        let principal = Principal.fromText(principalText);
-        let timestamp = Time.now();
-        let randomness = Random.Finite(await Random.blob());
-        let reversed = do {
-            switch (randomness.byte()) {
-                case null { throw Error.reject("Randomness failure"); };
-                case (?seed) { Nat8.toNat(seed) > Int.abs(Float.toInt(0.66 * 255.0)); };
+        Array.filter<(Id, CardDraw)>(Iter.toArray(cardDraws.entries()), func (id : Id, x : CardDraw) {
+            if (x.principal != principal) {
+                return false;
             };
-        };
-        let cardIndex = do {
-            switch (randomness.byte()) {
-                case null { throw Error.reject("Randomness failure"); };
-                case (?seed) { Int.abs(Float.toInt(Float.fromInt(Nat8.toNat(seed)) / 255.0 * 100.0)); };
+            if (x.theme != theme) {
+                return false;
             };
+            if (Time.now() - x.timestamp > drawInterval) {
+                return false;
+            };
+            return true;
+        }).vals().next();
+    };
+
+    public func nextDrawTime (principalText : Text, theme : Text) : async NextAvailableDraw {
+        // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
+        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
+
+        if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
+            throw Error.reject("Unsupported draw theme");
         };
-        // TODO: Get tarot card data from datastore instead of returning a Nat for cardindex
+
+        let existingDraw = await getExistingDraw(principalText, theme);
+
         return {
             principal = principal;
             theme = theme;
-            timestamp = timestamp;
-            card = cardIndex;
-            reversed = reversed;
+            now = Time.now();
+            interval = drawInterval;
+            lastDraw = do {
+                switch (existingDraw) {
+                    case null { null; };
+                    case (?(id, draw)) { ?draw.timestamp };
+                };
+            };
+            nextDraw = do {
+                switch (existingDraw) {
+                    case null { Time.now(); };
+                    case (?(id, draw)) { draw.timestamp + drawInterval; };
+                };
+            };
         };
     };
 
-    public func listPrincipleDailyDraws () : async [CardDraw] {
+    public func createDailyDraw (principalText : Text, theme : Text) : async CardDraw {
+        // TODO: This should be signed by the principal drawing the card AND the application principal
+        // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
+        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
+
+        if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
+            throw Error.reject("Unsupported draw theme");
+        };
+
+        switch (
+            await getExistingDraw(principalText, theme)
+        ) {
+            case null { (); };
+            case (?(id, existingDraw)) {
+                return existingDraw;
+            };
+        };
+
+        let randomness = Random.Finite(await Random.blob());
+        
+        let draw = {
+            principal = principal;
+            theme = theme;
+            timestamp = Time.now();
+            card = do {
+                switch (randomness.byte()) {
+                    case null { throw Error.reject("Randomness failure"); };
+                    case (?seed) { Int.abs(Float.toInt(Float.fromInt(Nat8.toNat(seed)) / 255.0 * 100.0)); };
+                };
+            };
+            reversed = do {  // TODO: Get tarot card data from datastore instead of returning a Nat for cardindex
+                switch (randomness.byte()) {
+                    case null { throw Error.reject("Randomness failure"); };
+                    case (?seed) { Nat8.toNat(seed) > Int.abs(Float.toInt(0.66 * 255.0)); };
+                };
+            };
+        };
+
+        ignore cardDraws.create(draw);
+        return draw;
+    };
+
+    public func listPrincipleDailyDraws (principalText : Text) : async [CardDraw] {
         // Return any card draws from the principal today
         // Restrict access to the principal
-        let draws = cardDraws.entries();
-        let userDraws : [CardDraw] = [];
-        for (draw in draws) {
-            // Filter and push
-        };
-        return userDraws;
+
+        // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
+        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
+
+        Array.mapFilter<(Id, CardDraw), CardDraw>(Iter.toArray(cardDraws.entries()), func (id, draw) {
+            if (draw.principal != principal) { return null; };
+            if (draw.timestamp < Time.now() - drawInterval) { return null; };
+            ?draw;
+        });
     };
 
     public func getCardDraw (id: Nat) : async DB.Res<CardDraw> {

@@ -14,10 +14,9 @@ export default function App () {
         const preload = new Image();
         preload.src = CardBack;
 
-        (window as any).draw = function () {
-            //@ts-ignore
-            return tarot.createDailyDraw('bhvmm-kkp5p-pzycc-apxyy-26mff-zazxc-gyotq-dlvtq-ilprx-g47sw-zae', 'love').catch(console.error).then(console.log);
-        };
+        // Easy testing in the console, please:
+        (window as any).devPrincipal = '5qkc6-yb2qp-43g6o-cxhp7-bcpx5-a747h-g73np-5qlqg-ad7vf-fdulx-oqe';
+        (window as any).tarot = tarot;
     }, []);
 
     return (
