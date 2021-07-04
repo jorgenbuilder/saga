@@ -4,17 +4,27 @@ import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
 import { useMemo } from 'react';
 import * as Card from './primitives';
 import { animated } from '@react-spring/three';
+import { Suspense } from 'react';
 
 interface Props extends MeshProps {
-    skin?: TarotDeckSkin;
+    skin?: TarotDeckSkin | null;
 }
 
 export default function BlankTarotCardMesh ({skin = RiderWaiteTarotSkin, ...props}: Props) {
 
     // This is an attempt to make the loading experience of cards less shit
+    // It relies upon the card back image being preloaded.
 
     const shape = useMemo(() => Card.TarotCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
+
+    const back = useMemo(() => {
+        if (skin) {
+            return Card.CardTextureJPEG({
+                filePath: skin.cards[78].filePath,
+            })
+        }
+    }, []);
 
     return (
         <animated.mesh
@@ -22,7 +32,9 @@ export default function BlankTarotCardMesh ({skin = RiderWaiteTarotSkin, ...prop
             rotation={props.rotation || [0, M3.degToRad(90), 0]}
             geometry={geometry}
         >
-            <meshPhongMaterial attachArray="material" color='#AFC8C3' />
+            {skin
+                ? <meshPhongMaterial attachArray="material" map={back} />
+                : <meshPhongMaterial attachArray="material" color='#AFC8C3' />}
             <meshPhongMaterial attachArray="material" color='white' />
             <meshPhongMaterial attachArray="material" color='white' />
         </animated.mesh>

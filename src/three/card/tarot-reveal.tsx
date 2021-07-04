@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { useEffect, Suspense } from 'react';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
-import { Preload } from '@react-three/drei';
 import { useAccelerometer } from 'src/context/device-accelerometer';
 import { CardDraw } from 'src/services/cards/draws';
 import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
@@ -97,27 +96,22 @@ export default function TarotCardReveal ({
         },
     })
 
+    const cardProps = {
+        position: spring1.position as unknown as THREE.Vector3,
+        rotation: spring1.rotation as unknown as THREE.Euler,
+        scale: spring1.scale as unknown as THREE.Vector3,
+        onPointerMove: hoverTilt,
+        onPointerEnter: () => setHover(true),
+        onPointerLeave: () => { setHover(false); setMx(0); setMy(0); },
+        skin,
+    }
+
     return (
-        // @ts-ignore
-        <Canvas camera={{ position: [0, 0, 4] }} colorManagement pixelRatio={window.devicePixelRatio}>
-            <Suspense fallback={<BlankTarotCardMesh
-                position={spring1.position as unknown as THREE.Vector3}
-                rotation={spring1.rotation as unknown as THREE.Euler}
-                skin={skin}
-                {...props}
-            />}>
-                <Preload all />{/* Dunno if this actually does anything */}
-                <TarotCardMesh
-                    onPointerMove={hoverTilt}
-                    onPointerEnter={() => setHover(true)}
-                    onPointerLeave={() => { setHover(false); setMx(0); setMy(0); }}
-                    position={spring1.position as unknown as THREE.Vector3}
-                    rotation={spring1.rotation as unknown as THREE.Euler}
-                    scale={spring1.scale as unknown as THREE.Vector3}
-                    skin={skin}
-                    draw={draw}
-                    {...props}
-                />
+        <Canvas camera={{ position: [0, 0, 4] }}>
+            <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} skin={null}/>}>
+                <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props}/>}>
+                    <TarotCardMesh draw={draw} {...cardProps} {...props}/>
+                </Suspense>
             </Suspense>
             <DefaultLighting />
             <pointLight
