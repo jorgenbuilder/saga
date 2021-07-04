@@ -10,7 +10,6 @@ interface PrivateRouteProps extends RouteConf {
 
 export default function PrivateRoute({ path, exact, Component, requiresAuth, ...rest }: PrivateRouteProps) {
     const { isAuthed } = useInternetIdentity();
-    console.log(window.location.host)
     if (requiresAuth && !isAuthed && !window.location.host.includes('localhost')) {
         return <AuthScreen />
     }

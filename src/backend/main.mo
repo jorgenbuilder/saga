@@ -1,6 +1,11 @@
+import Array "mo:base/Array";
+import Error "mo:base/Error";
+import Float "mo:base/Float";
 import Hash "mo:base/Hash";
+import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
+import Nat8 "mo:base/Nat8";
 import Principal "mo:base/Principal";
 import Random "mo:base/Random";
 import Time "mo:base/Time";
@@ -14,19 +19,21 @@ actor {
 
     // Datastore
 
-    public type Id = Nat;
-    public type Timestamp = Int;
+    type Id = Nat;
+    type Timestamp = Int;
 
     // Tarot
 
-    public type TarotCard = {
+    type TarotCardSuits = {#trump; #wands; #pentacles; #swords; #cups;};
+
+    type TarotCard = {
         index : Nat;
         name : Text;
         number : Nat;
-        suit : {#trump; #wands; #pentacles; #swords; #cups;};
+        suit : TarotCardSuits;
     };
 
-    public type TarotCardData1 = {
+    type TarotCardData1 = {
         arcana : Text;
         keywords : [Text];
         meanings : {
@@ -44,7 +51,7 @@ actor {
         mythology : ?Text;
     };
 
-    public type TarotCardData2 = {
+    type TarotCardData2 = {
         description : Text;
         keywordsGeneralUpright : [Text];
         keywordsGeneralReversed : [Text];
@@ -60,15 +67,18 @@ actor {
         meaningCareerReversed : Text;
     };
 
-    public type DrawTheme = {#general; #love; #career;};
-
-    public type CardDraw = {
+    type CardDraw = {
         principal : Principal;
-        card : TarotCard;
+        card: Nat;  // TarotCard;
         reversed : Bool;
         timestamp : Timestamp;
-        theme: DrawTheme;
+        theme: Text;
     };
+
+
+    // Constants --------
+
+    let drawThemes : [Text] = ["general", "love", "career"];
 
 
     // Data Store --------
@@ -134,19 +144,35 @@ actor {
 
     // Card Draw
 
-    public func createDailyDraw (principal : Principal, theme : DrawTheme) : async CardDraw {
+    public func createDailyDraw (principalText : Text, theme : Text) : async CardDraw {
         // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
         // TODO: Check to see if a draw already exists for today + principal + theme
+        if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
+            throw Error.reject("Unsupported draw theme");
+        };
+
+        let principal = Principal.fromText(principalText);
         let timestamp = Time.now();
         let randomness = Random.Finite(await Random.blob());
-        let reversed = randomness.byte() > 0.66 * 255;
-        let cardIndex = randomness.byte() / 255 * 100;
+        let reversed = do {
+            switch (randomness.byte()) {
+                case null { throw Error.reject("Randomness failure"); };
+                case (?seed) { Nat8.toNat(seed) > Int.abs(Float.toInt(0.66 * 255.0)); };
+            };
+        };
+        let cardIndex = do {
+            switch (randomness.byte()) {
+                case null { throw Error.reject("Randomness failure"); };
+                case (?seed) { Int.abs(Float.toInt(Float.fromInt(Nat8.toNat(seed)) / 255.0 * 100.0)); };
+            };
+        };
+        // TODO: Get tarot card data from datastore instead of returning a Nat for cardindex
         return {
-            principal: principal;
-            theme: theme;
-            timestamp: timestamp;
-            card: cardIndex;
-            reversed: reversed;
+            principal = principal;
+            theme = theme;
+            timestamp = timestamp;
+            card = cardIndex;
+            reversed = reversed;
         };
     };
 

@@ -25,7 +25,7 @@ const agent = new HttpAgent({
     // TODO: Handle mainnet and devnet
     host: 'http://localhost:8000',
 });
-agent.fetchRootKey();
+agent.fetchRootKey().catch(console.error);
 const DefaultState: CanistersState = {
     agent,
     tarot: Actor.createActor<TarotCanisterInterface>(TarotCanister.idlFactory, { agent, canisterId: TarotCanister.canisterId }),
