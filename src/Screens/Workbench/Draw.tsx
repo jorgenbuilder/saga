@@ -1,25 +1,24 @@
 import { useState, useEffect } from 'react';
 import drawCard, { CardDraw } from 'src/services/cards/draws';
-import { defaultUser } from 'src/services/users';
 import TarotCardReveal from 'src/three/card/tarot-reveal';
 import { useCanister } from 'src/context/canisters';
+import { useInternetIdentity } from 'src/context/internet-identity';
 
 const DrawWorkbench:React.FC = () => {
     const { tarot } = useCanister();
+    const { identity } = useInternetIdentity();
 
     const [revealed, setRevealed] = useState<boolean>(false);
     const [draw, setDraw] = useState<CardDraw>();
 
     useEffect(() => {
-        drawCard(defaultUser).then(setDraw);
-
-        // Test canister card draw
-        tarot.drawCard().then(console.log).catch(console.error);
+        if (!identity) return;
+        drawCard(identity?.getPrincipal().toHex()).then(setDraw)
     }, [tarot]);
 
     function handleClick () {
-        if (!revealed) {
-            drawCard(defaultUser).then(setDraw);
+        if (!revealed && identity) {
+            drawCard(identity?.getPrincipal().toHex()).then(setDraw)
         }
         setRevealed(!revealed);
     }

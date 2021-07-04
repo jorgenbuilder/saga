@@ -1,8 +1,7 @@
-import { User } from '../users';
 import { mapIntToCardName } from './cards';
 
 export interface CardDraw {
-    user: User;
+    principal: string;
     timestamp: number;
     card: number;
     cardName: string;
@@ -10,10 +9,7 @@ export interface CardDraw {
     message: string;
 }
 
-export default async function drawCard (user: User): Promise<CardDraw> {
-    if (user.tokenBalance < 1) {
-        throw new Error(`User doesn't have any draw tokens.`);
-    }
+export default async function drawCard (principal: string): Promise<CardDraw> {
     const timestamp = new Date().getTime();
     const [F_CARD, F_UPSIDEDOWN] = allowAdminForcedDraw();
     const card = F_CARD === undefined ? randomCardIndex() : F_CARD;
@@ -21,7 +17,7 @@ export default async function drawCard (user: User): Promise<CardDraw> {
     const upsidedown = F_UPSIDEDOWN === undefined ? Math.random() >= .66 : F_UPSIDEDOWN;
     const message = `Drew ${cardName} ${upsidedown ? 'up-side-down' : 'right-side-up'} (${card})`;
     console.info(message);
-    return { user, timestamp, card, cardName, upsidedown, message }
+    return { principal, timestamp, card, cardName, upsidedown, message }
 }
 
 export function randomCardIndex () {

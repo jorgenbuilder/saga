@@ -51,7 +51,7 @@ export function getLabrynthosMeaning (draw: CardDraw, theme: ReadingTheme) {
     }
 
     // Labrynthos meanings are often large single paragraphs.
-    // This messes up my typesetting layout, so let's just break them up. 
+    // This messes up my typesetting, so let's just break them up. 
     if (meaning.split('\n').length === 1) {
         const br = meaning.split('. ').length / 2;
         meaning = meaning.split('. ').map((x, i) => i === Math.floor(br) ? `\n${x}` : x).join('. ');

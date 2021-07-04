@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import drawCard, { CardDraw } from 'src/services/cards/draws';
-import { defaultUser } from 'src/services/users';
 import TarotCardReveal from 'src/three/card/tarot-reveal';
 import Reading from 'src/components/reading-body';
+import { useInternetIdentity } from 'src/context/internet-identity';
 
 export default function RevealScreen () {
+
+    const { identity } = useInternetIdentity();
 
     const [draw, setDraw] = useState<CardDraw>()
     const [revealed, setRevealed] = useState<boolean>(false);
 
     useEffect(() => {
-        drawCard(defaultUser).then(setDraw)
+        if (!identity) return;
+        drawCard(identity?.getPrincipal().toHex()).then(setDraw)
     }, [])
 
     return (
