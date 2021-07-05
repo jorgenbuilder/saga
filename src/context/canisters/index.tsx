@@ -7,9 +7,48 @@ import { useMemo } from 'react';
 import { useContext } from 'react';
 
 
-interface TarotCanisterInterface {
+export interface CardDraw {
+    'theme': string,
+    'principal': string,
+    'card': number,
+    'reversed': boolean,
+    'timestamp': Timestamp,
+};
+export type Err = { 'permissionDenied': null } |
+{ 'invalidId': null };
+export type Id = number;
+export interface NextAvailableDraw {
+    'now': Timestamp,
+    'theme': string,
+    'principal': string,
+    'interval': Timestamp,
+    'lastDraw': [] | [Timestamp],
+    'nextDraw': Timestamp,
+};
+export type Res = Result;
+export type Result = { 'ok': CardDraw } |
+{ 'err': Err };
+export interface TarotCard {
+    'name': string,
+    'suit': TarotCardSuits,
+    'number': number,
+    'index': number,
+};
+export type TarotCardSuits = string;
+export type Timestamp = number;
+
+export interface TarotCanisterInterface {
     // TODO: This should come from .dfx/local/canisters/tarot/tarot.d.ts, but doesn't seem to work
-    drawCard: () => Promise<[[] | [number], [] | [number]]>,
+    'countDraws': () => Promise<number>,
+    'createDailyDraw': (arg_0: string, arg_1: string) => Promise<CardDraw>,
+    'getCardDraw': (arg_0: number) => Promise<Res>,
+    'getExistingDraw': (arg_0: string, arg_1: string) => Promise<
+        [] | [[Id, CardDraw]]
+    >,
+    'importTarotCards': (arg_0: Array<TarotCard>) => Promise<undefined>,
+    'listPrincipleDailyDraws': (arg_0: string) => Promise<Array<CardDraw>>,
+    'listTarotCards': () => Promise<Array<TarotCard>>,
+    'nextDrawTime': (arg_0: string, arg_1: string) => Promise<NextAvailableDraw>,
 }
 
 interface CanistersState {
@@ -34,7 +73,7 @@ const DefaultState: CanistersState = {
 export const CanistersContext = createContext<CanistersState>(DefaultState);
 export const useCanister = () => useContext(CanistersContext);
 
-export default function CanistersProvider ({ children }: CanistersProviderProps) {
+export default function CanistersProvider({ children }: CanistersProviderProps) {
 
     const agent = useMemo(() => DefaultState.agent, []);
     const tarot = useMemo(() => DefaultState.tarot, []);

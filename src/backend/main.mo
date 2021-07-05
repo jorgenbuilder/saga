@@ -2,6 +2,7 @@ import Array "mo:base/Array";
 import Error "mo:base/Error";
 import Float "mo:base/Float";
 import Hash "mo:base/Hash";
+import HashMap "mo:base/HashMap";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
@@ -20,11 +21,12 @@ actor {
     // Datastore
 
     type Id = Nat;
+    type Index = Nat;
     type Timestamp = Int;
 
     // Tarot
 
-    type TarotCardSuits = {#trump; #wands; #pentacles; #swords; #cups;};
+    type TarotCardSuits = Text; //{#trump : Text; #wands : Text; #pentacles : Text; #swords : Text; #cups : Text;};
 
     type TarotCard = {
         index : Nat;
@@ -34,6 +36,7 @@ actor {
     };
 
     type TarotCardData1 = {
+        index : Nat;
         arcana : Text;
         keywords : [Text];
         meanings : {
@@ -43,15 +46,16 @@ actor {
         element : Text;
         questions : [Text];
         fortunes : [Text];
-        affirmation : ?Text;
-        archetype : ?Text;
-        hebrew : ?Text;
-        numerology : ?Text;
-        astrology : ?Text;
-        mythology : ?Text;
+        affirmation : Text;  // Optional, but indicating such breaks my import script. Empty strings instead.
+        archetype : Text;  // Optional, but indicating such breaks my import script. Empty strings instead.
+        hebrew : Text;  // Optional, but indicating such breaks my import script. Empty strings instead.
+        numerology : Text;  // Optional, but indicating such breaks my import script. Empty strings instead.
+        astrology : Text;  // Optional, but indicating such breaks my import script. Empty strings instead.
+        mythology : Text;  // Optional, but indicating such breaks my import script. Empty strings instead.
     };
 
     type TarotCardData2 = {
+        index : Nat;
         description : Text;
         keywordsGeneralUpright : [Text];
         keywordsGeneralReversed : [Text];
@@ -69,7 +73,10 @@ actor {
 
     type CardDraw = {
         principal : Principal;
-        card: Nat;  // TarotCard;
+        cardIndex: Nat;
+        card: TarotCard;
+        data1: TarotCardData1;
+        data2: TarotCardData2;
         reversed : Bool;
         timestamp : Timestamp;
         theme: Text;
@@ -100,53 +107,46 @@ actor {
         }
     };
 
-    let tarotCards = DB.Database<Id, TarotCard>(getNextId, Nat.equal, #hash(Hash.hash));
-    let tarotCardData1 = DB.Database<Id, TarotCardData1>(getNextId, Nat.equal, #hash(Hash.hash));
-    let tarotCardData2 = DB.Database<Id, TarotCardData2>(getNextId, Nat.equal, #hash(Hash.hash));
     let cardDraws = DB.Database<Id, CardDraw>(getNextId, Nat.equal, #hash(Hash.hash));
+
+    stable let tarotCards = Array.init<?TarotCard>(78, null);
+    stable let tarotCardData1 = Array.init<?TarotCardData1>(78, null);
+    stable let tarotCardData2 = Array.init<?TarotCardData2>(78, null);
 
 
     // Private Methods --------
 
     // Admin
 
-    func importTarotCards (cards: [TarotCard]) : async () {
-        // tarotCards.read();
-    };
-
-    func listTarotCards () : async [TarotCard] {
-        let cards = tarotCards.entries();
-        var response : [TarotCard] = [];
-        for (card in cards) {
-            // Push card
+    public func importTarotCards (cards: [TarotCard]) : async () {
+        // TODO: Move the tests from the frontend into here
+        for (card in Iter.fromArray(cards)) {
+            tarotCards[card.index] := ?card;
         };
-        return response;
     };
 
-    func importTarotCardData1 (cards: [TarotCard]) : async () {
-        // tarotCardData1.read();
+    public func listTarotCards () : async [?TarotCard] {
+        Array.freeze(tarotCards);
     };
 
-    func listTarotCardData1 () : async [TarotCardData1] {
-        let cards = tarotCardData1.entries();
-        var response : [TarotCardData1] = [];
-        for (card in cards) {
-            // Push card
+    public func importTarotCardData1 (cards: [TarotCardData1]) : async () {
+        for (card in Iter.fromArray(cards)) {
+            tarotCardData1[card.index] := ?card;
         };
-        return response;
     };
 
-    func importTarotCardData2 (cards: [TarotCard]) : async () {
-        // Expose an API for the principle to upload card data set #1
+    public func listTarotCardData1 () : async [?TarotCardData1] {
+        Array.freeze(tarotCardData1);
     };
 
-    func listTarotCardData2 () : async [TarotCardData2] {
-        let cards = tarotCardData2.entries();
-        var response : [TarotCardData2] = [];
-        for (card in cards) {
-            // Push card
+    public func importTarotCardData2 (cards: [TarotCardData2]) : async () {
+        for (card in Iter.fromArray(cards)) {
+            tarotCardData2[card.index] := ?card;
         };
-        return response;
+    };
+
+    public func listTarotCardData2 () : async [?TarotCardData2] {
+        Array.freeze(tarotCardData2);
     };
 
 
@@ -225,15 +225,34 @@ actor {
         };
 
         let randomness = Random.Finite(await Random.blob());
+        let index = do {
+            switch (randomness.byte()) {
+                case null { throw Error.reject("Randomness failure"); };
+                case (?seed) { Int.abs(Float.toInt(Float.fromInt(Nat8.toNat(seed)) / 255.0 * 100.0)); };
+            };
+        };
         
         let draw = {
             principal = principal;
             theme = theme;
             timestamp = Time.now();
+            cardIndex = index;
             card = do {
-                switch (randomness.byte()) {
-                    case null { throw Error.reject("Randomness failure"); };
-                    case (?seed) { Int.abs(Float.toInt(Float.fromInt(Nat8.toNat(seed)) / 255.0 * 100.0)); };
+                switch (tarotCards[index]) {
+                    case null { throw Error.reject("Missing data"); };
+                    case (?card) { card; };
+                };
+            };
+            data1 = do {
+                switch (tarotCardData1[index]) {
+                    case null { throw Error.reject("Missing data"); };
+                    case (?card) { card; };
+                };
+            };
+            data2 = do {
+                switch (tarotCardData2[index]) {
+                    case null { throw Error.reject("Missing data"); };
+                    case (?card) { card; };
                 };
             };
             reversed = do {  // TODO: Get tarot card data from datastore instead of returning a Nat for cardindex
