@@ -122,3 +122,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [Motoko NPM](https://npm.io/search/keyword:motoko)
 - [II Client Auth Flow](https://github.com/dfinity/internet-identity/blob/main/docs/internet-identity-spec.adoc#client-auth-protocol)
 - https://www.npmjs.com/package/@dfinity/identity
+- [Article on Canadian NFT Tax Implications](https://www.mondaq.com/canada/tax-authorities/1061890/canadian-income-tax-implications-of-buying-selling-blockchain-nfts)
+- [Canada Revenue Agency Guidance on Cryptocurrecny](https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/compliance/digital-currency/cryptocurrency-guide.html)
