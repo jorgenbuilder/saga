@@ -5,9 +5,6 @@
       "type": "motoko"
     },
     "tarot_frontend": {
-      "dependencies": [
-        "tarot"
-      ],
       "frontend": {
         "entrypoint": "build/index.html"
       },
