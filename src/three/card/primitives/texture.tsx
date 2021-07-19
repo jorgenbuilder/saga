@@ -1,13 +1,7 @@
 import { useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
-interface CardTextureJPEGProps {
-    filePath: string;
-}
-
-export function CardTextureJPEG ({
-    filePath,
-}: CardTextureJPEGProps) {
-    const t = useLoader(THREE.TextureLoader, filePath);
+export function CardTextureJPEG (pathOrData: string) {
+    const t = useLoader(THREE.TextureLoader, pathOrData);
     return t;
 }

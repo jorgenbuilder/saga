@@ -3,7 +3,7 @@
       "baseUrl": ".",
       "paths": {
         "dfx-generated/tarot": [
-          ".dfx/local/canisters/tarot/tarot.js"
+          ".dfx/local/canisters/tarot/"
         ]
       }
     }

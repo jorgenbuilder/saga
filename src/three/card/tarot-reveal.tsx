@@ -4,7 +4,6 @@ import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
 import { useAccelerometer } from 'src/context/device-accelerometer';
 import { CardDraw } from 'src/services/cards/draws';
-import { RiderWaiteTarotSkin, TarotDeckSkin } from 'src/assets/cards';
 import TarotCardMesh from 'src/three/card/tarot';
 import DefaultLighting from 'src/three/lighting';
 import BlankTarotCardMesh from './tarot-blank';
@@ -12,13 +11,11 @@ import { useState } from 'react';
 
 interface Props extends MeshProps {
     draw?: CardDraw;
-    skin?: TarotDeckSkin;
     revealed: boolean;
 }
 
 export default function TarotCardReveal ({
     draw,
-    skin = RiderWaiteTarotSkin,
     revealed,
     ...props
 }: Props) {
@@ -103,12 +100,11 @@ export default function TarotCardReveal ({
         onPointerMove: hoverTilt,
         onPointerEnter: () => setHover(true),
         onPointerLeave: () => { setHover(false); setMx(0); setMy(0); },
-        skin,
     }
 
     return (
         <Canvas camera={{ position: [0, 0, 4] }}>
-            <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} skin={null}/>}>
+            <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
                 <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props}/>}>
                     <TarotCardMesh draw={draw} {...cardProps} {...props}/>
                 </Suspense>

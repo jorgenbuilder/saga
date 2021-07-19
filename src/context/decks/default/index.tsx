@@ -1,4 +1,5 @@
 import TarotDeckData from 'src/services/cards/cards';
+import { Deck } from '..';
 
 export interface TarotCardSkin {
     cardIndex: number;
@@ -8,19 +9,9 @@ export interface TarotCardSkin {
 
 export interface TarotDeckSkin {
     cards: TarotCardSkin[];
-    config?: {
-        offsetBack?: [number, number],
-        paddingBack?: [number, number],
-        offsetFace?: [number, number],
-        paddingFace?: [number, number],
-    }
 };
 
 const RiderWaiteTarotSkin: TarotDeckSkin = {
-    config: {
-        offsetFace: [.485, .5],
-        paddingFace: [.25, .25],
-    },
     cards: TarotDeckData.map(card => {
         const suitMap = {
             'Trump': 'm',
@@ -32,20 +23,26 @@ const RiderWaiteTarotSkin: TarotDeckSkin = {
         return {
             cardIndex: card.index,
             cardName: card.name,
-            filePath: require(`./rider-waite/${suitMap[card.suit]}${`0${card.number}`.slice(-2)}.jpg`).default,
+            filePath: require(`./${suitMap[card.suit]}${`0${card.number}`.slice(-2)}.jpg`).default,
         }
     }).concat([{
         cardIndex: 78,
         cardName: 'CARD BACK',
-        filePath: require('./rider-waite/back.jpg').default,
+        filePath: require('./back.jpg').default,
     },
     {
         cardIndex: 79,
         cardName: 'PROMPT CARD BACK',
-        filePath: require(`./rider-waite/prompt-back.jpg`).default,
+        filePath: require(`./prompt-back.jpg`).default,
     }]).sort((a, b) => a.cardIndex - b.cardIndex)
 };
 
-export {
-    RiderWaiteTarotSkin,
+const DefaultDeck: Deck = {
+    name: 'Rider Waite Smith',
+    serveCard (index: number) {
+        if (index > 79) throw Error(`Index ${index} doesn't exist. There are 78 cards (0-77,) plus two card backs (78, 79.)`);
+        return (RiderWaiteTarotSkin.cards.find(x => x.cardIndex === index) as TarotCardSkin).filePath;
+    },
 };
+
+export default DefaultDeck;

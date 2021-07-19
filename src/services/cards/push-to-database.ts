@@ -1,8 +1,7 @@
-import { Actor, HttpAgent } from '@dfinity/agent';
-import { TarotCanisterInterface } from 'src/context/canisters';
+import { HttpAgent } from '@dfinity/agent';
 import { TarotDeckData } from './';
 import Readings from '../readings/data';
-import * as TarotCanister from 'dfx-generated/tarot';
+import { tarot } from 'dfx-generated/tarot';
 
 // Takes our hand-made JSON and pushes it into the canister
 
@@ -10,11 +9,11 @@ const agent = new HttpAgent({
     // TODO: Handle mainnet and devnet
     host: 'http://localhost:8000',
 });
-agent.fetchRootKey().catch(console.error);
-const tarot = Actor.createActor<TarotCanisterInterface>(TarotCanister.idlFactory, { agent, canisterId: TarotCanister.canisterId });
+// dfx 0.7.7 is doing this for us now (but it's breaking)
+// agent.fetchRootKey().catch(console.error);
 
 export function pushCardsBasic () {
-    const data = TarotDeckData.map(x => ({ index: x.index, name: x.name, number: x.number, suit: x.suit }));
+    const data = TarotDeckData.map(x => ({ index: BigInt(x.index), name: x.name, number: BigInt(x.number), suit: x.suit as string }));
     tarot.importTarotCards(data).then((r) => console.log('Import complete!', r)).catch(console.log);
 }
 
