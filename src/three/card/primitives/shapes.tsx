@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
 export function TarotCardShape () {
-    return roundedRectFromDimensions(2.5, 4.75, .125);
+    return roundedRectFromDimensions(2.75, 4.75, .125);
 }
 
 export function PromptCardShape () {
-    return roundedRectFromDimensions(4.75, 2.5, .125);
+    return roundedRectFromDimensions(4.75, 2.75, .125);
 }
 
 export function fromSVG () {
