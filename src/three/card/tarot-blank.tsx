@@ -7,9 +7,10 @@ import { useContext } from 'react';
 import { DecksContext } from 'src/context/decks';
 
 interface Props extends MeshProps {
+    plain?: boolean;
 }
 
-export default function BlankTarotCardMesh ({...props}: Props) {
+export default function BlankTarotCardMesh ({plain, ...props}: Props) {
 
     // This is an attempt to make the loading experience of cards less shit
     // It relies upon the card back image being preloaded.
@@ -28,9 +29,9 @@ export default function BlankTarotCardMesh ({...props}: Props) {
             rotation={props.rotation || [0, M3.degToRad(90), 0]}
             geometry={geometry}
         >
-            {back
-                ? <meshPhongMaterial attachArray="material" map={back} />
-                : <meshPhongMaterial attachArray="material" color='#AFC8C3' />}
+            {plain
+                ? <meshPhongMaterial attachArray="material" color='#AFC8C3' />
+                : <meshPhongMaterial attachArray="material" map={back} />}
             <meshPhongMaterial attachArray="material" color='white' />
             <meshPhongMaterial attachArray="material" color='white' />
         </animated.mesh>

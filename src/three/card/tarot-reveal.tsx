@@ -104,8 +104,9 @@ export default function TarotCardReveal ({
 
     return (
         <Canvas camera={{ position: [0, 0, 4] }}>
-            <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
-                <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props}/>}>
+            {/* Fall back to a blank tarot card, then a blank tarot card with no card back. */}
+            <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} plain={true} />}>
+                <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
                     <TarotCardMesh draw={draw} {...cardProps} {...props}/>
                 </Suspense>
             </Suspense>
