@@ -23,17 +23,17 @@ const RiderWaiteTarotSkin: TarotDeckSkin = {
         return {
             cardIndex: card.index,
             cardName: card.name,
-            filePath: require(`./${suitMap[card.suit]}${`0${card.number}`.slice(-2)}.jpg`).default,
+            filePath: require(`./${suitMap[card.suit]}${`0${card.number}`.slice(-2)}.webp`).default,
         }
     }).concat([{
         cardIndex: 78,
         cardName: 'CARD BACK',
-        filePath: require('./back.jpg').default,
+        filePath: require('./back.webp').default,
     },
     {
         cardIndex: 79,
         cardName: 'PROMPT CARD BACK',
-        filePath: require(`./prompt-back.jpg`).default,
+        filePath: require(`./prompt-back.webp`).default,
     }]).sort((a, b) => a.cardIndex - b.cardIndex)
 };
 
