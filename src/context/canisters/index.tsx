@@ -1,25 +1,61 @@
 import { createContext, ReactNode, useMemo, useContext } from 'react';
-import { ActorSubclass, HttpAgent } from '@dfinity/agent';
-import { tarot } from 'dfx-generated/tarot';
-import { _SERVICE } from '.dfx/local/canisters/tarot/tarot.did';
+import { Actor, ActorSubclass } from '@dfinity/agent';
+import { idlFactory, canisterId } from 'dfx-generated/tarot';
+import agent from 'src/constants/agent';
+
+export interface CardDraw {
+    'theme': string,
+    'principal': string,
+    'card': number,
+    'reversed': boolean,
+    'timestamp': Timestamp,
+};
+export type Err = { 'permissionDenied': null } |
+{ 'invalidId': null };
+export type Id = number;
+export interface NextAvailableDraw {
+    'now': Timestamp,
+    'theme': string,
+    'principal': string,
+    'interval': Timestamp,
+    'lastDraw': [] | [Timestamp],
+    'nextDraw': Timestamp,
+};
+export type Res = Result;
+export type Result = { 'ok': CardDraw } |
+{ 'err': Err };
+export interface TarotCard {
+    'name': string,
+    'suit': TarotCardSuits,
+    'number': number,
+    'index': number,
+};
+export type TarotCardSuits = string;
+export type Timestamp = number;
+
+export interface TarotCanisterInterface {
+    // TODO: This should come from .dfx/local/canisters/tarot/tarot.d.ts, but doesn't seem to work
+    'countDraws': () => Promise<number>,
+    'createDailyDraw': (arg_0: string, arg_1: string) => Promise<CardDraw>,
+    'getCardDraw': (arg_0: number) => Promise<Res>,
+    'getExistingDraw': (arg_0: string, arg_1: string) => Promise<
+        [] | [[Id, CardDraw]]
+    >,
+    'importTarotCards': (arg_0: Array<TarotCard>) => Promise<undefined>,
+    'listPrincipleDailyDraws': (arg_0: string) => Promise<Array<CardDraw>>,
+    'listTarotCards': () => Promise<Array<TarotCard>>,
+    'nextDrawTime': (arg_0: string, arg_1: string) => Promise<NextAvailableDraw>,
+}
 
 interface CanistersState {
-    agent: HttpAgent;
-    tarot: ActorSubclass<_SERVICE>;
+    tarot: ActorSubclass<TarotCanisterInterface>;
 };
 
 interface CanistersProviderProps {
     children?: ReactNode;
 };
-
-const agent = new HttpAgent({
-    // TODO: Handle mainnet and devnet
-    host: 'http://localhost:8000',
-});
-// dfx 0.7.7 is doing this for us now (but it's breaking)
-// agent.fetchRootKey().catch(console.error);
+export const tarot = Actor.createActor<TarotCanisterInterface>(idlFactory, { agent: agent(), canisterId: canisterId });
 const DefaultState: CanistersState = {
-    agent,
     tarot,
 };
 
@@ -28,11 +64,9 @@ export const useCanister = () => useContext(CanistersContext);
 
 export default function CanistersProvider({ children }: CanistersProviderProps) {
 
-    const agent = useMemo(() => DefaultState.agent, []);
     const tarot = useMemo(() => DefaultState.tarot, []);
 
     const value = {
-        agent,
         tarot,
     };
 

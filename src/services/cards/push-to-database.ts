@@ -1,19 +1,9 @@
-import { HttpAgent } from '@dfinity/agent';
 import { TarotDeckData } from './';
 import Readings from '../readings/data';
-import { tarot } from 'dfx-generated/tarot';
-
-// Takes our hand-made JSON and pushes it into the canister
-
-const agent = new HttpAgent({
-    // TODO: Handle mainnet and devnet
-    host: 'http://localhost:8000',
-});
-// dfx 0.7.7 is doing this for us now (but it's breaking)
-// agent.fetchRootKey().catch(console.error);
+import { tarot } from 'src/context/canisters';
 
 export function pushCardsBasic () {
-    const data = TarotDeckData.map(x => ({ index: BigInt(x.index), name: x.name, number: BigInt(x.number), suit: x.suit as string }));
+    const data = TarotDeckData.map(x => ({ index: x.index, name: x.name, number: x.number, suit: x.suit as string }));
     tarot.importTarotCards(data).then((r) => console.log('Import complete!', r)).catch(console.log);
 }
 
