@@ -4,7 +4,12 @@
       "main": "src/backend/main.mo",
       "type": "motoko"
     },
+    "alphadeck": {
+      "main": "src/backend/alphadeck.mo",
+      "type": "motoko"
+    },
     "tarot_frontend": {
+      "dependencies": ["tarot"],
       "frontend": {
         "entrypoint": "build/index.html"
       },
