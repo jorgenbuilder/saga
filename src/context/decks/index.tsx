@@ -1,5 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
-import AlphaDeck from './alphadeck';
+import { createContext, ReactNode, useContext, useState } from 'react';
 import DefaultDeck from './default';
 
 interface DecksState {
@@ -18,7 +17,7 @@ interface DecksProviderProps {
 
 const DefaultState: DecksState = {
     deck: DefaultDeck,
-    availableDecks: [DefaultDeck, AlphaDeck],
+    availableDecks: [DefaultDeck],
 };
 
 export const DecksContext = createContext<DecksState>(DefaultState);
