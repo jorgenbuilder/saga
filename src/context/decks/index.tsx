@@ -1,9 +1,12 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
+import AlphaDeck from './alphadeck';
 import DefaultDeck from './default';
 
 interface DecksState {
     deck: Deck;
     availableDecks: Deck[];
+    setDeck: Dispatch<SetStateAction<Deck>>;
+    setAvailableDecks: Dispatch<SetStateAction<Deck[]>>;
 };
 
 export interface Deck {
@@ -17,24 +20,28 @@ interface DecksProviderProps {
 
 const DefaultState: DecksState = {
     deck: DefaultDeck,
-    availableDecks: [DefaultDeck],
+    availableDecks: [DefaultDeck, AlphaDeck],
+    setDeck: () => {},
+    setAvailableDecks: () => {},
 };
 
 export const DecksContext = createContext<DecksState>(DefaultState);
-export const useCanister = () => useContext(DecksContext);
+export const useDecks = () => useContext(DecksContext);
 
 export default function DecksProvider({ children }: DecksProviderProps) {
 
     const [deck, setDeck] = useState<Deck>(DefaultState.deck);
     const [availableDecks, setAvailableDecks] = useState<Deck[]>(DefaultState.availableDecks);
 
-    const value = {
+    const value = useCallback(() => ({
         deck,
+        setDeck,
         availableDecks,
-    };
+        setAvailableDecks,
+    }), [deck, setDeck, availableDecks, setAvailableDecks,]);
 
     return <DecksContext.Provider
-        value={value}
+        value={value()}
     >
         {children}
     </DecksContext.Provider>;

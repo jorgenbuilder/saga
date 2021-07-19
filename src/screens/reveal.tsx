@@ -6,7 +6,7 @@ import Reading from 'src/components/reading-body';
 import { useInternetIdentity } from 'src/context/internet-identity';
 
 export default function RevealScreen () {
-
+    
     const { identity } = useInternetIdentity();
 
     const [draw, setDraw] = useState<CardDraw>()
@@ -26,7 +26,7 @@ export default function RevealScreen () {
                     draw={draw}
                 />
             </Header>
-            <Body on={revealed}>
+            <Body isOn={revealed}>
                 <Reading draw={draw} />
             </Body>
         </Container>
@@ -46,13 +46,13 @@ flex-shrink: 0;
 position: relative;
 `;
 
-const Body = styled.div<{on: boolean}>`
+const Body = styled.div<{isOn: boolean}>`
 display: flex;
 flex-direction: column;
 padding: 20px 10px;
 box-sizing: border-box;
-opacity: ${props => props.on ? 1 : 0};
-transform: ${props => props.on ? 'translateY(-9%)' : ''};
+opacity: ${props => props.isOn ? 1 : 0};
+transform: ${props => props.isOn ? 'translateY(-9%)' : ''};
 transition: all 620ms ease-out;
 
 color: hsl(var(--color-gold));

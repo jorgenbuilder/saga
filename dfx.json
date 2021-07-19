@@ -9,7 +9,7 @@
       "type": "motoko"
     },
     "tarot_frontend": {
-      "dependencies": ["tarot"],
+      "dependencies": ["tarot", "alphadeck"],
       "frontend": {
         "entrypoint": "build/index.html"
       },

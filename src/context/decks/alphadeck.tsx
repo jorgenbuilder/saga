@@ -4,7 +4,7 @@ import { Actor, ActorSubclass } from '@dfinity/agent';
 import agent from 'src/constants/agent';
 
 
-const deck: ActorSubclass<any> = Actor.createActor<any>(idlFactory, { agent: agent(), canisterId: canisterId });
+export const deck: ActorSubclass<any> = Actor.createActor<any>(idlFactory, { agent: agent(), canisterId: canisterId });
 
 const AlphaDeck: Deck = {
   name: 'Alpha Deck',

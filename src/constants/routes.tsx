@@ -8,6 +8,7 @@ import SplashScreen from 'src/screens/splash';
 import ChooseThemeScreen from 'src/screens/choose-theme';
 import AuthScreen from 'src/screens/auth';
 import { AnimatedRoute, AnimatedSwitch } from 'src/components/animated-routes';
+import ChooseDeckScreen from 'src/screens/choose-deck';
 
 export interface RouteConf {
     path: string;
@@ -69,6 +70,11 @@ const Routes: {
     draw: {
         path: '/draw',
         Component: RevealScreen,
+        requiresAuth: true,
+    },
+    decks: {
+        path: '/decks',
+        Component: ChooseDeckScreen,
         requiresAuth: true,
     },
 };

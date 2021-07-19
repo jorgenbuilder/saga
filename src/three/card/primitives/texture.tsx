@@ -7,20 +7,20 @@ export function CardTextureJPEG (pathOrData: string) {
     return useLoader(THREE.TextureLoader, pathOrData ? pathOrData : '');
 };
 
-const textures: { [key: number]: string; } = {};
-const texturePromises: { [key: number]: Promise<string> } = {};
+const textures: { [key: string]: string; } = {};
+const texturePromises: { [key: string]: Promise<string> } = {};
 
 export default function CardTexture ({ index }: {index: number}) {
     const { deck } = useContext(DecksContext);
-    if (!textures[index]) {
-        if (!texturePromises[index]) {
-            texturePromises[index] = deck.serveCard(index).then((r) => {
-                textures[index] = r;
-                console.log(r);
+    if (!textures[`${deck.name}${index}`]) {
+        if (!texturePromises[`${deck.name}${index}`]) {
+            texturePromises[`${deck.name}${index}`] = deck.serveCard(index).then((r) => {
+                textures[`${deck.name}${index}`] = r;
+                console.info('Retrieved asset', r);
                 return r;
             });
         }
-        throw texturePromises[index];
+        throw texturePromises[`${deck.name}${index}`];
     }
-    return <meshPhongMaterial attachArray="material" map={useLoader(THREE.TextureLoader, textures[index])} />;
+    return <meshPhongMaterial attachArray="material" map={useLoader(THREE.TextureLoader, textures[`${deck.name}${index}`])} />;
 };

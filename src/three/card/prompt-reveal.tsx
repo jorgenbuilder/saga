@@ -82,7 +82,7 @@ export default function PromptCardReveal ({
     return (
         // @ts-ignore
         <Canvas colorManagement pixelRatio={window.devicePixelRatio} camera={{ position: [0, 0, 4] }}>
-            {/* TODO: This fallback sucks, obviously */}
+            {/* TODO: This fallback sucks, obviously. No one really sees it, though. */}
             <Suspense fallback={null}>
                 <PromptCardMesh
                     onPointerMove={hoverTilt}

@@ -46,8 +46,8 @@ export default function Reading ({ draw }: Props) {
                 </ReadingCardName>
                 <Keywords>
                     {keywords.map((x, i) => <>
-                        {i < 4 && <Keyword length={x.length}>{x}</Keyword>}
-                        {i < 3 && i < keywords.length - 1 && <HeaderBullet>•</HeaderBullet>}
+                        {i < 4 && <Keyword length={x.length} key={`${i}--keyword`}>{x}</Keyword>}
+                        {i < 3 && i < keywords.length - 1 && <HeaderBullet key={`${i}--bullet`}>•</HeaderBullet>}
                     </>)}
                 </Keywords>
             </ReadingHead>

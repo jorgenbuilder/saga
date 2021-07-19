@@ -8,6 +8,7 @@ import TarotCardMesh from 'src/three/card/tarot';
 import DefaultLighting from 'src/three/lighting';
 import BlankTarotCardMesh from './tarot-blank';
 import { useState } from 'react';
+import { DecksContext, useDecks } from 'src/context/decks';
 
 interface Props extends MeshProps {
     draw?: CardDraw;
@@ -91,7 +92,7 @@ export default function TarotCardReveal ({
             tension: 300,
             friction: 85,
         },
-    })
+    });
 
     const cardProps = {
         position: spring1.position as unknown as THREE.Vector3,
@@ -100,22 +101,27 @@ export default function TarotCardReveal ({
         onPointerMove: hoverTilt,
         onPointerEnter: () => setHover(true),
         onPointerLeave: () => { setHover(false); setMx(0); setMy(0); },
-    }
+    };
+
+    // const Bridge = useContextBridge(DecksContext,);  // https://docs.pmnd.rs/react-three-fiber/advanced/gotchas#consuming-context-from-a-foreign-provider
+    const decks = useDecks();
 
     return (
         <Canvas camera={{ position: [0, 0, 4] }}>
-            {/* Fall back to a blank tarot card, then a blank tarot card with no card back. */}
-            <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} plain={true} />}>
-                <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
-                    <TarotCardMesh draw={draw as CardDraw} {...cardProps} {...props}/>
+            <DecksContext.Provider value={decks}>
+                {/* Fall back to a blank tarot card, then a blank tarot card with no card back. */}
+                <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} plain={true} />}>
+                    <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
+                        <TarotCardMesh draw={draw as CardDraw} {...cardProps} {...props}/>
+                    </Suspense>
                 </Suspense>
-            </Suspense>
-            <DefaultLighting />
-            <pointLight
-                position={spring2.position as unknown as THREE.Vector3}
-                intensity={100}
-                color={'white'}
-            />
+                <DefaultLighting />
+                <pointLight
+                    position={spring2.position as unknown as THREE.Vector3}
+                    intensity={100}
+                    color={'white'}
+                />
+            </DecksContext.Provider>
         </Canvas>
     );
 }

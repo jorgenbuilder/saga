@@ -3,7 +3,6 @@ import { LinkButton } from 'src/components/button';
 import Routes from 'src/constants/routes';
 
 const ChooseThemeScreen: React.FC = () => {
-    
     return (
         <>
             <Container>
@@ -16,6 +15,8 @@ const ChooseThemeScreen: React.FC = () => {
                 <LinkButton to={Routes.drawCareer.path}>
                     Career
                 </LinkButton>
+                <br /><br />
+                <LinkButton to={Routes.decks.path}>My Decks</LinkButton>
             </Container>
         </>
     );
