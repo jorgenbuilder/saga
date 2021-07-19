@@ -2,13 +2,15 @@ import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import { LinkButton } from 'src/components/button';
 import Routes from 'src/constants/routes';
-import CardBack from 'src/assets/cards/rider-waite/back.jpg';
+import { useContext } from 'react';
+import { DecksContext } from 'src/context/decks';
 
 const ChooseThemeScreen:React.FC = () => {
+    const { deck } = useContext(DecksContext);
     return (
         <>
             <Helmet>
-                <link rel="preload" as="image" href={CardBack} />
+                <link rel="preload" as="image" href={deck.serveCard(78)} />
             </Helmet>
             <Container>
                 <LinkButton to={Routes.drawGeneral.path}>

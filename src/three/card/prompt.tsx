@@ -6,8 +6,9 @@ import { animated } from '@react-spring/three';
 import * as Card from './primitives';
 import { useRef } from 'react';
 import { Text, OrthographicCamera } from '@react-three/drei';
-import Back from 'src/assets/cards/rider-waite/prompt-back.jpg';
 import Almendra from '@fontsource/almendra/files/almendra-all-400-italic.woff';
+import { useContext } from 'react';
+import { DecksContext } from 'src/context/decks';
 
 interface Props extends MeshProps {
     prompt: string;
@@ -38,6 +39,7 @@ function PromptCardFace({ text }: { text: string }) {
 }
 
 export default function PromptCardMesh({ prompt, children, ...props }: Props) {
+    const { deck } = useContext(DecksContext);
     const cam = useRef<Camera>();
     const shape = useMemo(() => Card.PromptCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
@@ -50,9 +52,7 @@ export default function PromptCardMesh({ prompt, children, ...props }: Props) {
         return [scene, target];
     }, []);
 
-    const back = useMemo(() => Card.CardTextureJPEG({
-        filePath: Back,
-    }), []);
+    const back = useMemo(() => Card.CardTextureJPEG(deck.serveCard(79)), [deck]);
 
     useFrame(state => {
         if (!cam.current) return;
