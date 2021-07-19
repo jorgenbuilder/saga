@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { createPortal, MeshProps, useFrame } from '@react-three/fiber';
 import { Camera, MathUtils as M3 } from 'three';
 import { animated } from '@react-spring/three';
@@ -7,8 +7,7 @@ import * as Card from './primitives';
 import { useRef } from 'react';
 import { Text, OrthographicCamera } from '@react-three/drei';
 import Almendra from '@fontsource/almendra/files/almendra-all-400-italic.woff';
-import { useContext } from 'react';
-import { DecksContext } from 'src/context/decks';
+import CardTexture from './primitives/texture';
 
 interface Props extends MeshProps {
     prompt: string;
@@ -39,7 +38,6 @@ function PromptCardFace({ text }: { text: string }) {
 }
 
 export default function PromptCardMesh({ prompt, children, ...props }: Props) {
-    const { deck } = useContext(DecksContext);
     const cam = useRef<Camera>();
     const shape = useMemo(() => Card.PromptCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
@@ -51,8 +49,6 @@ export default function PromptCardMesh({ prompt, children, ...props }: Props) {
         target.samples = 8;
         return [scene, target];
     }, []);
-
-    const back = useMemo(() => Card.CardTextureJPEG(deck.serveCard(79)), [deck]);
 
     useFrame(state => {
         if (!cam.current) return;
@@ -70,7 +66,9 @@ export default function PromptCardMesh({ prompt, children, ...props }: Props) {
                 rotation={props.rotation || [0, M3.degToRad(90), 0]}
                 geometry={geometry}
             >
-                <meshStandardMaterial attachArray="material" map={back} />
+                <Suspense fallback={<meshStandardMaterial attachArray="material" color='#222' />}>
+                    <CardTexture index={79} />
+                </Suspense>
                 <meshStandardMaterial attachArray="material" color='#222' />
                 <meshStandardMaterial attachArray="material" map={target.texture} precision={'highp'} />
             </animated.mesh>

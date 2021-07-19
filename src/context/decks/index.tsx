@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
+import AlphaDeck from './alphadeck';
 import DefaultDeck from './default';
 
 interface DecksState {
@@ -8,7 +9,7 @@ interface DecksState {
 
 export interface Deck {
     name: string;
-    serveCard: (index: number) => string;  // return an image path or data
+    serveCard: (index: number) => Promise<string>;  // return an image path or data
 };
 
 interface DecksProviderProps {
@@ -17,7 +18,7 @@ interface DecksProviderProps {
 
 const DefaultState: DecksState = {
     deck: DefaultDeck,
-    availableDecks: [DefaultDeck],
+    availableDecks: [DefaultDeck, AlphaDeck],
 };
 
 export const DecksContext = createContext<DecksState>(DefaultState);

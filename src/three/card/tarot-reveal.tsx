@@ -107,7 +107,7 @@ export default function TarotCardReveal ({
             {/* Fall back to a blank tarot card, then a blank tarot card with no card back. */}
             <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} plain={true} />}>
                 <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
-                    <TarotCardMesh draw={draw} {...cardProps} {...props}/>
+                    <TarotCardMesh draw={draw as CardDraw} {...cardProps} {...props}/>
                 </Suspense>
             </Suspense>
             <DefaultLighting />
