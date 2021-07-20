@@ -23,7 +23,7 @@ shared({ caller }) actor class AlphaDeck() {
     // Primary entity datastores //
     //////////////////////////////
 
-    stable let tarotCards : [var ?CardAsset] = Array.init<?CardAsset>(79, null);
+    stable let tarotCards : [var ?CardAsset] = Array.init<?CardAsset>(80, null);
     stable var nfts : [var NFT] = Array.init<NFT>(10, { var owner = null });
 
     //////////////////////////////////
