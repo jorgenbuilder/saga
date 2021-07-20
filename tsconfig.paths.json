@@ -7,6 +7,9 @@
         ],
         "dfx-generated/alphadeck": [
           ".dfx/local/canisters/alphadeck/alphadeck.js"
+        ],
+        "devconf": [
+          "dev.js"
         ]
       }
     }
