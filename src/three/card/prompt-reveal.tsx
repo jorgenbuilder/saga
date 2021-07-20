@@ -6,6 +6,7 @@ import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
 import { useAccelerometer } from 'src/context/device-accelerometer';
 import DefaultLighting from 'src/three/lighting';
 import PromptCardMesh from 'src/three/card/prompt';
+import { DecksContext, useDecks } from 'src/context/decks';
 
 interface Props extends MeshProps {
     prompt: string;
@@ -77,25 +78,29 @@ export default function PromptCardReveal ({
         var bbox = new THREE.Box3().setFromObject(e.eventObject);
         setMx(e.point.x >= 0 ? e.point.x / bbox.max.x : - e.point.x / bbox.min.x);
         setMy(e.point.y >= 0 ? e.point.y / bbox.max.y : - e.point.y / bbox.min.y);
-    }
+    };
+
+    const decks = useDecks();
 
     return (
         // @ts-ignore
         <Canvas colorManagement pixelRatio={window.devicePixelRatio} camera={{ position: [0, 0, 4] }}>
-            {/* TODO: This fallback sucks, obviously. No one really sees it, though. */}
-            <Suspense fallback={null}>
-                <PromptCardMesh
-                    onPointerMove={hoverTilt}
-                    onPointerEnter={() => setHover(true)}
-                    onPointerLeave={() => { setHover(false); setMx(0); setMy(0); }}
-                    prompt={prompt}
-                    position={spring1.position as unknown as Vector3}
-                    rotation={spring1.rotation as unknown as Euler}
-                    scale={spring1.scale as unknown as Vector3}
-                    {...props}
-                />
-            </Suspense>
-            <DefaultLighting />
+            <DecksContext.Provider value={decks}>
+                {/* TODO: This fallback sucks, obviously. No one really sees it, though. */}
+                <Suspense fallback={null}>
+                    <PromptCardMesh
+                        onPointerMove={hoverTilt}
+                        onPointerEnter={() => setHover(true)}
+                        onPointerLeave={() => { setHover(false); setMx(0); setMy(0); }}
+                        prompt={prompt}
+                        position={spring1.position as unknown as Vector3}
+                        rotation={spring1.rotation as unknown as Euler}
+                        scale={spring1.scale as unknown as Vector3}
+                        {...props}
+                    />
+                </Suspense>
+                <DefaultLighting />
+            </DecksContext.Provider>
         </Canvas>
     );
 }
