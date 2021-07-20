@@ -38,7 +38,8 @@ export default function DecksProvider({ children }: DecksProviderProps) {
 
     useEffect(() => {
         if (identity) {
-            alphadeck.getPrincipalNFT(identity?.getPrincipal()).then((resp: any) => {
+            alphadeck.getPrincipalNFT(identity?.getPrincipal()).catch(console.error).then((resp: any) => {
+                if (!resp) return;
                 if (resp.length) {
                     setAvailableDecks([DefaultDeck, AlphaDeck]);
                 } else {
