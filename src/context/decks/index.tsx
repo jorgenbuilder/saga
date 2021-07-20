@@ -1,5 +1,6 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useState } from 'react';
-import AlphaDeck from './alphadeck';
+import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
+import { useInternetIdentity } from '../internet-identity';
+import AlphaDeck, { deck as alphadeck} from './alphadeck';
 import DefaultDeck from './default';
 
 interface DecksState {
@@ -20,7 +21,7 @@ interface DecksProviderProps {
 
 const DefaultState: DecksState = {
     deck: DefaultDeck,
-    availableDecks: [DefaultDeck, AlphaDeck],
+    availableDecks: [DefaultDeck],
     setDeck: () => {},
     setAvailableDecks: () => {},
 };
@@ -32,6 +33,20 @@ export default function DecksProvider({ children }: DecksProviderProps) {
 
     const [deck, setDeck] = useState<Deck>(DefaultState.deck);
     const [availableDecks, setAvailableDecks] = useState<Deck[]>(DefaultState.availableDecks);
+
+    const { identity } = useInternetIdentity();
+
+    useEffect(() => {
+        if (identity) {
+            alphadeck.getPrincipalNFT(identity?.getPrincipal()).then((resp: any) => {
+                if (resp.length) {
+                    setAvailableDecks([DefaultDeck, AlphaDeck]);
+                } else {
+                    setAvailableDecks([DefaultDeck]);
+                }
+            });
+        }
+    }, [identity]);
 
     const value = useCallback(() => ({
         deck,

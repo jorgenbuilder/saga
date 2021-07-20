@@ -4,13 +4,15 @@ import { RouteConf } from 'src/constants/routes';
 import { useInternetIdentity } from 'src/context/internet-identity';
 import AuthScreen from 'src/screens/auth';
 
+const DEVMODE = window.location.host.includes('localhost');
+
 interface PrivateRouteProps extends RouteConf {
     children?: ReactNode;
 }
 
 export default function PrivateRoute({ path, exact, Component, requiresAuth, ...rest }: PrivateRouteProps) {
     const { isAuthed } = useInternetIdentity();
-    if (requiresAuth && !isAuthed && !window.location.host.includes('localhost')) {
+    if (requiresAuth && !isAuthed && !DEVMODE) {
         return <AuthScreen />
     }
     return <Route path={path} exact={exact} {...rest} />

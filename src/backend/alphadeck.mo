@@ -99,7 +99,7 @@ shared({ caller }) actor class AlphaDeck() {
     func grantNFT(principal : Principal) : ?NFT {
         var i = 0;
         while (i < nfts.size()) {
-            if (Option.isNull(?nfts[i])) {
+            if (Option.isNull(nfts[i].owner)) {
                 var nft = nfts[i];
                 nft.owner := ?principal;
                 return ?nft;

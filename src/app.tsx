@@ -27,8 +27,8 @@ export default function App () {
         <Compose components={[
             DeviceAccelerometerProvider,
             CanistersProvider,
-            InternetIdentityProvider,
             DeckProvider,
+            InternetIdentityProvider,
         ]}>
             <PreloadAssets />
             <Router>
