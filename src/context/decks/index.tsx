@@ -1,4 +1,4 @@
-import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useState } from 'react';
 import AlphaDeck from './alphadeck';
 import DefaultDeck from './default';
 

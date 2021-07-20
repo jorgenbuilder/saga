@@ -1,4 +1,5 @@
 /* This just helps me upload assets to the canister by transforming images into a base64 string and mapping the image file name onto the correct card index. Should work with most image formats. */
+// There's a script to handle this in browser, too
 import fs from 'fs';
 
 const path = process.argv[2];
