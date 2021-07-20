@@ -4,7 +4,6 @@ import Routes from 'src/constants/routes'
 import Grid from 'src/components/grid'
 
 const Workbench:React.FC = () => {
-    // TODO: This redirects when run with deploy-local :(
     if (process.env.NODE_ENV === 'production') {
         return <Redirect to={Routes.app.path} />
     }

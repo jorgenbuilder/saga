@@ -89,7 +89,7 @@ export default function AccelerometerProvider ({ children }: AccelerometerProvid
 
     useEffect(() => {
         setIsSupported(window.DeviceMotionEvent !== undefined);
-        if (typeof window.DeviceMotionEvent.requestPermission === 'function') {
+        if (typeof window?.DeviceMotionEvent?.requestPermission === 'function') {
             // Some devices provide this permission api, which must be called from a user interaction.
             // If a user has already granted permission, we can call this without a user interaction.
             requestPermission();

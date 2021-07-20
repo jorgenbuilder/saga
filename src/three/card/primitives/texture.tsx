@@ -16,7 +16,6 @@ export default function CardTexture ({ index }: {index: number}) {
         if (!texturePromises[`${deck.name}${index}`]) {
             texturePromises[`${deck.name}${index}`] = deck.serveCard(index).then((r) => {
                 textures[`${deck.name}${index}`] = r;
-                console.info('Retrieved asset', r);
                 return r;
             });
         }

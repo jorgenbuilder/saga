@@ -16,7 +16,7 @@ const ChooseThemeScreen: React.FC = () => {
                     Career
                 </LinkButton>
                 <br /><br />
-                <LinkButton to={Routes.decks.path}>My Decks</LinkButton>
+                <LinkButton to={Routes.index.path}>Back</LinkButton>
             </Container>
         </>
     );

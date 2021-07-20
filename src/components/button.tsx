@@ -38,6 +38,8 @@ color: hsl(var(--color-gold));
 text-decoration: none !important;
 font-family: Uncial Antiqua;
 font-size: 20px;
+
+cursor: pointer;
 `;
 
 export default function Button ({ children, onClick, active }: {active?: boolean; children: ReactNode, onClick?: MouseEventHandler<HTMLDivElement>}) {

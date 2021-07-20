@@ -15,8 +15,8 @@ export default function ChooseDeckScreen () {
                     key={x.name}
                 />)}
                 <br /><br />
-                <LinkButton to={Routes.drawSelection.path}>
-                    Okay
+                <LinkButton to={Routes.index.path}>
+                    Back
                 </LinkButton>
             </Container>
         </>

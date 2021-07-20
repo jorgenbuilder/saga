@@ -1,8 +1,7 @@
-import { Redirect } from 'react-router-dom';
-import Routes from 'src/constants/routes';
+import TitleScreen from './title';
 const Index:React.FC = () => {
     return (
-        <Redirect push={true} to={Routes.workbench.path} />
+        <TitleScreen />
     );
 };
 

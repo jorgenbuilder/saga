@@ -136,7 +136,7 @@ const ReadingHead = styled.div`
 padding:  10px 0 30px 0;
 margin: 0 0 25px 0;
 text-align: center;
-text-shadow: 0 1px 10px var(--color-back);
+text-shadow: 0 1px 10px hsl(var(--color-back));
 background: linear-gradient(
     0deg,
     hsla(var(--color-back), 1) 50%,
