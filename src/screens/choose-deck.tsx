@@ -1,19 +1,17 @@
 import styled from 'styled-components';
-import Button, { LinkButton } from 'src/components/button';
+import { LinkButton } from 'src/components/button';
 import Routes from 'src/constants/routes';
 import { useDecks } from 'src/context/decks';
 
 export default function ChooseDeckScreen () {
-    const { deck, setDeck, availableDecks } = useDecks();
+    const { availableDecks } = useDecks();
     return (
         <>
             <Container>
-                {availableDecks.map(x => <Button
-                    children={x.name}
-                    active={deck === x}
-                    onClick={() => setDeck(x)}
-                    key={x.name}
-                />)}
+                {availableDecks.map(x => <LinkButton
+                    to={`/decks/${x.slug}`}
+                    key={x.slug}
+                >{x.name}</LinkButton>)}
                 <br /><br />
                 <LinkButton to={Routes.index.path}>
                     Back

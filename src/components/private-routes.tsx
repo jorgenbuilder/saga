@@ -5,7 +5,7 @@ import { useInternetIdentity } from 'src/context/internet-identity';
 import AuthScreen from 'src/screens/auth';
 
 // const DEVMODE = window.location.host.includes('localhost');
-const DEVMODE = true;
+const DEVMODE = false;
 
 interface PrivateRouteProps extends RouteConf {
     children?: ReactNode;

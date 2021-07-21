@@ -1,6 +1,5 @@
 import { useLoader } from '@react-three/fiber';
-import { useContext } from 'react';
-import { DecksContext } from 'src/context/decks';
+import { useDecks } from 'src/context/decks';
 import * as THREE from 'three';
 
 export function CardTextureJPEG (pathOrData: string) {
@@ -11,15 +10,16 @@ const textures: { [key: string]: string; } = {};
 const texturePromises: { [key: string]: Promise<string> } = {};
 
 export default function CardTexture ({ index }: {index: number}) {
-    const { deck } = useContext(DecksContext);
-    if (!textures[`${deck.name}${index}`]) {
-        if (!texturePromises[`${deck.name}${index}`]) {
-            texturePromises[`${deck.name}${index}`] = deck.serveCard(index).then((r) => {
-                textures[`${deck.name}${index}`] = r;
+    const { viewDeck, deck } = useDecks();
+    const useDeck = viewDeck || deck;
+    if (!textures[`${useDeck.name}${index}`]) {
+        if (!texturePromises[`${useDeck.name}${index}`]) {
+            texturePromises[`${useDeck.name}${index}`] = useDeck.serveCard(index).then((r) => {
+                textures[`${useDeck.name}${index}`] = r;
                 return r;
             });
         }
-        throw texturePromises[`${deck.name}${index}`];
+        throw texturePromises[`${useDeck.name}${index}`];
     }
-    return <meshPhongMaterial attachArray="material" map={useLoader(THREE.TextureLoader, textures[`${deck.name}${index}`])} />;
+    return <meshPhongMaterial attachArray="material" map={useLoader(THREE.TextureLoader, textures[`${useDeck.name}${index}`])} />;
 };

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+
 import { useEffect, Suspense } from 'react';
 import { useSpring as useSpring3 } from '@react-spring/three';
 import { Canvas, MeshProps, ThreeEvent } from '@react-three/fiber';
@@ -9,6 +10,7 @@ import DefaultLighting from 'src/three/lighting';
 import BlankTarotCardMesh from './tarot-blank';
 import { useState } from 'react';
 import { DecksContext, useDecks } from 'src/context/decks';
+import SplashScreen from 'src/screens/splash';
 
 interface Props extends MeshProps {
     draw?: CardDraw;
@@ -106,13 +108,15 @@ export default function TarotCardReveal ({
     // const Bridge = useContextBridge(DecksContext,);  // https://docs.pmnd.rs/react-three-fiber/advanced/gotchas#consuming-context-from-a-foreign-provider
     const decks = useDecks();
 
+    if (!draw) return <SplashScreen />;
+
     return (
         <Canvas camera={{ position: [0, 0, 4] }}>
             <DecksContext.Provider value={decks}>
                 {/* Fall back to a blank tarot card, then a blank tarot card with no card back. */}
                 <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} plain={true} />}>
                     <Suspense fallback={<BlankTarotCardMesh {...cardProps} {...props} />}>
-                        <TarotCardMesh draw={draw as CardDraw} {...cardProps} {...props}/>
+                        <TarotCardMesh cardIndex={(draw).card} {...cardProps} {...props}/>
                     </Suspense>
                 </Suspense>
                 <DefaultLighting />

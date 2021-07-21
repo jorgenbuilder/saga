@@ -9,6 +9,8 @@ import ChooseThemeScreen from 'src/screens/choose-theme';
 import AuthScreen from 'src/screens/auth';
 import { AnimatedRoute, AnimatedSwitch } from 'src/components/animated-routes';
 import ChooseDeckScreen from 'src/screens/choose-deck';
+import ExplorerWorkBench from 'src/screens/workbench/explorer';
+import DeckDetail from 'src/screens/deck-detail';
 
 export interface RouteConf {
     path: string;
@@ -37,6 +39,10 @@ const Routes: {
     workbenchSplash: {
         path: '/workbench/splash',
         Component: SplashScreen,
+    },
+    workbenchExplorer: {
+        path: '/workbench/explorer',
+        Component: ExplorerWorkBench,
     },
     app: {
         path: '/app',
@@ -70,6 +76,11 @@ const Routes: {
     draw: {
         path: '/draw',
         Component: RevealScreen,
+        requiresAuth: true,
+    },
+    deckDetail: {
+        path: '/decks/:slug',
+        Component: DeckDetail,
         requiresAuth: true,
     },
     decks: {

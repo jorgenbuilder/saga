@@ -3,14 +3,13 @@ import { MeshProps } from '@react-three/fiber';
 import * as THREE from 'three';
 import { animated } from '@react-spring/three';
 import * as Card from './primitives';
-import { CardDraw } from 'src/services/cards/draws';
 import CardTexture from './primitives/texture';
 
 interface Props extends MeshProps {
-    draw: CardDraw;
+    cardIndex: number;
 };
 
-export default function TarotCardMesh ({draw, ...props}: Props) {
+export default function TarotCardMesh ({cardIndex, ...props}: Props) {
     const shape = useMemo(() => Card.TarotCardShape(), []);
     const geometry = useMemo(() => Card.CardGeometry(shape), [shape]);
 
@@ -22,7 +21,7 @@ export default function TarotCardMesh ({draw, ...props}: Props) {
         >
             <CardTexture index={78} />
             <meshPhongMaterial attachArray="material" color='white' />
-            <CardTexture index={draw.card} />
+            <CardTexture index={cardIndex} />
         </animated.mesh>
     )
 }

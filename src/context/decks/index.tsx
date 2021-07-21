@@ -5,6 +5,7 @@ import DefaultDeck from './default';
 
 interface DecksState {
     deck: Deck;
+    viewDeck?: Deck;
     availableDecks: Deck[];
     setDeck: Dispatch<SetStateAction<Deck>>;
     setAvailableDecks: Dispatch<SetStateAction<Deck[]>>;
@@ -12,6 +13,7 @@ interface DecksState {
 
 export interface Deck {
     name: string;
+    slug: string;
     serveCard: (index: number) => Promise<string>;  // return an image path or data
 };
 

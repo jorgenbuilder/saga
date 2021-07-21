@@ -8,6 +8,7 @@ export const deck: ActorSubclass<any> = Actor.createActor<any>(idlFactory, { age
 
 const AlphaDeck: Deck = {
   name: 'Alpha Deck',
+  slug: 'alpha-deck',
   serveCard(index: number) {
     return deck.serveCard(BigInt(index)).then((r: any) => r[0] as string);
   },

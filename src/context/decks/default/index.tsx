@@ -39,6 +39,7 @@ const RiderWaiteTarotSkin: TarotDeckSkin = {
 
 const DefaultDeck: Deck = {
     name: 'Rider Waite Smith',
+    slug: 'rider-waite-smith',
     serveCard (index: number) {
         if (index > 79) throw Error(`Index ${index} doesn't exist. There are 78 cards (0-77,) plus two card backs (78, 79.)`);
         return new Promise((resolve) => resolve((RiderWaiteTarotSkin.cards.find(x => x.cardIndex === index) as TarotCardSkin).filePath));

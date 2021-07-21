@@ -12,7 +12,7 @@ export default function AuthScreen () {
         <Container>
             <Button onClick={() => authenticate()}>
                 Authenticate
-                <img src={dfinity} height={40} style={{margin: '0 0 0 1em'}} />
+                <img alt="with Internet Identity" src={dfinity} height={40} style={{margin: '0 0 0 1em'}} />
             </Button>
         </Container>
     )
