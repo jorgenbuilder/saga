@@ -64,12 +64,12 @@ export default function HackathonDecks() {
                 </Logo>
                 <H2><span>D</span><span>S</span><span>C</span><span>V</span><span>R</span> Hackathon<br />Special Release</H2>
                 <Timer>
-                    <p>Claim A Deck While You Can!</p>
+                    <p>{countdown > 0 ? 'Claim A Deck While You Can!' : `Ended ${new Date(deadDrop)}`}</p>
                     <Countdown>{toTimer(countdown)}</Countdown>
                 </Timer>
-                <div style={{ width: '24em' }}>
+                {countdown > 0 && <div style={{ width: '24em' }}>
                     <Button onClick={() => chooseSection?.current?.scrollIntoView()}>Claim Your Deck</Button>
-                </div>
+                </div>}
             </Head>
             <TwoBy>
                 <CardDemo>
