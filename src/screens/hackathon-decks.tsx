@@ -31,7 +31,6 @@ import Chaos6 from 'src/assets/hackathon/chaos-6.png';
 import Chaos7 from 'src/assets/hackathon/chaos-7.png';
 import Chaos8 from 'src/assets/hackathon/chaos-8.png';
 import { useInternetIdentity } from 'src/context/internet-identity';
-import { useTable } from 'react-table';
 
 const deadDrop = new Date('August 1 2021').getTime();
 
@@ -39,7 +38,7 @@ export default function HackathonDecks() {
     function count() { return Math.floor((deadDrop - new Date().getTime()) / 1000); };
     const [countdown, setCountdown] = useState<number>(count());
     useEffect(() => {
-        const i = setInterval(() => setCountdown(count()), 1000);
+        const i = setInterval(() => setCountdown(Math.max(count(), 0)), 1000);
         return () => clearInterval(i);
     }, []);
 
@@ -53,6 +52,9 @@ export default function HackathonDecks() {
     }
 
     const chooseSection = useRef<HTMLDivElement>(null);
+
+    const [hasDeck, setHasDeck] = useState<boolean>(false);
+
     return (
         <Root>
             <Head>
@@ -85,11 +87,15 @@ export default function HackathonDecks() {
                 </TypeSet>
             </TwoBy>
             <ChooseSection ref={chooseSection}>
-                <ChooseCanvas />
+                {hasDeck
+                    ? <YourChoice />
+                    : countdown === 0
+                        ? <DeadDrop />
+                        : <ChooseCanvas claim={() => { setHasDeck(true); chooseSection?.current?.scrollIntoView(); }} />}
             </ChooseSection>
+            <Thanks>These decks are a proof-of-concept for Saga Tarot, and your participation is very much appreciated. This is an <a href="https://www.github.com/jorgenbuilder/saga">open source</a> distributed application on Internet Computer. These decks can be used in Saga Tarot canisters, and they are simple enough to be integrated into any software. Anyone can mint decks like these. If you are interested in letting people use these decks in your software, or in minting decks with your art, reach out to <a href="https://twitter.com/SagaCards">@SagaCards</a> on Twitter for help.</Thanks>
             <H3>Ledger</H3>
             <Ledger />
-            <Thanks>These decks are a proof-of-concept for Saga Tarot, and your participation is very much appreciated. This is an <a href="https://www.github.com/jorgenbuilder/saga">open source</a> distributed application on Internet Computer. These decks can be used in Saga Tarot canisters, and they are simple enough to be integrated into any software. Anyone can mint decks like these. If you are interested in letting people use these decks in your software, or in minting decks with your art, reach out to <a href="https://twitter.com/SagaCards">@SagaCards</a> on Twitter for help.</Thanks>
         </Root>
     );
 };
@@ -162,7 +168,7 @@ function DemoCard({ rot, i, active, cards, setActive, setRot }: { rot: number, i
     </Suspense>
 };
 
-function ChooseCanvas() {
+function ChooseCanvas(props: {claim: () => void}) {
     const { isAuthed, authenticate } = useInternetIdentity();
     const decks = [
         ['Chaos #1', Chaos1, 'Gentle lattice hallucination.'],
@@ -185,7 +191,7 @@ function ChooseCanvas() {
                 {decks.map(([title, image, description], i) => <ChooseDeck onClick={() => setActive(i)} active={active === i} image={image} cards={cards} title={title} description={description} key={`choosedeck-${i}`} />)}
                 <div style={{ width: '38em' }}>
                     {isAuthed
-                        ? <Button size={'large'}>Claim Your Deck 🃏🎉</Button>
+                        ? <Button size={'large'} onClick={props.claim}>Claim Your Deck 🃏🎉</Button>
                         : <Button size={'large'} onClick={authenticate}>
                             Authenticate to Claim
                             <img alt="with Internet Identity" src={dfinity} height={50} style={{ margin: '0 0 0 1em' }} />
@@ -228,6 +234,63 @@ function Ledger() {
         </Table>
     );
 }
+
+function YourChoice () {
+    return (
+        <YouChose>
+            <H3>You Were Here</H3>
+            <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '100px' }}>
+                <div>
+                    <DeckPreview src={Chaos1} width="220" />
+                    <div>
+                        <H4>You Chose &ldquo;Chaos #1&rdquo;</H4>
+                        <p>Gentle lattice hallucination.</p>
+                    </div>
+                </div>
+                <Table style={{maxWidth: '14em'}}>
+                    <Row>
+                        <ColHead>Deck</ColHead>
+                        <ColHead>%</ColHead>
+                    </Row>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <Row>
+                        <Col>Chaos #{i}</Col>
+                        <Col>0%</Col>
+                    </Row>)}
+                    <H4>Community Choice</H4>
+                </Table>
+            </div>
+            <div style={{width: '24em'}}><LinkButton to='/'>Use My Deck in Saga</LinkButton></div>
+        </YouChose>
+    )
+};
+
+function DeadDrop () {
+    const { authenticate, isAuthed } = useInternetIdentity();
+    return (
+        <YouChose>
+            <H3>How The Community Chose</H3>
+                <Table style={{maxWidth: '14em'}}>
+                    <Row>
+                        <ColHead>Deck</ColHead>
+                        <ColHead>%</ColHead>
+                    </Row>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <Row>
+                        <Col>Chaos #{i}</Col>
+                        <Col>0%</Col>
+                    </Row>)}
+                </Table>
+                {!isAuthed
+                    ?   <div>
+                            <p style={{fontSize: '24px', fontFamily: 'cardo'}}>Authenticate to see your deck if you claimed one.</p>
+                            <Button size={'large'} onClick={authenticate}>
+                                Authenticate
+                                <img alt="with Internet Identity" src={dfinity} height={50} style={{ margin: '0 0 0 1em' }} />
+                            </Button>
+                        </div>
+                    : <></>}
+        </YouChose>
+    )
+};
 
 const Root = styled.div`
 display: flex;
@@ -387,6 +450,7 @@ line-height: 150%;
 
 const ChooseSection = styled.div`
 position: relative;
+width: 100%;
 `;
 
 const H3 = styled.h3`
@@ -483,11 +547,21 @@ display: flex;
 flex-direction: row;
 `;
 const ColHead = styled.div`
-flex-basis: 33%;
+flex: 1;
 font-style: italic;
 padding: .5em 0;
 `;
 const Col = styled.div`
-flex-basis: 33%;
+flex: 1;
 padding: .25em 0;
+`;
+const YouChose = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 100px;
+width: 100%;
+font-family: almendra;
+text-align: center;
 `;
