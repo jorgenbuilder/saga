@@ -1,7 +1,6 @@
 import { useParams } from 'react-router';
-import Button, { LinkButton } from 'src/components/button';
+import Button from 'src/components/button';
 import DeckStrip from 'src/components/deck-strip';
-import Routes from 'src/constants/routes';
 import { useDecks } from 'src/context/decks';
 import styled from 'styled-components';
 
@@ -19,7 +18,7 @@ export default function DeckDetail () {
                 <Actions>
                     <Button active={deck === viewDeck} onClick={() => setDeck(viewDeck)}>Use This Deck</Button>
                     <br/>
-                    <LinkButton to={Routes.decks.path}>Back</LinkButton>
+                    <Button onClick={() => window.history.back()}>Back</Button>
                 </Actions>
             </Container>
         </>
