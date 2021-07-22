@@ -11,6 +11,7 @@ import { AnimatedRoute, AnimatedSwitch } from 'src/components/animated-routes';
 import ChooseDeckScreen from 'src/screens/choose-deck';
 import ExplorerWorkBench from 'src/screens/workbench/explorer';
 import DeckDetail from 'src/screens/deck-detail';
+import HackathonDecks from 'src/screens/hackathon-decks';
 
 export interface RouteConf {
     path: string;
@@ -81,6 +82,11 @@ const Routes: {
     deckDetail: {
         path: '/decks/:slug',
         Component: DeckDetail,
+        requiresAuth: true,
+    },
+    hackathonDecks: {
+        path: '/hackathon-decks',
+        Component: HackathonDecks,
         requiresAuth: true,
     },
     decks: {

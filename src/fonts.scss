@@ -2,8 +2,10 @@
 @use '~@fontsource/astloch/scss/mixins' as astloch;
 @use '~@fontsource/uncial-antiqua/scss/mixins' as uncialantiqua;
 @use '~@fontsource/cardo/scss/mixins' as cardo;
+@use '~@fontsource/press-start-2p/scss/mixins' as pressstart2p;
 
 @include almendra.fontFace($display: block);
 @include astloch.fontFace($display: block);
 @include uncialantiqua.fontFace($display: block);
 @include cardo.fontFace($display: block);
+@include pressstart2p.fontFace($display: block);

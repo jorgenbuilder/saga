@@ -165,7 +165,7 @@ const Keyword = styled.span<{length: number}>`
 ${({length}) => length > 12 && 'font-size: 18px;'}
 `;
 
-const DropCap = styled.span`
+export const DropCap = styled.span`
 display: flex;
 align-items: center;
 justify-content: center;

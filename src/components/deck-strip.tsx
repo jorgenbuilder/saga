@@ -54,7 +54,7 @@ const config = {
     mass: 10,
     tension: 300,
     friction: 85,
-}
+};
 
 function Slide ({ pos, scroll, cardIndex, onClick }: { onClick?: () => void, pos: number, scroll: number, cardIndex: number }) {
     const { acceleration, popPermissionToast, } = useAccelerometer();

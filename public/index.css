@@ -11,4 +11,5 @@ html, body, #root {
     margin: 0;
     background: hsl(var(--color-back));
     font-family: Menlo;
+    scroll-behavior: smooth;
 }
