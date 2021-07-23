@@ -1,3 +1,15 @@
+
+
+
+
+
+
+
+
+
+
+
+
 //                                                    )                    
 //    (         )                (                 ( /(                    
 //    )\     ( /(     )          )\ )              )\())               (   
@@ -8,6 +20,33 @@
 //  /_/ \_\ |_.__/\__,_||_||_| \__,_|\___/|_||_|  |_||_|\___/| .__/ \___|  
 //                                                           |_|                                                           |_|          
 // This is hackathon code.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import * as THREE from 'three';
 import styled, { keyframes } from 'styled-components';
@@ -31,17 +70,27 @@ import Chaos6 from 'src/assets/hackathon/chaos-6.png';
 import Chaos7 from 'src/assets/hackathon/chaos-7.png';
 import Chaos8 from 'src/assets/hackathon/chaos-8.png';
 import { useInternetIdentity } from 'src/context/internet-identity';
+import { Deck as DeckInterface, useDecks } from 'src/context/decks';
+import ChaosDecks, { Chaos1Deck, Chaos2Deck, Chaos3Deck, Chaos4Deck, Chaos5Deck, Chaos6Deck, Chaos7Deck, Chaos8Deck } from 'src/context/decks/hackaton';
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+
+interface NFT {
+    owner: string;
+    deck: string;
+    timestamp: number;
+    alias?: string;
+};
 
 const deadDrop = new Date('August 1 2021').getTime();
+const hackathonDecks = [Chaos1Deck, Chaos2Deck, Chaos3Deck, Chaos4Deck, Chaos5Deck, Chaos6Deck, Chaos7Deck, Chaos8Deck];
 
 export default function HackathonDecks() {
-    function count() { return Math.floor((deadDrop - new Date().getTime()) / 1000); };
-    const [countdown, setCountdown] = useState<number>(count());
-    useEffect(() => {
-        const i = setInterval(() => setCountdown(Math.max(count(), 0)), 1000);
-        return () => clearInterval(i);
-    }, []);
 
+    const { availableDecks } = useDecks();
+    const { identity } = useInternetIdentity();
+    function count() { return Math.floor((deadDrop - new Date().getTime()) / 1000); };
+    
     function toTimer(countdown: number) {
         function pad(n: number) { return n < 10 ? `0${n}` : `${n}` }
         const d = Math.floor(countdown / (60 * 60 * 24));
@@ -51,9 +100,43 @@ export default function HackathonDecks() {
         return `${d}:${h}:${m}:${s}`;
     }
 
-    const chooseSection = useRef<HTMLDivElement>(null);
+    function claim (deck: DeckInterface) {
+        const principal = identity?.getPrincipal();
+        ChaosDecks['chaos'+deck.slug.match(/[0-9]/)].claimNFT(principal);
+        setClaimedDeck(deck);
+    };
 
-    const [hasDeck, setHasDeck] = useState<boolean>(false);
+    const [countdown, setCountdown] = useState<number>(count());
+    const [claimedDeck, setClaimedDeck] = useState<DeckInterface>();
+    const [ledger, setLedger] = useState<NFT[]>([])
+    const ledgerPercentages = useMemo(() => ledger.reduce((agg, nft) => {
+        if (nft.deck in agg) agg[nft.deck]++;
+        else agg[nft.deck] = 1;
+        agg['total']++;
+        return agg
+    }, {} as { [key: string]: number }), [ledger]);
+
+    useEffect(() => {
+        if (window.location.hash === '#chooseSection') chooseSection?.current?.scrollIntoView();
+        const i = setInterval(() => setCountdown(Math.max(count(), 0)), 1000);
+        for (const key in ChaosDecks) {
+            ChaosDecks[key].listNFT().then((nfts: NFT[]) => {
+                setLedger(ledger.concat(nfts.map(x => Object.assign(x, {deck: key}))))
+            });
+        };
+        return () => clearInterval(i);
+    }, []);
+
+    useEffect(() => {
+        for (const d of availableDecks) {
+            if (hackathonDecks.indexOf(d) >= 0) {
+                setClaimedDeck(d);
+                break;
+            }
+        };
+    }, [availableDecks]);
+
+    const chooseSection = useRef<HTMLDivElement>(null);
 
     return (
         <Root>
@@ -86,16 +169,18 @@ export default function HackathonDecks() {
                     <p>Why not so in computer systems? What happens when neural networks that we trained to see our world recurse? Saga invites you to reflect with this unique deck art that blends the traditional Rider Waite Smith (RWS) deck with Google DeepDream.</p>
                 </TypeSet>
             </TwoBy>
-            <ChooseSection ref={chooseSection}>
-                {hasDeck
-                    ? <YourChoice />
+            <ChooseSection id="chooseSection" ref={chooseSection}>
+                {claimedDeck
+                    ? <YourChoice breakdown={ledgerPercentages} />
                     : countdown === 0
-                        ? <DeadDrop />
-                        : <ChooseCanvas claim={() => { setHasDeck(true); chooseSection?.current?.scrollIntoView(); }} />}
+                        ? <DeadDrop breakdown={ledgerPercentages} />
+                        : <ChooseCanvas claim={(deck: DeckInterface) => { claim(deck); chooseSection?.current?.scrollIntoView(); }} />}
             </ChooseSection>
             <Thanks>These decks are a proof-of-concept for Saga Tarot, and your participation is very much appreciated. This is an <a href="https://www.github.com/jorgenbuilder/saga">open source</a> distributed application on Internet Computer. These decks can be used in Saga Tarot canisters, and they are simple enough to be integrated into any software. Anyone can mint decks like these. If you are interested in letting people use these decks in your software, or in minting decks with your art, reach out to <a href="https://twitter.com/SagaCards">@SagaCards</a> on Twitter for help.</Thanks>
-            <H3>Ledger</H3>
-            <Ledger />
+            <LedgerContainer>
+                <H3>Ledger</H3>
+                <Ledger ledger={ledger} />
+            </LedgerContainer>
         </Root>
     );
 };
@@ -103,29 +188,41 @@ export default function HackathonDecks() {
 export function DemoCanvas() {
     const [rot, setRot] = useState<number>(0);
     const [active, setActive] = useState<number>(0);
+    const [hover, setHover] = useState<boolean>(false);
     const cards = [0, 1, 2, 3, 4];
-    useFrame(() => setRot(rot + .5));
+    useFrame(() => !hover && setRot(rot + .5));
     return (
         <>
-            {cards.map((i) => <DemoCard rot={rot} i={i} active={active} cards={cards} setActive={setActive} setRot={setRot} />)}
+            {cards.map((i) => <DemoCard setParentHover={setHover} rot={rot} i={i} active={active} cards={cards} setActive={setActive} setRot={setRot} />)}
             <DefaultLighting />
         </>
     );
 };
 
-function DemoCard({ rot, i, active, cards, setActive, setRot }: { rot: number, i: number, active: number, cards: number[], setActive: (i: number) => void, setRot: (i: number) => void }) {
+function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i: number, active: number, cards: number[], setActive: (i: number) => void, setRot: (i: number) => void }) {
     const [hover, setHover] = useState<boolean>(false);
+    const [mx, setMx] = useState<number>(0);
+    const [my, setMy] = useState<number>(0);
+
+    function hoverTilt (e: ThreeEvent<PointerEvent>) {
+        var bbox = new THREE.Box3().setFromObject(e.eventObject);
+        setMx(e.point.x >= 0 ? e.point.x / bbox.max.x : - e.point.x / bbox.min.x);
+        setMy(e.point.y >= 0 ? e.point.y / bbox.max.y : - e.point.y / bbox.min.y);
+    }
+
     const scaHover = hover ? .01 : 0;
     const posHover = hover ? -.15 : 0;
-    const props = function () {
-        const inactives = cards.filter(x => x !== active);
-        switch (i === active) {
+    const nearestFace = props.rot % 180;
+    console.log(nearestFace);
+    const switchProps = function () {
+        const inactives = props.cards.filter(x => x !== props.active);
+        switch (props.i === props.active) {
             case true: return {
-                rotation: [0, THREE.MathUtils.degToRad(rot), 0] as unknown as THREE.Euler,
+                rotation: [THREE.MathUtils.degToRad(0 + my * 5), THREE.MathUtils.degToRad((hover ? props.rot - nearestFace : props.rot) - mx * 5), 0] as unknown as THREE.Euler,
                 position: [0, -1.125, 0] as unknown as THREE.Vector3,
-                scale: .8 as unknown as THREE.Vector3,
+                scale: (hover ? 1 : .8) as unknown as THREE.Vector3,
             };
-            default: switch (inactives.indexOf(i)) {
+            default: switch (inactives.indexOf(props.i)) {
                 case 0: return {
                     rotation: [0, 0, THREE.MathUtils.degToRad(12)] as unknown as THREE.Euler,
                     position: [-1, 2.65 + posHover, -.25] as unknown as THREE.Vector3,
@@ -151,47 +248,47 @@ function DemoCard({ rot, i, active, cards, setActive, setRot }: { rot: number, i
     }();
     const cardProps = {
         ...useSpring({
-            ...props,
+            ...switchProps,
             config: {
                 mass: 10,
                 tension: 300,
                 friction: 85,
             },
         }),
-        onPointerEnter: (e: ThreeEvent<PointerEvent>) => { setHover(true); e.stopPropagation(); },
-        onPointerLeave: (e: ThreeEvent<PointerEvent>) => { setHover(false); e.stopPropagation(); },
+        onPointerMove: hoverTilt,
+        onPointerEnter: (e: ThreeEvent<PointerEvent>) => { if (props.i === props.active) props.setParentHover(true); setHover(true); e.stopPropagation(); },
+        onPointerLeave: (e: ThreeEvent<PointerEvent>) => { if (props.i === props.active) { props.setRot(props.rot - nearestFace); props.setParentHover(false); } setHover(false); e.stopPropagation(); },
     };
-    return <Suspense key={`democard-${i}`} {...cardProps} fallback={<BlankTarotCardMesh plain={true} />}>
+    return <Suspense key={`democard-${props.i}`} {...cardProps} fallback={<BlankTarotCardMesh plain={true} />}>
         <Suspense {...cardProps} fallback={<BlankTarotCardMesh plain={false} />}>
-            <TarotCardMesh {...cardProps} cardIndex={i} onClick={(e: ThreeEvent<MouseEvent>) => { setActive(i); setRot(0); e.stopPropagation(); }} />
+            <TarotCardMesh {...cardProps} cardIndex={props.i} onClick={(e: ThreeEvent<MouseEvent>) => { props.setActive(props.i); if (props.active === props.i) props.setRot(props.rot - nearestFace - 180); else props.setRot(0); e.stopPropagation(); }} />
         </Suspense>
     </Suspense>
 };
 
-function ChooseCanvas(props: {claim: () => void}) {
+function ChooseCanvas(props: {claim: (deck: DeckInterface) => void}) {
     const { isAuthed, authenticate } = useInternetIdentity();
     const decks = [
-        ['Chaos #1', Chaos1, 'Gentle lattice hallucination.'],
-        ['Chaos #2', Chaos2, 'CMYK obsessed painter.'],
-        ['Chaos #3', Chaos3, 'Lattice hallucination, a stronger hit.'],
-        ['Chaos #4', Chaos4, 'Color channel vortices and beady eyes.'],
-        ['Chaos #5', Chaos5, 'I cant see you; you hacked my eyes.'],
-        ['Chaos #6', Chaos6, '“Your hair is made of snakes.”'],
-        ['Chaos #7', Chaos7, 'You\'re not in Kansas anymore.'],
-        ['Chaos #8', Chaos8, 'R.W.S but not at all, with fur and scales.'],
+        ['Chaos #1', Chaos1, 'Gentle lattice hallucination.', Chaos1Deck],
+        ['Chaos #2', Chaos2, 'CMYK obsessed painter.', Chaos2Deck],
+        ['Chaos #3', Chaos3, 'Lattice hallucination, a stronger hit.', Chaos3Deck],
+        ['Chaos #4', Chaos4, 'Color channel vortices and beady eyes.', Chaos4Deck],
+        ['Chaos #5', Chaos5, 'I cant see you; you hacked my eyes.', Chaos5Deck],
+        ['Chaos #6', Chaos6, '“Your hair is made of snakes.”', Chaos6Deck],
+        ['Chaos #7', Chaos7, 'You\'re not in Kansas anymore.', Chaos7Deck],
+        ['Chaos #8', Chaos8, 'R.W.S but not at all, with fur and scales.', Chaos8Deck],
     ];
     const [active, setActive] = useState<number>(Math.floor(Math.random() * decks.length));
-    const [cards, setCards] = useState<number[]>([15, 16, 17, 18, 19]);
     return (
         <>
             <ChooseHeader>
                 <H3>You May Choose One Deck</H3>
             </ChooseHeader>
             <ChooseContainer>
-                {decks.map(([title, image, description], i) => <ChooseDeck onClick={() => setActive(i)} active={active === i} image={image} cards={cards} title={title} description={description} key={`choosedeck-${i}`} />)}
+                {decks.map(([title, image, description, deck], i) => <ChooseDeck onClick={() => setActive(i)} active={active === i} deck={deck as DeckInterface} image={image as string} title={title as string} description={description as string} key={`choosedeck-${i}`} />)}
                 <div style={{ width: '38em' }}>
                     {isAuthed
-                        ? <Button size={'large'} onClick={props.claim}>Claim Your Deck 🃏🎉</Button>
+                        ? <Button size={'large'} onClick={() => props.claim(decks[active][3] as DeckInterface)}>Claim Your Deck 🃏🎉</Button>
                         : <Button size={'large'} onClick={authenticate}>
                             Authenticate to Claim
                             <img alt="with Internet Identity" src={dfinity} height={50} style={{ margin: '0 0 0 1em' }} />
@@ -202,7 +299,7 @@ function ChooseCanvas(props: {claim: () => void}) {
     );
 };
 
-function ChooseDeck(props: { title: string; image: string; description: string; cards: number[]; active: boolean; onClick: () => void; }) {
+function ChooseDeck(props: { deck: DeckInterface; title: string; image: string; description: string; active: boolean; onClick: () => void; }) {
     return (
         <DeckContainer>
             <Deck>
@@ -211,14 +308,14 @@ function ChooseDeck(props: { title: string; image: string; description: string; 
                     <H4>{props.title}</H4>
                     <p>{props.description}</p>
                 </div>
-                <div style={{ width: '220px' }}><LinkButton to='/decks/rider-waite-smith/' size={'small'}>Browse</LinkButton></div>
+                <div style={{ width: '220px' }}><LinkButton to={`/hackathon-decks/${props.deck.slug}/`} size={'small'}>Browse</LinkButton></div>
                 <div style={{ width: '220px' }}><Button onClick={props.onClick} active={props.active} size={'small'}>Select</Button></div>
             </Deck>
         </DeckContainer>
     );
 };
 
-function Ledger() {
+function Ledger(props: { ledger: NFT[] }) {
     return (
         <Table>
             <Row>
@@ -226,16 +323,16 @@ function Ledger() {
                 <ColHead>Timestamp</ColHead>
                 <ColHead>Deck</ColHead>
             </Row>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(i => <Row>
-                <Col>1101042</Col>
-                <Col>2021-07-25 12:04 PM</Col>
-                <Col><a href="#">Chaos #1</a></Col>
+            {props.ledger.map(i => <Row>
+                <Col>{i.alias || 'anonymous'}</Col>
+                <Col>{new Date(i.timestamp / 1e9)}</Col>
+                <Col><Link to={`/hackathon-decks/${i.deck}/`}>{hackathonDecks[parseInt((i.deck.match(/[0-9]/) as string[])[0])].name}</Link></Col>
             </Row>)}
         </Table>
     );
 }
 
-function YourChoice () {
+function YourChoice (props: { breakdown: { [key: string]: number} }) {
     return (
         <YouChose>
             <H3>You Were Here</H3>
@@ -252,9 +349,9 @@ function YourChoice () {
                         <ColHead>Deck</ColHead>
                         <ColHead>%</ColHead>
                     </Row>
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <Row>
-                        <Col>Chaos #{i}</Col>
-                        <Col>0%</Col>
+                    {Object.keys(props.breakdown).map((key, i) => <Row>
+                        <Col>Chaos #{(key.match(/[0-9]/) as string[])[0]}</Col>
+                        <Col>{props.breakdown[key] / props.breakdown['total']}% (props.breakdown[key])</Col>
                     </Row>)}
                     <H4>Community Choice</H4>
                 </Table>
@@ -264,7 +361,7 @@ function YourChoice () {
     )
 };
 
-function DeadDrop () {
+function DeadDrop (props: { breakdown: { [key: string]: number} }) {
     const { authenticate, isAuthed } = useInternetIdentity();
     return (
         <YouChose>
@@ -564,4 +661,11 @@ gap: 100px;
 width: 100%;
 font-family: almendra;
 text-align: center;
+`;
+const LedgerContainer = styled.div`
+display: flex;
+flex-direction: column;
+width: 100%;
+gap: 62px;
+align-items: center;
 `;
