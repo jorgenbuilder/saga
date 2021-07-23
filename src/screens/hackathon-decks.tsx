@@ -210,17 +210,17 @@ export function DemoCanvas() {
     const [rot, setRot] = useState<number>(0);
     const [active, setActive] = useState<number>(0);
     const [hover, setHover] = useState<boolean>(false);
-    const cards = [0, 1, 2, 3, 4];
+    const cards = [Chaos1Deck, Chaos2Deck, Chaos4Deck, Chaos6Deck, Chaos8Deck];
     useFrame(() => !hover && setRot(rot + .5));
     return (
         <>
-            {cards.map((i) => <DemoCard key={`democard-${i}`} setParentHover={setHover} rot={rot} i={i} active={active} cards={cards} setActive={setActive} setRot={setRot} />)}
+            {cards.map((deck, i) => <DemoCard key={`democard-${i}`} setParentHover={setHover} rot={rot} i={i} active={active} deck={deck} setActive={setActive} setRot={setRot} />)}
             <DefaultLighting />
         </>
     );
 };
 
-function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i: number, active: number, cards: number[], setActive: (i: number) => void, setRot: (i: number) => void }) {
+function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i: number, active: number, deck: DeckInterface, setActive: (i: number) => void, setRot: (i: number) => void }) {
     const [hover, setHover] = useState<boolean>(false);
     const [mx, setMx] = useState<number>(0);
     const [my, setMy] = useState<number>(0);
@@ -235,7 +235,7 @@ function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i:
     const posHover = hover ? -.15 : 0;
     const nearestFace = props.rot % 180;
     const switchProps = function () {
-        const inactives = props.cards.filter(x => x !== props.active);
+        const inactives = [0, 1, 2, 3, 4].filter((i) => i !== props.active);
         switch (props.i === props.active) {
             case true: return {
                 rotation: [THREE.MathUtils.degToRad(0 + my * 5), THREE.MathUtils.degToRad((hover ? props.rot - nearestFace : props.rot) - mx * 5), 0] as unknown as THREE.Euler,
@@ -281,7 +281,7 @@ function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i:
     };
     return <Suspense key={`democard-${props.i}`} {...cardProps} fallback={<BlankTarotCardMesh plain={true} />}>
         <Suspense {...cardProps} fallback={<BlankTarotCardMesh plain={false} />}>
-            <TarotCardMesh {...cardProps} cardIndex={props.i} onClick={(e: ThreeEvent<MouseEvent>) => { props.setActive(props.i); if (props.active === props.i) props.setRot(props.rot - nearestFace - 180); else props.setRot(0); e.stopPropagation(); }} />
+            <TarotCardMesh forceDeck={props.deck} {...cardProps} cardIndex={19} onClick={(e: ThreeEvent<MouseEvent>) => { props.setActive(props.i); if (props.active === props.i) props.setRot(props.rot - nearestFace - 180); else props.setRot(0); e.stopPropagation(); }} />
         </Suspense>
     </Suspense>
 };
@@ -336,7 +336,7 @@ function Ledger(props: { ledger: NFT[] }) {
             {props.ledger.map((nft, i) => {
                 const date = new Date(Number(nft.timestamp) / 1e6);
                 return <Row key={`ledger-${i}`}>
-                    <Col>{nft?.alias?.length ? nft.alias : 'Anonymous'}</Col>
+                    <Col><span title={nft?.owner}>{nft?.alias?.length ? nft.alias : 'Anonymous'}</span></Col>
                     <Col>{`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDay())} ${date.toLocaleTimeString()}`}</Col>
                     <Col><Link to={`/hackathon-decks/${nft.deck.split(/[0-9]/).join('-')}${nft.deck.match(/[0-9]/)}/`}>Chaos #{nft.deck.match(/[0-9]/)}</Link></Col>
                 </Row>
