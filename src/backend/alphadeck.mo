@@ -65,14 +65,19 @@ shared({ caller }) actor class AlphaDeck() {
         "To lock this canister, call lockForProduction then confirmLockForProduction within one minute.";
     };
 
-    public query func validateAssets () : async () {
+    public shared query func validateAssets () : async () {
         var i = 0;
+        var missingAssets : Bool = false;
         while (i < 79) {
             if (Option.isNull(tarotCards[i])) {
-                throw Error.reject("Invalid canister assets for production release.");
+                missingAssets := true;
+                Debug.print("Missing asset #" # Nat.toText(i));
             };
             i += 1;
         };
+        if (missingAssets) {
+            throw Error.reject("Invalid canister assets for production release.");
+        }
     };
 
     //////////////

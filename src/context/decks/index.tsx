@@ -11,7 +11,6 @@ interface DecksState {
     setDeck: Dispatch<SetStateAction<Deck>>;
     setAvailableDecks: Dispatch<SetStateAction<Deck[]>>;
     knownDecks: Deck[];
-    discoverDecks: () => void;
 };
 
 export interface Deck {
@@ -30,7 +29,6 @@ const DefaultState: DecksState = {
     setDeck: () => {},
     setAvailableDecks: () => {},
     knownDecks: [DefaultDeck],
-    discoverDecks: () => {},
 };
 
 export const DecksContext = createContext<DecksState>(DefaultState);
@@ -53,25 +51,27 @@ export default function DecksProvider({ children }: DecksProviderProps) {
     const [deck, setDeck] = useState<Deck>(DefaultState.deck);
     const [availableDecks, setAvailableDecks] = useState<Deck[]>(DefaultState.availableDecks);
 
-    const { identity } = useInternetIdentity();
+    const { identity, isAuthed } = useInternetIdentity();
 
-    function discoverDecks () {
-        if (!identity) return;
+    async function discoverDecks () {
         let discoveredDecks: Deck[] = [DefaultDeck];
-        DeckCanisters.forEach(({can, deck}) => {
-            can.getPrincipalNFT(identity?.getPrincipal()).catch(console.error).then((resp: any) => {
+        const queries: Promise<Deck[]>[] = [];
+        for (const key in DeckCanisters) {
+            const {can, deck} = DeckCanisters[key];
+            queries.push(can.getPrincipalNFT(identity?.getPrincipal()).catch(console.error).then((resp: any) => {
+                console.log(resp)
                 if (!resp) return;
                 if (resp.length) {
                     discoveredDecks.push(deck);
                 }
-            });
-        });
-        console.log('Discovered decks: ', discoveredDecks);
+            }));
+        }
+        await Promise.all(queries);
+        console.log('Discovered decks', discoveredDecks);
         setAvailableDecks(discoveredDecks);
     };
 
-    useEffect(discoverDecks, [identity]);
-    console.log(availableDecks)
+    useEffect(() => { discoverDecks() }, [isAuthed]);
 
     const value = useCallback(() => ({
         deck,
@@ -79,8 +79,7 @@ export default function DecksProvider({ children }: DecksProviderProps) {
         availableDecks,
         setAvailableDecks,
         knownDecks: [DefaultDeck].concat(DeckCanisters.map(x => x.deck)),
-        discoverDecks,
-    }), [deck, setDeck, availableDecks, setAvailableDecks,]);
+    }), [deck, setDeck, availableDecks, setAvailableDecks]);
 
     return <DecksContext.Provider
         value={value()}

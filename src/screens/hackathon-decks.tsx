@@ -82,17 +82,30 @@ interface NFT {
     alias?: string;
 };
 
+type DeckContent = [string, string, string, DeckInterface];
+
 const deadDrop = new Date('August 1 2021').getTime();
 const hackathonDecks = [Chaos1Deck, Chaos2Deck, Chaos3Deck, Chaos4Deck, Chaos5Deck, Chaos6Deck, Chaos7Deck, Chaos8Deck];
+const hackathonDecksContent : DeckContent[] = [
+    ['Chaos #1', Chaos1, 'Gentle lattice hallucination.', Chaos1Deck],
+    ['Chaos #2', Chaos2, 'CMYK obsessed painter.', Chaos2Deck],
+    ['Chaos #3', Chaos3, 'Lattice hallucination, a stronger hit.', Chaos3Deck],
+    ['Chaos #4', Chaos4, 'Color channel vortices and beady eyes.', Chaos4Deck],
+    ['Chaos #5', Chaos5, 'I cant see you; you hacked my eyes.', Chaos5Deck],
+    ['Chaos #6', Chaos6, '“Your hair is made of snakes.”', Chaos6Deck],
+    ['Chaos #7', Chaos7, 'You\'re not in Kansas anymore.', Chaos7Deck],
+    ['Chaos #8', Chaos8, 'R.W.S but not at all, with fur and scales.', Chaos8Deck],
+];
+
+function pad(n: number) { return n < 10 ? `0${n}` : `${n}` }
 
 export default function HackathonDecks() {
 
     const { availableDecks } = useDecks();
     const { identity } = useInternetIdentity();
     function count() { return Math.floor((deadDrop - new Date().getTime()) / 1000); };
-    
+
     function toTimer(countdown: number) {
-        function pad(n: number) { return n < 10 ? `0${n}` : `${n}` }
         const d = Math.floor(countdown / (60 * 60 * 24));
         const h = pad(Math.floor(countdown % (60 * 60 * 24) / (60 * 60)));
         const m = pad(Math.floor(countdown % (60 * 60) / 60));
@@ -106,24 +119,30 @@ export default function HackathonDecks() {
         setClaimedDeck(deck);
     };
 
+    async function pullLedger () {
+        let discoveredLedger: NFT[] = [];
+        for (const key in ChaosDecks) {
+            discoveredLedger = discoveredLedger.concat((await ChaosDecks[key].listNFT()).map((x: NFT) => Object.assign(x, {deck: key})));
+        };
+        setLedger(discoveredLedger);
+    };
+
     const [countdown, setCountdown] = useState<number>(count());
     const [claimedDeck, setClaimedDeck] = useState<DeckInterface>();
     const [ledger, setLedger] = useState<NFT[]>([])
+    
     const ledgerPercentages = useMemo(() => ledger.reduce((agg, nft) => {
+        if (!nft) return agg;
         if (nft.deck in agg) agg[nft.deck]++;
         else agg[nft.deck] = 1;
         agg['total']++;
         return agg
-    }, {} as { [key: string]: number }), [ledger]);
+    }, { total: 0, } as { [key: string]: number }), [ledger]);
 
     useEffect(() => {
+        pullLedger();
         if (window.location.hash === '#chooseSection') chooseSection?.current?.scrollIntoView();
         const i = setInterval(() => setCountdown(Math.max(count(), 0)), 1000);
-        for (const key in ChaosDecks) {
-            ChaosDecks[key].listNFT().then((nfts: NFT[]) => {
-                setLedger(ledger.concat(nfts.map(x => Object.assign(x, {deck: key}))))
-            });
-        };
         return () => clearInterval(i);
     }, []);
 
@@ -135,6 +154,8 @@ export default function HackathonDecks() {
             }
         };
     }, [availableDecks]);
+
+    const chosenDeck: DeckContent | undefined = claimedDeck ? hackathonDecksContent.find(([,,,deck]) => deck === claimedDeck) : hackathonDecksContent.find(([,,, deck]) => availableDecks.includes(deck as DeckInterface));
 
     const chooseSection = useRef<HTMLDivElement>(null);
 
@@ -170,8 +191,8 @@ export default function HackathonDecks() {
                 </TypeSet>
             </TwoBy>
             <ChooseSection id="chooseSection" ref={chooseSection}>
-                {claimedDeck
-                    ? <YourChoice breakdown={ledgerPercentages} />
+                {chosenDeck
+                    ? <YourChoice chosenDeck={chosenDeck} breakdown={ledgerPercentages} />
                     : countdown === 0
                         ? <DeadDrop breakdown={ledgerPercentages} />
                         : <ChooseCanvas claim={(deck: DeckInterface) => { claim(deck); chooseSection?.current?.scrollIntoView(); }} />}
@@ -193,7 +214,7 @@ export function DemoCanvas() {
     useFrame(() => !hover && setRot(rot + .5));
     return (
         <>
-            {cards.map((i) => <DemoCard setParentHover={setHover} rot={rot} i={i} active={active} cards={cards} setActive={setActive} setRot={setRot} />)}
+            {cards.map((i) => <DemoCard key={`democard-${i}`} setParentHover={setHover} rot={rot} i={i} active={active} cards={cards} setActive={setActive} setRot={setRot} />)}
             <DefaultLighting />
         </>
     );
@@ -213,7 +234,6 @@ function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i:
     const scaHover = hover ? .01 : 0;
     const posHover = hover ? -.15 : 0;
     const nearestFace = props.rot % 180;
-    console.log(nearestFace);
     const switchProps = function () {
         const inactives = props.cards.filter(x => x !== props.active);
         switch (props.i === props.active) {
@@ -268,27 +288,17 @@ function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i:
 
 function ChooseCanvas(props: {claim: (deck: DeckInterface) => void}) {
     const { isAuthed, authenticate } = useInternetIdentity();
-    const decks = [
-        ['Chaos #1', Chaos1, 'Gentle lattice hallucination.', Chaos1Deck],
-        ['Chaos #2', Chaos2, 'CMYK obsessed painter.', Chaos2Deck],
-        ['Chaos #3', Chaos3, 'Lattice hallucination, a stronger hit.', Chaos3Deck],
-        ['Chaos #4', Chaos4, 'Color channel vortices and beady eyes.', Chaos4Deck],
-        ['Chaos #5', Chaos5, 'I cant see you; you hacked my eyes.', Chaos5Deck],
-        ['Chaos #6', Chaos6, '“Your hair is made of snakes.”', Chaos6Deck],
-        ['Chaos #7', Chaos7, 'You\'re not in Kansas anymore.', Chaos7Deck],
-        ['Chaos #8', Chaos8, 'R.W.S but not at all, with fur and scales.', Chaos8Deck],
-    ];
-    const [active, setActive] = useState<number>(Math.floor(Math.random() * decks.length));
+    const [active, setActive] = useState<number>(Math.floor(Math.random() * hackathonDecksContent.length));
     return (
         <>
             <ChooseHeader>
                 <H3>You May Choose One Deck</H3>
             </ChooseHeader>
             <ChooseContainer>
-                {decks.map(([title, image, description, deck], i) => <ChooseDeck onClick={() => setActive(i)} active={active === i} deck={deck as DeckInterface} image={image as string} title={title as string} description={description as string} key={`choosedeck-${i}`} />)}
+                {hackathonDecksContent.map(([title, image, description, deck], i) => <ChooseDeck onClick={() => setActive(i)} active={active === i} deck={deck as DeckInterface} image={image as string} title={title as string} description={description as string} key={`choosedeck-${i}`} />)}
                 <div style={{ width: '38em' }}>
                     {isAuthed
-                        ? <Button size={'large'} onClick={() => props.claim(decks[active][3] as DeckInterface)}>Claim Your Deck 🃏🎉</Button>
+                        ? <Button size={'large'} onClick={() => props.claim(hackathonDecksContent[active][3] as DeckInterface)}>Claim Your Deck 🃏🎉</Button>
                         : <Button size={'large'} onClick={authenticate}>
                             Authenticate to Claim
                             <img alt="with Internet Identity" src={dfinity} height={50} style={{ margin: '0 0 0 1em' }} />
@@ -323,25 +333,28 @@ function Ledger(props: { ledger: NFT[] }) {
                 <ColHead>Timestamp</ColHead>
                 <ColHead>Deck</ColHead>
             </Row>
-            {props.ledger.map(i => <Row>
-                <Col>{i.alias || 'anonymous'}</Col>
-                <Col>{new Date(i.timestamp / 1e9)}</Col>
-                <Col><Link to={`/hackathon-decks/${i.deck}/`}>{hackathonDecks[parseInt((i.deck.match(/[0-9]/) as string[])[0])].name}</Link></Col>
-            </Row>)}
+            {props.ledger.map((nft, i) => {
+                const date = new Date(Number(nft.timestamp) / 1e6);
+                return <Row key={`ledger-${i}`}>
+                    <Col>{nft?.alias?.length ? nft.alias : 'Anonymous'}</Col>
+                    <Col>{`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDay())} ${date.toLocaleTimeString()}`}</Col>
+                    <Col><Link to={`/hackathon-decks/${nft.deck.split(/[0-9]/).join('-')}${nft.deck.match(/[0-9]/)}/`}>Chaos #{nft.deck.match(/[0-9]/)}</Link></Col>
+                </Row>
+            })}
         </Table>
     );
 }
 
-function YourChoice (props: { breakdown: { [key: string]: number} }) {
+function YourChoice (props: { chosenDeck: DeckContent; breakdown: { [key: string]: number} }) {
     return (
         <YouChose>
             <H3>You Were Here</H3>
             <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', gap: '100px' }}>
                 <div>
-                    <DeckPreview src={Chaos1} width="220" />
+                    <DeckPreview src={props.chosenDeck[1]} width="220" />
                     <div>
-                        <H4>You Chose &ldquo;Chaos #1&rdquo;</H4>
-                        <p>Gentle lattice hallucination.</p>
+                        <H4>You Chose &ldquo;{props.chosenDeck[0]}&rdquo;</H4>
+                        <p>{props.chosenDeck[2]}</p>
                     </div>
                 </div>
                 <Table style={{maxWidth: '14em'}}>
@@ -349,9 +362,9 @@ function YourChoice (props: { breakdown: { [key: string]: number} }) {
                         <ColHead>Deck</ColHead>
                         <ColHead>%</ColHead>
                     </Row>
-                    {Object.keys(props.breakdown).map((key, i) => <Row>
-                        <Col>Chaos #{(key.match(/[0-9]/) as string[])[0]}</Col>
-                        <Col>{props.breakdown[key] / props.breakdown['total']}% (props.breakdown[key])</Col>
+                    {Object.keys(props.breakdown).filter(x => x !== 'total').map((key, i) => <Row>
+                        <Col>Chaos #{key.match(/[0-9]/)}</Col>
+                        <Col>{Math.floor(props.breakdown[key] / props.breakdown['total'] * 100)}% ({props.breakdown[key]})</Col>
                     </Row>)}
                     <H4>Community Choice</H4>
                 </Table>

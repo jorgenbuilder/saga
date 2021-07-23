@@ -10,9 +10,12 @@ const map = { "card-back": 78, "prompt-back": 79, "c01": 22, "c02": 23, "c03": 2
 
 export default async function uploadAssets (service: ActorSubclass<any>) {
     //@ts-ignore
-    for (const file of await window.showOpenFilePicker({ multiple: true }).catch(console.error)) {
-        console.log(file);
+    const files = await window.showOpenFilePicker({ multiple: true }).catch(console.error);
+    let j = 1;
+
+    for (const file of files) {
         const match = file.name.match(/([a-z][0-9][0-9]|card-back|prompt-back)/);
+        console.log(`Uploading #${j}/${files.length}: ${match}`);
         if (!match) throw Error(`Dunno what to do with this one "${file.name}"`);
         const i = match[0];
         const f = await file.getFile();
@@ -20,8 +23,8 @@ export default async function uploadAssets (service: ActorSubclass<any>) {
         const index = map[i];
         const b64 = await readFile(f);
         const data = `${b64}`;
-        console.log('bump!');
         await service.uploadAsset(index, data);
+        j++;
     };
 }
 

@@ -61,6 +61,7 @@ const H1 = styled.h1`
 margin: 0;
 font-family: 'Astloch';
 font-size: 100px;
+font-weight: 100;
 cursor: default;
 `;
 
