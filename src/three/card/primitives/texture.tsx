@@ -1,5 +1,5 @@
 import { useLoader } from '@react-three/fiber';
-import { useDecks } from 'src/context/decks';
+import { Deck, useDecks } from 'src/context/decks';
 import * as THREE from 'three';
 
 export function CardTextureJPEG (pathOrData: string) {
@@ -9,9 +9,9 @@ export function CardTextureJPEG (pathOrData: string) {
 const textures: { [key: string]: string; } = {};
 const texturePromises: { [key: string]: Promise<string> } = {};
 
-export default function CardTexture ({ index }: {index: number}) {
+export default function CardTexture ({ forceDeck, index }: {forceDeck?: Deck, index: number}) {
     const { viewDeck, deck } = useDecks();
-    const useDeck = viewDeck || deck;
+    const useDeck = forceDeck || viewDeck || deck;
     if (!textures[`${useDeck.name}${index}`]) {
         if (!texturePromises[`${useDeck.name}${index}`]) {
             texturePromises[`${useDeck.name}${index}`] = useDeck.serveCard(index).then((r) => {
