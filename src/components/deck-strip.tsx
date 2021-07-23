@@ -9,6 +9,12 @@ import TarotCardMesh from 'src/three/card/tarot';
 import BlankTarotCardMesh from 'src/three/card/tarot-blank';
 
 import { useAccelerometer } from 'src/context/device-accelerometer';
+import { TarotDeckData } from 'src/services/cards';
+
+const Container = styled.div`
+position: relative;
+height: 100%;
+`;
 
 const StyledCanvas = styled(Canvas)`
 position: absolute;
@@ -18,21 +24,44 @@ width: 275 * 80;
 height: 475;
 `;
 
+const Info = styled.div`
+position: absolute;
+top: 5%;
+left: 0;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 14px;
+
+color: white;
+font-family: almendra;
+
+p { margin: 0; }
+`;
+
 export default function DeckStrip({ deck }: { deck?: Deck }) {
     const decks = useDecks();
     decks.viewDeck = deck;
     const width = 2.75;
     const [scroll, setScroll] = useState<number>(0);
+    const [active, setActive] = useState<number>(0);
     const cards = [78];
     for (let i = 0; i < 78; i++) { cards.push(i) }
 
     return (
-        <>
+        <Container>
+            <Info>
+                {active > 0 && <>
+                    <p>{active - 1 < 10 && 0}{active - 1}</p>
+                    <p>{TarotDeckData[active - 1].name}</p>
+                </>}
+            </Info>
             <StyledCanvas camera={{position: [0, 0, 5]}}>
                 <DecksContext.Provider value={decks}>
                     {cards.map((card, i) => {
                         const pos = (i) * (width * 1.5);
-                        return <Slide key={`slide-${i}`} cardIndex={card} pos={pos} scroll={scroll} onClick={() => setScroll(-i * (width * 1.5))} />
+                        return <Slide key={`slide-${i}`} cardIndex={card} pos={pos} scroll={scroll} onClick={() => { setScroll(-i * (width * 1.5)); setActive(i)}} />
                     })}
                     <ambientLight
                         intensity={.1}
@@ -46,7 +75,7 @@ export default function DeckStrip({ deck }: { deck?: Deck }) {
                     />
                 </DecksContext.Provider>
             </StyledCanvas>
-        </>
+        </Container>
     );
 };
 
