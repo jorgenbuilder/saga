@@ -10,15 +10,54 @@ import { idlFactory as idlFactory8, canisterId as canisterId8 } from 'dfx-genera
 import { Actor, ActorSubclass } from '@dfinity/agent';
 import { Deck } from '.';
 
+export const HackathonCanisterIds = {
+    "alphadeck": {
+        "ic": "c5u3f-qqaaa-aaaah-qafkq-cai"
+    },
+    "chaos1": {
+        "ic": "ctwwn-laaaa-aaaah-qaflq-cai"
+    },
+    "chaos2": {
+        "ic": "d6ysd-eiaaa-aaaah-qafma-cai"
+    },
+    "chaos3": {
+        "ic": "dzzux-jqaaa-aaaah-qafmq-cai"
+    },
+    "chaos4": {
+        "ic": "dq27l-7yaaa-aaaah-qafna-cai"
+    },
+    "chaos5": {
+        "ic": "dx3z7-saaaa-aaaah-qafnq-cai"
+    },
+    "chaos6": {
+        "ic": "dc4is-tiaaa-aaaah-qafoa-cai"
+    },
+    "chaos7": {
+        "ic": "dm6f2-iyaaa-aaaah-qafpa-cai"
+    },
+    "chaos8": {
+        "ic": "dl7do-faaaa-aaaah-qafpq-cai"
+    },
+    "tarot": {
+        "ic": "5eiu6-pyaaa-aaaah-qaa6q-cai"
+    },
+    "tarot_assets": {
+        "ic": "l2jyf-nqaaa-aaaah-qadha-cai"
+    }
+};
+
+const DEVMODE = window.location.host.includes('localhost');
+// const DEVMODE = false;
+
 const ChaosDecks: { [key: string]: ActorSubclass<any> } = {
-    chaos1: Actor.createActor<any>(idlFactory1, { agent: agent(), canisterId: canisterId1 }),
-    chaos2: Actor.createActor<any>(idlFactory2, { agent: agent(), canisterId: canisterId2 }),
-    chaos3: Actor.createActor<any>(idlFactory3, { agent: agent(), canisterId: canisterId3 }),
-    chaos4: Actor.createActor<any>(idlFactory4, { agent: agent(), canisterId: canisterId4 }),
-    chaos5: Actor.createActor<any>(idlFactory5, { agent: agent(), canisterId: canisterId5 }),
-    chaos6: Actor.createActor<any>(idlFactory6, { agent: agent(), canisterId: canisterId6 }),
-    chaos7: Actor.createActor<any>(idlFactory7, { agent: agent(), canisterId: canisterId7 }),
-    chaos8: Actor.createActor<any>(idlFactory8, { agent: agent(), canisterId: canisterId8 }),
+    chaos1: Actor.createActor<any>(idlFactory1, { agent: agent(), canisterId: DEVMODE ? canisterId1 : HackathonCanisterIds['chaos1']['ic'] }),
+    chaos2: Actor.createActor<any>(idlFactory2, { agent: agent(), canisterId: DEVMODE ? canisterId2 : HackathonCanisterIds['chaos2']['ic'] }),
+    chaos3: Actor.createActor<any>(idlFactory3, { agent: agent(), canisterId: DEVMODE ? canisterId3 : HackathonCanisterIds['chaos3']['ic'] }),
+    chaos4: Actor.createActor<any>(idlFactory4, { agent: agent(), canisterId: DEVMODE ? canisterId4 : HackathonCanisterIds['chaos4']['ic'] }),
+    chaos5: Actor.createActor<any>(idlFactory5, { agent: agent(), canisterId: DEVMODE ? canisterId5 : HackathonCanisterIds['chaos5']['ic'] }),
+    chaos6: Actor.createActor<any>(idlFactory6, { agent: agent(), canisterId: DEVMODE ? canisterId6 : HackathonCanisterIds['chaos6']['ic'] }),
+    chaos7: Actor.createActor<any>(idlFactory7, { agent: agent(), canisterId: DEVMODE ? canisterId7 : HackathonCanisterIds['chaos7']['ic'] }),
+    chaos8: Actor.createActor<any>(idlFactory8, { agent: agent(), canisterId: DEVMODE ? canisterId8 : HackathonCanisterIds['chaos8']['ic'] }),
 };
 
 const Chaos1Deck: Deck = {
