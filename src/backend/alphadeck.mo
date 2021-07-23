@@ -4,7 +4,9 @@ import Bool "mo:base/Bool";
 import Debug "mo:base/Debug";
 import Error "mo:base/Error";
 import Int "mo:base/Int";
+import Int8 "mo:base/Int";
 import Nat "mo:base/Nat";
+import Nat8 "mo:base/Nat8";
 import Option "mo:base/Option";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
@@ -14,21 +16,32 @@ import Time "mo:base/Time";
 
 shared({ caller }) actor class AlphaDeck() {
 
+    ////////////
+    // Types //
+    //////////
+
     type CardAsset = Text;
     type NFT = {
-        var owner : ?Principal;
+        var owner : Principal;
+        var timestamp : Int;
+        var alias : ?Text;
+    };
+    type frozeNFT = {
+        owner : Principal;
+        timestamp : Int;
+        alias : ?Text;
     };
 
-    ////////////////////////////////
-    // Primary entity datastores //
-    //////////////////////////////
+    /////////////
+    // Stores //
+    ///////////
 
     stable let tarotCards : [var ?CardAsset] = Array.init<?CardAsset>(80, null);
-    stable var nfts : [var NFT] = Array.init<NFT>(10, { var owner = null });
+    stable var nfts : [var NFT] = [var];
 
-    //////////////////////////////////
-    // Admin canister setup things //
-    ////////////////////////////////
+    /////////////
+    // Admin  //
+    ///////////
 
     var lockStage1Time : Int = 0;
     stable var productionMode : Bool = false;
@@ -45,7 +58,7 @@ shared({ caller }) actor class AlphaDeck() {
 
     public shared({caller}) func confirmLockForProduction() : async Text {
         ignore validateAssets();
-        if (lockStage1Time - Time.now() >= 60_000_000_000) {
+        if (Time.now() - lockStage1Time <= 60_000_000_000) {
             productionMode := true;
             return "This canister is now locked.";
         };
@@ -53,104 +66,73 @@ shared({ caller }) actor class AlphaDeck() {
     };
 
     public query func validateAssets () : async () {
-        // Image processing is probably not something I feel like doing in Motoko right now
-        // So like, frontend validate image file types and dimensions
         var i = 0;
         while (i < 79) {
-            if (tarotCards[i] == null) {
+            if (Option.isNull(tarotCards[i])) {
                 throw Error.reject("Invalid canister assets for production release.");
             };
             i += 1;
         };
     };
 
-    ////////////////////////////////////////
-    // Admin inventory management things //
-    //////////////////////////////////////
+    //////////////
+    // Private //
+    ////////////
 
-    public shared({caller}) func grantUnownedDeckToPrincipal(principal : Text) : () {
-        ignore grantNFT(Principal.fromText(principal));
+    func _getPrincipalNFT(principal : Principal) : ?NFT {
+        Array.find<NFT>(Array.freeze(nfts), func (nft) { nft.owner == principal });
     };
 
-    public shared({caller}) func mintNewDecks(count : Nat) : () {
-        // This is gnarly
-        nfts := Array.thaw(Array.append<NFT>(Array.freeze(nfts), Array.freeze(Array.init<NFT>(count, { var owner = null }))));
-    };
-
-    ///////////////////////////
-    // General logic things //
-    /////////////////////////
-
-    func getUnclaimedNFTs() : [var NFT] {
-        Array.thaw(Array.filter<NFT>(Array.freeze(nfts), func (x: NFT) { x.owner == null }));
-    };
-
-    func _getPrincipalNFT(principal : Principal) : ?Nat {
-        var i = 0;
-        while (i < nfts.size()) {
-            if (nfts[i].owner == ?principal) {
-                return ?i;
-            };
-            i += 1;
-        };
-        return null;
-    };
-
-    func grantNFT(principal : Principal) : ?NFT {
-        var i = 0;
-        while (i < nfts.size()) {
-            if (Option.isNull(nfts[i].owner)) {
-                var nft = nfts[i];
-                nft.owner := ?principal;
-                return ?nft;
-            };
-            i += 1;
-        };
-        return null;
-    };
-
-    /////////////////////////////////
-    // Essential public interface //
-    ///////////////////////////////
+    /////////////
+    // Public //
+    ///////////
 
     public shared query func serveCard(index : Nat) : async ?Text {
+        Debug.print("Query: serve card: " # Nat.toText(index) # ".");
         tarotCards[index];
     };
 
-    public shared query func serveAllCards() : async [?Text] {
-        Array.freeze(tarotCards);
-    };
-
     public shared query func supplyTotal() : async Nat {
-        nfts.size();
+        let size = nfts.size();
+        Debug.print("Query: total supply: " # Nat.toText(size));
+        size;
     };
 
-    public shared query func supplyAvailable() : async Nat {
-        getUnclaimedNFTs().size();
-    };
-
-    public shared query func getPrincipalNFT(principal : Principal) : async ?Nat {
-        _getPrincipalNFT(principal);
-    };
-
-    public shared({caller}) func transferNFT(transferTo : Principal) : async () {
-        var i = 0;
-        while (i < nfts.size()) {
-            if (nfts[i].owner == ?caller) {
-                nfts[i].owner := ?transferTo;
+    public shared query func listNFT() : async [frozeNFT] {
+        Debug.print("Query: List all NFTs.");
+        Array.map<NFT, frozeNFT>(Array.freeze(nfts), func (nft) {
+            return {
+                owner = nft.owner;
+                timestamp = nft.timestamp;
+                alias = nft.alias;
             };
+        });
+    };
+
+    public shared query func getPrincipalNFT(principal : Principal) : async ?frozeNFT {
+        Debug.print("Query: NFT owned by principal.");
+        switch (_getPrincipalNFT(principal)) {
+            case (?nft) return ?{
+                owner = nft.owner;
+                timestamp = nft.timestamp;
+                alias = nft.alias;
+            };
+            case (null) null;
         };
     };
 
-    public shared({caller}) func claimNFT() : async () {
-        // maybe use motoko base response
-        if (getUnclaimedNFTs().size() == 0) {
-            throw Error.reject("There are no available NFTs.");
-        };
-        if (Option.isNull(_getPrincipalNFT(caller))) {
+    public shared func claimNFT(principal: Principal) : async ()  {
+        Debug.print("Func: Claiming an NFT: " # Principal.toText(principal) # ".");
+        if (not Option.isNull(_getPrincipalNFT(principal))) {
             throw Error.reject("Principals can only have one NFT.");
         };
-        ignore grantNFT(caller);
+        var mint : NFT = {
+            var timestamp = Time.now();
+            var owner = principal;
+            var alias = null;
+        };
+        nfts := Array.thaw<NFT>(Array.append<NFT>(Array.freeze(nfts), [mint]));
+        return;
     };
 
     ////////////////////

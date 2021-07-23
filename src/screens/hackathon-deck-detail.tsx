@@ -1,12 +1,12 @@
 import { useParams } from 'react-router';
-import Button from 'src/components/button';
+import { LinkButton } from 'src/components/button';
 import DeckStrip from 'src/components/deck-strip';
 import { useDecks } from 'src/context/decks';
 import styled from 'styled-components';
 
-export default function DeckDetail () {
+export default function HackathonDeckDetail () {
     const { slug } = useParams<{ slug: string }>();
-    const { deck, knownDecks, setDeck } = useDecks();
+    const {knownDecks } = useDecks();
     const viewDeck = knownDecks.find(x => x.slug === slug);
     if (!viewDeck) throw Error('Deck not found');
 
@@ -16,9 +16,7 @@ export default function DeckDetail () {
 
             <Container>
                 <Actions>
-                    <Button active={deck === viewDeck} onClick={() => setDeck(viewDeck)}>Use This Deck</Button>
-                    <br/>
-                    <Button onClick={() => window.history.back()}>Back</Button>
+                    <LinkButton to={'/hackathon-decks#chooseSection'}>Back</LinkButton>
                 </Actions>
             </Container>
         </>

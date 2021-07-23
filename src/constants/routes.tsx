@@ -12,6 +12,7 @@ import ChooseDeckScreen from 'src/screens/choose-deck';
 import ExplorerWorkBench from 'src/screens/workbench/explorer';
 import DeckDetail from 'src/screens/deck-detail';
 import HackathonDecks from 'src/screens/hackathon-decks';
+import HackathonDeckDetail from 'src/screens/hackathon-deck-detail';
 
 export interface RouteConf {
     path: string;
@@ -84,10 +85,15 @@ const Routes: {
         Component: DeckDetail,
         requiresAuth: true,
     },
+    hackathonDeckDetail: {
+        path: '/hackathon-decks/:slug',
+        Component: HackathonDeckDetail,
+        requiresAuth: false,
+    },
     hackathonDecks: {
         path: '/hackathon-decks',
         Component: HackathonDecks,
-        requiresAuth: true,
+        requiresAuth: false,
     },
     decks: {
         path: '/decks',
