@@ -1,6 +1,7 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useCallback, useContext, useEffect, useState } from 'react';
 import { useInternetIdentity } from '../internet-identity';
 import AlphaDeck, { deck as alphadeck} from './alphadeck';
+import ChaosDecks, { Chaos1Deck, Chaos2Deck, Chaos3Deck, Chaos4Deck, Chaos5Deck, Chaos6Deck, Chaos7Deck, Chaos8Deck } from './hackaton';
 import DefaultDeck from './default';
 
 interface DecksState {
@@ -9,6 +10,8 @@ interface DecksState {
     availableDecks: Deck[];
     setDeck: Dispatch<SetStateAction<Deck>>;
     setAvailableDecks: Dispatch<SetStateAction<Deck[]>>;
+    knownDecks: Deck[];
+    discoverDecks: () => void;
 };
 
 export interface Deck {
@@ -26,10 +29,24 @@ const DefaultState: DecksState = {
     availableDecks: [DefaultDeck],
     setDeck: () => {},
     setAvailableDecks: () => {},
+    knownDecks: [DefaultDeck],
+    discoverDecks: () => {},
 };
 
 export const DecksContext = createContext<DecksState>(DefaultState);
 export const useDecks = () => useContext(DecksContext);
+
+const DeckCanisters = [
+    {can: alphadeck, deck: AlphaDeck},
+    {can: ChaosDecks.chaos1, deck: Chaos1Deck},
+    {can: ChaosDecks.chaos2, deck: Chaos2Deck},
+    {can: ChaosDecks.chaos3, deck: Chaos3Deck},
+    {can: ChaosDecks.chaos4, deck: Chaos4Deck},
+    {can: ChaosDecks.chaos5, deck: Chaos5Deck},
+    {can: ChaosDecks.chaos6, deck: Chaos6Deck},
+    {can: ChaosDecks.chaos7, deck: Chaos7Deck},
+    {can: ChaosDecks.chaos8, deck: Chaos8Deck},
+];
 
 export default function DecksProvider({ children }: DecksProviderProps) {
 
@@ -38,24 +55,31 @@ export default function DecksProvider({ children }: DecksProviderProps) {
 
     const { identity } = useInternetIdentity();
 
-    useEffect(() => {
-        if (identity) {
-            alphadeck.getPrincipalNFT(identity?.getPrincipal()).catch(console.error).then((resp: any) => {
+    function discoverDecks () {
+        if (!identity) return;
+        let discoveredDecks: Deck[] = [DefaultDeck];
+        DeckCanisters.forEach(({can, deck}) => {
+            can.getPrincipalNFT(identity?.getPrincipal()).catch(console.error).then((resp: any) => {
                 if (!resp) return;
                 if (resp.length) {
-                    setAvailableDecks([DefaultDeck, AlphaDeck]);
-                } else {
-                    setAvailableDecks([DefaultDeck]);
+                    discoveredDecks.push(deck);
                 }
             });
-        }
-    }, [identity]);
+        });
+        console.log('Discovered decks: ', discoveredDecks);
+        setAvailableDecks(discoveredDecks);
+    };
+
+    useEffect(discoverDecks, [identity]);
+    console.log(availableDecks)
 
     const value = useCallback(() => ({
         deck,
         setDeck,
         availableDecks,
         setAvailableDecks,
+        knownDecks: [DefaultDeck].concat(DeckCanisters.map(x => x.deck)),
+        discoverDecks,
     }), [deck, setDeck, availableDecks, setAvailableDecks,]);
 
     return <DecksContext.Provider

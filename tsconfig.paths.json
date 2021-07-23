@@ -8,6 +8,30 @@
         "dfx-generated/alphadeck": [
           ".dfx/local/canisters/alphadeck/alphadeck.js"
         ],
+        "dfx-generated/chaos1": [
+          ".dfx/local/canisters/chaos1/chaos1.js"
+        ],
+        "dfx-generated/chaos2": [
+          ".dfx/local/canisters/chaos2/chaos2.js"
+        ],
+        "dfx-generated/chaos3": [
+          ".dfx/local/canisters/chaos3/chaos3.js"
+        ],
+        "dfx-generated/chaos4": [
+          ".dfx/local/canisters/chaos4/chaos4.js"
+        ],
+        "dfx-generated/chaos5": [
+          ".dfx/local/canisters/chaos5/chaos5.js"
+        ],
+        "dfx-generated/chaos6": [
+          ".dfx/local/canisters/chaos6/chaos6.js"
+        ],
+        "dfx-generated/chaos7": [
+          ".dfx/local/canisters/chaos7/chaos7.js"
+        ],
+        "dfx-generated/chaos8": [
+          ".dfx/local/canisters/chaos8/chaos8.js"
+        ],
         "devconf": [
           "dev.js"
         ]
