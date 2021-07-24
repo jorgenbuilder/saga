@@ -2,9 +2,17 @@ import styled from 'styled-components';
 import { LinkButton } from 'src/components/button';
 import Routes from 'src/constants/routes';
 import { useDecks } from 'src/context/decks';
+import { useEffect } from 'react';
+import { useInternetIdentity } from 'src/context/internet-identity';
 
 export default function ChooseDeckScreen () {
-    const { availableDecks } = useDecks();
+    const { principal } = useInternetIdentity();
+    const { discoverDecks, availableDecks } = useDecks();
+
+    useEffect(() => {
+        discoverDecks(principal);
+    }, [principal]);
+
     return (
         <>
             <Container>

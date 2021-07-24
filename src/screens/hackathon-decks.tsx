@@ -54,7 +54,6 @@ import { ReactComponent as BigLoader } from 'src/assets/loader-big.svg';
 import { Suspense, useRef, useState } from 'react';
 import { useEffect } from 'react';
 import Button, { LinkButton } from 'src/components/button';
-import { DropCap } from 'src/components/reading-body';
 import DefaultLighting from 'src/three/lighting';
 import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber';
 import BlankTarotCardMesh from 'src/three/card/tarot-blank';
@@ -74,8 +73,9 @@ import { Deck as DeckInterface, useDecks } from 'src/context/decks';
 import ChaosDecks, { Chaos1Deck, Chaos2Deck, Chaos3Deck, Chaos4Deck, Chaos5Deck, Chaos6Deck, Chaos7Deck, Chaos8Deck } from 'src/context/decks/hackaton';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useAccelerometer } from 'src/context/device-accelerometer';
 
-interface NFT {
+export interface NFT {
     owner: string;
     deck: string;
     timestamp: number;
@@ -101,8 +101,9 @@ function pad(n: number) { return n < 10 ? `0${n}` : `${n}` }
 
 export default function HackathonDecks() {
 
-    const { availableDecks } = useDecks();
-    const { identity } = useInternetIdentity();
+    const { availableDecks, discoverDecks } = useDecks();
+    const { principal } = useInternetIdentity();
+    
     function count() { return Math.floor((deadDrop - new Date().getTime()) / 1000); };
 
     function toTimer(countdown: number) {
@@ -114,7 +115,6 @@ export default function HackathonDecks() {
     }
 
     function claim (deck: DeckInterface) {
-        const principal = identity?.getPrincipal();
         ChaosDecks['chaos'+deck.slug.match(/[0-9]/)].claimNFT(principal);
         setClaimedDeck(deck);
     };
@@ -154,6 +154,10 @@ export default function HackathonDecks() {
             }
         };
     }, [availableDecks]);
+
+    useEffect(() => {
+        discoverDecks(principal);
+    }, [principal]);
 
     const chosenDeck: DeckContent | undefined = claimedDeck ? hackathonDecksContent.find(([,,,deck]) => deck === claimedDeck) : hackathonDecksContent.find(([,,, deck]) => availableDecks.includes(deck as DeckInterface));
 
@@ -212,6 +216,8 @@ export function DemoCanvas() {
     const [hover, setHover] = useState<boolean>(false);
     const cards = [Chaos1Deck, Chaos2Deck, Chaos4Deck, Chaos6Deck, Chaos8Deck];
     useFrame(() => !hover && setRot(rot + .5));
+    const { popPermissionToast } = useAccelerometer();
+    useEffect(popPermissionToast, []);
     return (
         <>
             {cards.map((deck, i) => <DemoCard key={`democard-${i}`} setParentHover={setHover} rot={rot} i={i} active={active} deck={deck} setActive={setActive} setRot={setRot} />)}
@@ -231,6 +237,14 @@ function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i:
         setMy(e.point.y >= 0 ? e.point.y / bbox.max.y : - e.point.y / bbox.min.y);
     }
 
+    const { acceleration } = useAccelerometer();
+    
+    const rotDeviceTilt = [
+        -acceleration.alpha * .1,
+        -acceleration.beta * .1,
+        -acceleration.gamma * .1,
+    ];
+
     const scaHover = hover ? .01 : 0;
     const posHover = hover ? -.15 : 0;
     const nearestFace = props.rot % 180;
@@ -238,7 +252,11 @@ function DemoCard(props: { setParentHover: (s: boolean) => void; rot: number, i:
         const inactives = [0, 1, 2, 3, 4].filter((i) => i !== props.active);
         switch (props.i === props.active) {
             case true: return {
-                rotation: [THREE.MathUtils.degToRad(0 + my * 5), THREE.MathUtils.degToRad((hover ? props.rot - nearestFace : props.rot) - mx * 5), 0] as unknown as THREE.Euler,
+                rotation: [
+                    rotDeviceTilt[0] + THREE.MathUtils.degToRad(0 + my * 5),
+                    rotDeviceTilt[1] + THREE.MathUtils.degToRad((hover ? props.rot - nearestFace : props.rot) - mx * 5),
+                    rotDeviceTilt[2]
+                ] as unknown as THREE.Euler,
                 position: [0, -1.125, 0] as unknown as THREE.Vector3,
                 scale: (hover ? 1 : .8) as unknown as THREE.Vector3,
             };
@@ -362,7 +380,7 @@ function YourChoice (props: { chosenDeck: DeckContent; breakdown: { [key: string
                         <ColHead>Deck</ColHead>
                         <ColHead>%</ColHead>
                     </Row>
-                    {Object.keys(props.breakdown).filter(x => x !== 'total').map((key, i) => <Row>
+                    {Object.keys(props.breakdown).filter(x => x !== 'total').map((key, i) => <Row key={`row${i}`}>
                         <Col>Chaos #{key.match(/[0-9]/)}</Col>
                         <Col>{Math.floor(props.breakdown[key] / props.breakdown['total'] * 100)}% ({props.breakdown[key]})</Col>
                     </Row>)}
@@ -406,9 +424,18 @@ const Root = styled.div`
 display: flex;
 flex-direction: column;
 align-items: center;
-gap: 162px;
-padding: 162px 0;
+gap: 68px;
+padding: 68px .5em;
 color: hsl(var(--color-gold));
+
+@media (min-width: 680px) {
+    gap: 100px;
+    padding: 100px 0;
+}
+@media (min-width: 1200px) {
+    gap: 162px;
+    padding: 162px 0;
+}
 `;
 
 const Head = styled.header`
@@ -419,19 +446,27 @@ gap: 62px;
 `;
 
 const Logo = styled.div`
-width: 280px; height: 260px;
+width: 173.6px; height: 161.2px;
 position: relative;
 display: flex;
 align-items: center;
 justify-content: center;
+
+@media (min-width: 680px) {
+    width: 280px; height: 260px;
+}
 `;
 
 const H1 = styled.h1`
 position: relative;
 z-index: 1;
 font-family: Astloch;
-font-size: 100px;
+font-size: 62px;
 font-weight: 100;
+
+@media (min-width: 680px) {
+    font-size: 100px;
+}
 `;
 
 const SpinSlowly = keyframes`
@@ -457,10 +492,15 @@ to {
 const StyledSpinner = styled(BigLoader)`
 position: absolute;
 top: 0; left: 0;
-width: 280px; height: 310px;
+width: 173.6px; height: 192.2px;
 animation:
     ${SpinSlowly} 62s linear infinite;
-transform-origin: ${280 * .497}px ${310 * .418}px;
+transform-origin: ${173.6 * .497}px ${192.2 * .418}px;
+
+@media (min-width: 680px) {
+    width: 280px; height: 310px;
+    transform-origin: ${280 * .497}px ${310 * .418}px;
+}
 
 #big-loader-tristar {
     fill: hsl(var(--color-back));
@@ -506,17 +546,29 @@ transform-origin: ${280 * .497}px ${310 * .418}px;
 const H2 = styled.h2`
 color: hsl(var(--color-back));
 font-family: 'press start 2p';
-font-size: 38px;
+font-size: 18px;
 line-height: 125%;
 text-align: center;
 -webkit-text-stroke-width: .5px;
 -webkit-text-stroke-color: white;
 
- > span:nth-of-type(1) { -webkit-text-stroke-color: #5B6AFA;}
- > span:nth-of-type(2) { -webkit-text-stroke-color: #8952D2;}
- > span:nth-of-type(3) { -webkit-text-stroke-color: #D41A69;}
- > span:nth-of-type(4) { -webkit-text-stroke-color: #F16B52;}
- > span:nth-of-type(5) { -webkit-text-stroke-color: #FFCC07;}
+> span:nth-of-type(1) { -webkit-text-stroke-color: #5B6AFA;}
+> span:nth-of-type(2) { -webkit-text-stroke-color: #8952D2;}
+> span:nth-of-type(3) { -webkit-text-stroke-color: #D41A69;}
+> span:nth-of-type(4) { -webkit-text-stroke-color: #F16B52;}
+> span:nth-of-type(5) { -webkit-text-stroke-color: #FFCC07;}
+
+@media (min-width: 440px) {
+    font-size: 24px;
+}
+
+@media (min-width: 680px) {
+    font-size: 32px;
+}
+
+@media (min-width: 1200px) {
+    font-size: 38px;
+}
 `;
 
 const Timer = styled.div`
@@ -524,38 +576,118 @@ font-family: 'press start 2p';
 text-align: center;
 
 p {
-    font-size: 12px;
+    font-size: 8px;
+
+    @media (min-width: 440px) {
+        font-size: 10px;
+    }
+
+    @media (min-width: 680px) {
+        font-size: 12px;
+    }
 }
 `;
 
 const Countdown = styled.div`
-font-size: 100px;
+font-size: 28px;
 color: hsl(var(--color-back));
 line-height: 125%;
--webkit-text-stroke-width: 4px;
+-webkit-text-stroke-width: 2px;
 -webkit-text-stroke-color: white;
+
+@media (min-width: 440px) {
+    font-size: 38px;
+}
+
+@media (min-width: 680px) {
+    font-size: 62px;
+    -webkit-text-stroke-width: 4px;
+}
+
+@media (min-width: 1200px) {
+    font-size: 100px;
+}
 `;
 
 const TwoBy = styled.div`
 display: flex;
+flex-direction: column;
 align-items: center;
 width: 100%;
+
+@media (min-width: 768px) {
+    flex-direction: row;
+}
 `;
 
 const CardDemo = styled.div`
 width: 100%; height: 100%;
 flex-shrink: 1;
 max-width: 1680px;
+min-height: 768px;
 `;
 
 const TypeSet = styled.div`
-width: 22em;
 flex-shrink: 0;
-margin-right: 2em;
-gap: 38px;
 font-family: cardo;
-font-size: 24px;
 line-height: 150%;
+
+margin-right: 0;
+gap: 38px;
+
+width: 22em;
+font-size: 14px;
+
+@media (min-width: 400px) {
+    width: 22em;
+    font-size: 18px;
+}
+
+@media (min-width: 680px) {
+    margin-right: 2em;
+    gap: 38px;
+    font-size: 20px;
+}
+
+@media (min-width: 1200px) {
+    margin-right: 2em;
+    gap: 38px;
+    font-size: 24px;
+}
+`;
+
+const DropCap = styled.span`
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 10px 10px 0 0;
+float: left;
+background-color: hsl(var(--color-copper));
+border: 1px solid hsl(var(--color-gold));
+color: hsl(var(--color-gold));
+font-family: 'Uncial Antiqua';
+
+width: 46px;
+height: 46px;
+font-size: 28px;
+
+@media (min-width: 400px) {
+    width: 62px;
+    height: 62px;
+    font-size: 38px;
+}
+
+@media (min-width: 680px) {
+    width: 68px;
+    height: 68px;
+    font-size: 44px;
+}
+
+@media (min-width: 1200px) {
+    width: 86px;
+    height: 86px;
+    font-size: 62px;
+}
 `;
 
 const ChooseSection = styled.div`
@@ -567,12 +699,20 @@ const H3 = styled.h3`
 margin: 0;
 text-align: center;
 font-family: 'press start 2p';
-font-size: 38px;
 color: hsla(var(--color-back), 0);
 line-height: 125%;
 -webkit-text-stroke-width: 1px;
 -webkit-text-stroke-color: white;
 text-shadow: 0 0 20px black, 0 0 10px black;
+
+font-size: 24px;
+
+@media (min-width: 680px) {
+    font-size: 32px;
+}
+@media (min-width: 900px) {
+    font-size: 38px;
+}
 `;
 
 const ChooseHeader = styled.div`
@@ -628,7 +768,7 @@ cursor: pointer;
 transition: .38s ease-out all;
 
 &:hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 `;
 
@@ -639,8 +779,10 @@ const H4 = styled.h4`
 
 const Thanks = styled.div`
 max-width: 62em;
+padding: 0 1em;
 font-size: 16px;
 font-family: cardo;
+line-height: 150%;
 a { color: #00F0FF; }
 `;
 
@@ -648,10 +790,14 @@ const Table = styled.div`
 width: 100%;
 max-width: 748px;
 font-family: almendra;
-font-size: 24px;
 text-align: center;
 a { color: #00F0FF; }
+
+font-size: 16px;
+@media (min-width: 680px) { font-size: 18px; }
+@media (min-width: 900px) { font-size: 24px; }
 `;
+
 const Row = styled.div`
 display: flex;
 flex-direction: row;

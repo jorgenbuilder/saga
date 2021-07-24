@@ -1,20 +1,23 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useCallback, useState } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { useEffect } from 'react';
 import { Identity } from '@dfinity/agent';
 import SplashScreen from 'src/screens/splash';
 import { useContext } from 'react';
+import { Principal } from '@dfinity/principal';
 
 interface InternetIdentityState {
     authenticate: () => void;
     isAuthed?: boolean;
     identity?: Identity;
+    principal?: Principal;
 };
 
 const DefaultState: InternetIdentityState = {
     authenticate: () => { },
     isAuthed: undefined,
     identity: undefined,
+    principal: undefined,
 };
 
 export const InternetIdentityContext = createContext<InternetIdentityState>(DefaultState);
@@ -24,34 +27,43 @@ export const useInternetIdentity = () => useContext(InternetIdentityContext);
 export default function InternetIdentityProvider({ children }: { children?: ReactNode }) {
 
     const [isAuthed, setIsAuthed] = useState<boolean>();
-    const [identity, setIdentity] = useState<Identity>()
+    const [identity, setIdentity] = useState<Identity>();
+    const [client, setClient] = useState<AuthClient>();
+    const [principal, setPrincipal] = useState<Principal>();
 
     useEffect(() => {
-        AuthClient.create()
-            .then(client => client.isAuthenticated())
-            .then(setIsAuthed);
+        AuthClient.create().then(setClient);
     }, []);
 
+    useEffect(() => { console.log(principal?.toText()) }, [principal])
+
     useEffect(() => {
-        AuthClient.create()
-            .then(client => client.getIdentity())
-            .then(setIdentity);
-    }, [isAuthed]);
+        client?.isAuthenticated()
+        .then(setIsAuthed)
+        .then(() => {
+            const id = client?.getIdentity();
+            setIdentity(id);
+            setPrincipal(id.getPrincipal());
+        });
+    }, [client]);
 
     async function authenticate() {
-        AuthClient.create()
-            .then(client => client.login({
-                onSuccess: () => setIsAuthed(true),
-            }));
+        client?.login({
+            onSuccess: () => {
+                setIsAuthed(true);
+                setIdentity(client.getIdentity());
+            },
+        });
     };
 
     const value = {
         authenticate,
         isAuthed,
         identity,
+        principal,
     };
 
-    if (isAuthed === undefined) {
+    if (isAuthed === undefined || identity === undefined) {
         return <SplashScreen />;
     }
 

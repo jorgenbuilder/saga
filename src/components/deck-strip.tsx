@@ -14,14 +14,18 @@ import { TarotDeckData } from 'src/services/cards';
 const Container = styled.div`
 position: relative;
 height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
 `;
 
 const StyledCanvas = styled(Canvas)`
 position: absolute;
-top: 0;
-left: 0;
-width: 275 * 80;
-height: 475;
+top: 0; left: 0;
+
+@media (max-width: 680px) {
+    height: 80% !important;
+}
 `;
 
 const Info = styled.div`
