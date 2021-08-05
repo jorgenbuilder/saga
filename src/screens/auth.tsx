@@ -10,7 +10,7 @@ export default function AuthScreen () {
     
     return (
         <Container>
-            <Button onClick={() => authenticate()}>
+            <Button onClick={() => authenticate(() => window.location.reload())}>
                 Authenticate
                 <img alt="with Internet Identity" src={dfinity} height={40} style={{margin: '0 0 0 1em'}} />
             </Button>

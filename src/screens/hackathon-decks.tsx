@@ -102,7 +102,7 @@ function pad(n: number) { return n < 10 ? `0${n}` : `${n}` }
 export default function HackathonDecks() {
 
     const { availableDecks, discoverDecks } = useDecks();
-    const { principal } = useInternetIdentity();
+    const { isAuthed, principal } = useInternetIdentity();
     
     function count() { return Math.floor((deadDrop - new Date().getTime()) / 1000); };
 
@@ -156,8 +156,10 @@ export default function HackathonDecks() {
     }, [availableDecks]);
 
     useEffect(() => {
-        discoverDecks(principal);
-    }, [principal]);
+        if (isAuthed) {
+            discoverDecks(principal);
+        }
+    }, [principal, isAuthed]);
 
     const chosenDeck: DeckContent | undefined = claimedDeck ? hackathonDecksContent.find(([,,,deck]) => deck === claimedDeck) : hackathonDecksContent.find(([,,, deck]) => availableDecks.includes(deck as DeckInterface));
 
@@ -195,7 +197,7 @@ export default function HackathonDecks() {
                 </TypeSet>
             </TwoBy>
             <ChooseSection id="chooseSection" ref={chooseSection}>
-                {chosenDeck
+                {isAuthed && chosenDeck
                     ? <YourChoice chosenDeck={chosenDeck} breakdown={ledgerPercentages} />
                     : countdown === 0
                         ? <DeadDrop breakdown={ledgerPercentages} />
@@ -317,7 +319,7 @@ function ChooseCanvas(props: {claim: (deck: DeckInterface) => void}) {
                 <div style={{ width: '38em' }}>
                     {isAuthed
                         ? <Button size={'large'} onClick={() => props.claim(hackathonDecksContent[active][3] as DeckInterface)}>Claim Your Deck 🃏🎉</Button>
-                        : <Button size={'large'} onClick={authenticate}>
+                        : <Button size={'large'} onClick={() => authenticate(() => window.location.reload())}>
                             Authenticate to Claim
                             <img alt="with Internet Identity" src={dfinity} height={50} style={{ margin: '0 0 0 1em' }} />
                         </Button>}
@@ -344,21 +346,31 @@ function ChooseDeck(props: { deck: DeckInterface; title: string; image: string; 
 };
 
 function Ledger(props: { ledger: NFT[] }) {
+    const perPage = 10;
+    const pages = Math.floor(props.ledger.length / perPage) + 1;
+    const [page, setPage] = useState<number>(0);
     return (
         <Table>
             <Row>
+                <ColHead style={{flex: '.25'}}>#</ColHead>
                 <ColHead>Identity</ColHead>
                 <ColHead>Timestamp</ColHead>
                 <ColHead>Deck</ColHead>
             </Row>
-            {props.ledger.map((nft, i) => {
+            {props.ledger.sort((a, b) => Number(b.timestamp) - Number(a.timestamp)).slice(page * perPage, page * perPage + perPage).map((nft, i) => {
                 const date = new Date(Number(nft.timestamp) / 1e6);
                 return <Row key={`ledger-${i}`}>
+                    <Col style={{flex: '.25'}}>{props.ledger.length - i - 1}</Col>
                     <Col><span title={nft?.owner}>{nft?.alias?.length ? nft.alias : 'Anonymous'}</span></Col>
                     <Col>{`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDay())} ${date.toLocaleTimeString()}`}</Col>
                     <Col><Link to={`/hackathon-decks/${nft.deck.split(/[0-9]/).join('-')}${nft.deck.match(/[0-9]/)}/`}>Chaos #{nft.deck.match(/[0-9]/)}</Link></Col>
                 </Row>
             })}
+            <Pagination>
+                <Button size="small" onClick={() => setPage(Math.max(0, page - 1))}>Back</Button>
+                <span>Page {page + 1} of {pages} <small><em>({props.ledger.length} Total)</em></small></span>
+                <Button size="small" onClick={() => setPage(Math.min(pages - 1, page + 1))}>Next</Button>
+            </Pagination>
         </Table>
     );
 }
@@ -410,7 +422,7 @@ function DeadDrop (props: { breakdown: { [key: string]: number} }) {
                 {!isAuthed
                     ?   <div>
                             <p style={{fontSize: '24px', fontFamily: 'cardo'}}>Authenticate to see your deck if you claimed one.</p>
-                            <Button size={'large'} onClick={authenticate}>
+                            <Button size={'large'} onClick={() => authenticate(() => window.location.reload())}>
                                 Authenticate
                                 <img alt="with Internet Identity" src={dfinity} height={50} style={{ margin: '0 0 0 1em' }} />
                             </Button>
@@ -827,4 +839,17 @@ flex-direction: column;
 width: 100%;
 gap: 62px;
 align-items: center;
+`;
+
+const Pagination = styled.div`
+margin-top: 1em;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 20px;
+
+> :first-child, > :last-child {
+    flex-grow: 0;
+    width: 80px;
+}
 `;

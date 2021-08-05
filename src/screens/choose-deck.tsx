@@ -6,12 +6,14 @@ import { useEffect } from 'react';
 import { useInternetIdentity } from 'src/context/internet-identity';
 
 export default function ChooseDeckScreen () {
-    const { principal } = useInternetIdentity();
+    const { principal, isAuthed } = useInternetIdentity();
     const { discoverDecks, availableDecks } = useDecks();
 
     useEffect(() => {
-        discoverDecks(principal);
-    }, [principal]);
+        if (isAuthed) {
+            discoverDecks(principal);
+        }
+    }, [principal, isAuthed]);
 
     return (
         <>
