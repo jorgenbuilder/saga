@@ -355,7 +355,7 @@ function Ledger(props: { ledger: NFT[] }) {
                 const date = new Date(Number(nft.timestamp) / 1e6);
                 return <Row key={`ledger-${i}`}>
                     <Col><span title={nft?.owner}>{nft?.alias?.length ? nft.alias : 'Anonymous'}</span></Col>
-                    <Col>{`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDay())} ${date.toLocaleTimeString()}`}</Col>
+                    <Col>{`${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${date.toLocaleTimeString()}`}</Col>
                     <Col><Link to={`/hackathon-decks/${nft.deck.split(/[0-9]/).join('-')}${nft.deck.match(/[0-9]/)}/`}>Chaos #{nft.deck.match(/[0-9]/)}</Link></Col>
                 </Row>
             })}
@@ -402,9 +402,9 @@ function DeadDrop (props: { breakdown: { [key: string]: number} }) {
                         <ColHead>Deck</ColHead>
                         <ColHead>%</ColHead>
                     </Row>
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <Row>
-                        <Col>Chaos #{i}</Col>
-                        <Col>0%</Col>
+                    {Object.keys(props.breakdown).filter(x => x !== 'total').map((key, i) => <Row key={`row${i}`}>
+                        <Col>Chaos #{key.match(/[0-9]/)}</Col>
+                        <Col>{Math.floor(props.breakdown[key] / props.breakdown['total'] * 100)}% ({props.breakdown[key]})</Col>
                     </Row>)}
                 </Table>
                 {!isAuthed
