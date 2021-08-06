@@ -40,6 +40,10 @@
       "main": "src/backend/alphadeck.mo",
       "type": "motoko"
     },
+    "betadeck": {
+      "main": "src/backend/betadeck.mo",
+      "type": "motoko"
+    },
     "tarot_assets": {
       "frontend": {
         "entrypoint": "build/index.html"

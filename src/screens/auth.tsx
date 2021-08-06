@@ -15,7 +15,7 @@ export default function AuthScreen () {
                 <img alt="with Internet Identity" src={dfinity} height={40} style={{margin: '0 0 0 1em'}} />
             </Button>
         </Container>
-    )
+    );
 }
 
 const Container = styled.div`
