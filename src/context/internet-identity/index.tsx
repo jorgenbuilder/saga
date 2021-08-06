@@ -7,14 +7,14 @@ import { useContext } from 'react';
 import { Principal } from '@dfinity/principal';
 
 interface InternetIdentityState {
-    authenticate: () => void;
+    authenticate: (callback?: () => void) => void;
     isAuthed?: boolean;
     identity?: Identity;
     principal?: Principal;
 };
 
 const DefaultState: InternetIdentityState = {
-    authenticate: () => { },
+    authenticate: (callback?: () => void) => {},
     isAuthed: undefined,
     identity: undefined,
     principal: undefined,
@@ -47,11 +47,12 @@ export default function InternetIdentityProvider({ children }: { children?: Reac
         });
     }, [client]);
 
-    async function authenticate() {
+    async function authenticate(callback?: () => void) {
         client?.login({
             onSuccess: () => {
                 setIsAuthed(true);
                 setIdentity(client.getIdentity());
+                if (callback) callback();
             },
         });
     };
