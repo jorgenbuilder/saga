@@ -64,6 +64,15 @@
         "build/"
       ],
       "type": "assets"
+    },
+    "tarot_frontend": {
+      "frontend": {
+        "entrypoint": "old_can/index.html"
+      },
+      "source": [
+        "old_can/"
+      ],
+      "type": "assets"
     }
   },
   "defaults": {
