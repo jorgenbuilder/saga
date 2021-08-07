@@ -47,6 +47,7 @@ shared({ caller }) actor class AlphaDeck() {
     stable var productionMode : Bool = false;
 
     public shared({caller}) func uploadAsset(index : Nat, payload : Text) : () {
+        // TODO: test this doesn't work
         tarotCards[index] := ?payload;
     };
 
@@ -126,8 +127,10 @@ shared({ caller }) actor class AlphaDeck() {
         };
     };
 
-    public shared func claimNFT(principal: Principal) : async ()  {
+    public shared({caller}) func claimNFT(principal: Principal) : async ()  {
+        // TODO: try to restrict this to certain hosts
         Debug.print("Func: Claiming an NFT: " # Principal.toText(principal) # ".");
+        Debug.print("Caller: " #Principal.toText(caller));
         if (not Option.isNull(_getPrincipalNFT(principal))) {
             throw Error.reject("Principals can only have one NFT.");
         };
