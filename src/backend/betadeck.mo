@@ -87,8 +87,6 @@ type BetaDeckCanister = {
     mint : shared (request : ExtNonFungible.MintRequest) -> async ();
     transfer : shared (request : ExtCore.TransferRequest) -> async ExtCore.TransferResponse;
 
-    // NFT things: Departure Labs
-
     // Admin: general
 
     canisterOwners : shared () -> async ();
@@ -130,6 +128,7 @@ shared ({ caller = creator }) actor class BetaDeck() = canister {
         artists = [];
     };
     stable var OWNERS : [Principal] = [creator];
+    stable var ASSET_LOCK : Bool = false;
 
     // We store the next token ID, which just keeps iterating forward
     stable var NEXT_ID : ExtCore.TokenIndex = 0;
@@ -367,16 +366,26 @@ shared ({ caller = creator }) actor class BetaDeck() = canister {
 
     shared ({ caller }) func assetAdmin (request : AssetAdminRequest) : async AssetAdminResponse {
         assert _isOwner(caller);
+        assert ASSET_LOCK == false;
         ASSETS[request.index] := ?request.asset;
         #ok()
     };
 
-    shared ({ caller }) func assetCheck () : async () {
+    shared ({ caller }) func assetCheck () : async Result.Result<(), ExtCore.CommonError> {
         assert _isOwner(caller);
+        assert ASSET_LOCK == false;
+        let missing = Array.filter<?StaticAsset>(ASSETS, func a { a == null });
+        if (Iter.size(missing) > 0) {
+            #err(#Other("Missing assets"));
+        } else {
+            #ok();
+        };
     };
 
-    shared ({ caller }) func assetLock () : async () {
+    shared ({ caller }) func assetLock () : async Bool {
         assert _isOwner(caller);
+        ASSET_LOCK := not ASSET_LOCK;
+        ASSET_LOCK;
     };
 
 
