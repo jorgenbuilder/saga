@@ -11,6 +11,11 @@ let additions = [{
     repo = "https://github.com/jorgenbuilder/extendable-token",
     version = "main",
     dependencies = ["ext"]
+}, {
+    name = "dl-nft",
+    repo = "https://github.com/DepartureLabsIC/non-fungible-token",
+    version = "main",
+    dependencies = ["dl-nft"]
 }] : List Package
 
 in upstream # additions

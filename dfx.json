@@ -1,5 +1,9 @@
 {
   "canisters": {
+    "readings": {
+      "main": "src/backend/readings.mo",
+      "type": "motoko"
+    },
     "tarot": {
       "main": "src/backend/main.mo",
       "type": "motoko"

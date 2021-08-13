@@ -47,7 +47,7 @@ shared({ caller }) actor class AlphaDeck() {
     stable var productionMode : Bool = false;
 
     public shared({caller}) func uploadAsset(index : Nat, payload : Text) : () {
-        // TODO: test this doesn't work
+        if (productionMode) return;
         tarotCards[index] := ?payload;
     };
 

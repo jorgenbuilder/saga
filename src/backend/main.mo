@@ -13,7 +13,6 @@ import Time "mo:base/Time";
 
 import DB "mo:crud/Database";
 
-
 actor {
 
     // Types --------
@@ -120,6 +119,7 @@ actor {
 
     public func importTarotCards (cards: [TarotCard]) : async () {
         // TODO: Move the tests from the frontend into here
+        // Sounds like Axon might have some insight on testing
         for (card in Iter.fromArray(cards)) {
             tarotCards[card.index] := ?card;
         };
@@ -154,9 +154,8 @@ actor {
 
     // Card Draw
 
-    public func getExistingDraw (principalText : Text, theme : Text) : async ?(Id, CardDraw) {
+    public func getExistingDraw (principal : Principal, theme : Text) : async ?(Id, CardDraw) {
         // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
-        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
 
         if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
             throw Error.reject("Unsupported draw theme");
@@ -176,15 +175,14 @@ actor {
         }).vals().next();
     };
 
-    public func nextDrawTime (principalText : Text, theme : Text) : async NextAvailableDraw {
+    public func nextDrawTime (principal : Principal, theme : Text) : async NextAvailableDraw {
         // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
-        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
 
         if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
             throw Error.reject("Unsupported draw theme");
         };
 
-        let existingDraw = await getExistingDraw(principalText, theme);
+        let existingDraw = await getExistingDraw(principal, theme);
 
         return {
             principal = principal;
@@ -206,17 +204,16 @@ actor {
         };
     };
 
-    public func createDailyDraw (principalText : Text, theme : Text) : async CardDraw {
+    public func createDailyDraw (principal : Principal, theme : Text) : async CardDraw {
         // TODO: This should be signed by the principal drawing the card AND the application principal
         // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
-        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
 
         if (Array.find<Text>(drawThemes, func (t : Text) { t == theme; }) == null) {
             throw Error.reject("Unsupported draw theme");
         };
 
         switch (
-            await getExistingDraw(principalText, theme)
+            await getExistingDraw(principal, theme)
         ) {
             case null { (); };
             case (?(id, existingDraw)) {
@@ -267,12 +264,11 @@ actor {
         return draw;
     };
 
-    public func listPrincipleDailyDraws (principalText : Text) : async [CardDraw] {
+    public func listPrincipleDailyDraws (principal : Principal) : async [CardDraw] {
         // Return any card draws from the principal today
         // Restrict access to the principal
 
         // TODO: Verify the principal somehow? Require a cyrptographic signature (face id to draw)??? Overkill maybe
-        let principal = Principal.fromText(principalText);  // This provides some validation for the principal
 
         Array.mapFilter<(Id, CardDraw), CardDraw>(Iter.toArray(cardDraws.entries()), func (id, draw) {
             if (draw.principal != principal) { return null; };
