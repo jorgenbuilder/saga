@@ -24,6 +24,9 @@ const Workbench:React.FC = () => {
             <BlockLink to={Routes.workbenchExplorer.path}>
                 Explorer
             </BlockLink>
+            <BlockLink to={Routes.workbenchColin.path}>
+                Colin
+            </BlockLink>
         </Grid>
     );
 }

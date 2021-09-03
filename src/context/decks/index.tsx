@@ -66,7 +66,7 @@ export default function DecksProvider({ children }: DecksProviderProps) {
                     if (r.length) {
                         return deck;
                     }
-                });
+                }).catch(console.error);
                 canQueries.push(query);
             };
             Promise.all(canQueries).then(decks => {

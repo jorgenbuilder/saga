@@ -13,6 +13,7 @@ import ExplorerWorkBench from 'src/screens/workbench/explorer';
 import DeckDetail from 'src/screens/deck-detail';
 import HackathonDecks from 'src/screens/hackathon-decks';
 import HackathonDeckDetail from 'src/screens/hackathon-deck-detail';
+import ColinWorkbench from 'src/screens/workbench/colin';
 
 export interface RouteConf {
     path: string;
@@ -45,6 +46,10 @@ const Routes: {
     workbenchExplorer: {
         path: '/workbench/explorer',
         Component: ExplorerWorkBench,
+    },
+    workbenchColin: {
+        path: '/workbench/colin',
+        Component: ColinWorkbench,
     },
     app: {
         path: '/app',
