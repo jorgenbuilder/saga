@@ -18,10 +18,6 @@ export default function ChooseDeckScreen () {
     return (
         <>
             <Container>
-                <LinkButton to={Routes.hackathonDecks.path}>
-                    Get More Decks
-                </LinkButton>
-                <br /><br />
                 {availableDecks.map(x => <LinkButton
                     to={`/decks/${x.slug}`}
                     key={x.slug}

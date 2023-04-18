@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useState } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
 import { useEffect } from 'react';
 import { Identity } from '@dfinity/agent';

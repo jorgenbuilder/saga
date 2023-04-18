@@ -58,7 +58,9 @@ export default function AccelerometerProvider ({ children }: AccelerometerProvid
     const unbindMotionEvents = useCallback(() => window.removeEventListener('devicemotion', ingestMotion), []);
 
     const requestPermission = useCallback(() => {
+        //@ts-ignore
         DeviceMotionEvent.requestPermission()
+        //@ts-ignore
         .then(response => {
             if (response === 'granted') {
                 bindMotionEvents();
@@ -89,6 +91,7 @@ export default function AccelerometerProvider ({ children }: AccelerometerProvid
 
     useEffect(() => {
         setIsSupported(window.DeviceMotionEvent !== undefined);
+        // @ts-ignore
         if (typeof window?.DeviceMotionEvent?.requestPermission === 'function') {
             // Some devices provide this permission api, which must be called from a user interaction.
             // If a user has already granted permission, we can call this without a user interaction.

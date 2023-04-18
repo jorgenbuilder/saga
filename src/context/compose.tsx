@@ -1,19 +1,14 @@
-import { ComponentType, Fragment, ReactNode } from 'react';
-
-type Components = ComponentType | [ComponentType, { [key: string]: any }];
+import React from 'react';
 
 interface Props {
-    components: Components[];
-    children?: ReactNode
+    components: {order: number; component: React.ComponentType}[];
+    children?: React.ReactNode
 }
 
 export default function Compose ({ components, children }: Props) {
-    return (
-        <Fragment>
-            {components.reverse().reduce((acc, curr) => {
-                const [Provider, props] = Array.isArray(curr) ? [curr[0], curr[1]] : [curr, {}];
-                return <Provider {...props}>{acc}</Provider>;
-            }, children)}
-        </Fragment>
-    );
+    return <>
+        {components.sort((a, b) => a.order - b.order).reverse().reduce((acc, provider) => {
+            return <provider.component>{acc}</provider.component>
+        }, children)}
+    </>;
 }
